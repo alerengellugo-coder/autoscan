@@ -14,57 +14,53 @@ class Product extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    protected $table = 'products';
+
     protected $fillable = [
         'name',
         'slug',
         'sku',
         'description',
         'category',
+        'brand',
         'price',
         'cost',
-        'stock',
-        'min_stock',
+        'stock_quantity',
+        'min_stock_alert',
         'unit',
+        'image_path',
         'is_active',
-        'barcode',
+        'is_service',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'category' => ProductCategory::class,
         'price' => 'decimal:2',
         'cost' => 'decimal:2',
-        'stock' => 'integer',
-        'min_stock' => 'integer',
+        'stock_quantity' => 'integer',
+        'min_stock_alert' => 'integer',
         'is_active' => 'boolean',
+        'is_service' => 'boolean',
     ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | Boot
-    |--------------------------------------------------------------------------
-    */
+    protected $appends = ['stock', 'min_stock', 'formatted_price', 'formatted_cost', 'stock_status', 'stock_status_color'];
+
+    // Virtual attributes for compatibility with views
+    public function getStockAttribute(): int
+    {
+        return $this->attributes['stock_quantity'] ?? 0;
+    }
+
+    public function getMinStockAttribute(): int
+    {
+        return $this->attributes['min_stock_alert'] ?? 0;
+    }
 
     protected static function booted(): void
     {
         static::creating(function (self $product) {
             if (empty($product->slug)) {
                 $product->slug = self::generateUniqueSlug($product->name);
-            }
-        });
-
-        static::updating(function (self $product) {
-            if ($product->isDirty('name') && $product->slug === Str::slug($product->getOriginal('name'))) {
-                $product->slug = self::generateUniqueSlug($product->name, $product->id);
             }
         });
     }
@@ -80,23 +76,14 @@ class Product extends Model
             if ($excludeId) {
                 $query->where('id', '!=', $excludeId);
             }
-
             if (!$query->exists()) {
                 break;
             }
-
             $slug = "{$originalSlug}-{$counter}";
             $counter++;
         }
-
         return $slug;
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Accessors
-    |--------------------------------------------------------------------------
-    */
 
     public function getFormattedPriceAttribute(): string
     {
@@ -110,14 +97,8 @@ class Product extends Model
 
     public function getProfitMarginAttribute(): float
     {
-        if (!$this->price || $this->price == 0) {
-            return 0.0;
-        }
-
-        $cost = (float) ($this->cost ?? 0);
-        $price = (float) $this->price;
-
-        return round((($price - $cost) / $price) * 100, 2);
+        if (!$this->price || $this->price == 0) return 0.0;
+        return round((($this->price - ($this->cost ?? 0)) / $this->price) * 100, 2);
     }
 
     public function getProfitAmountAttribute(): float
@@ -125,42 +106,23 @@ class Product extends Model
         return round((float) $this->price - (float) ($this->cost ?? 0), 2);
     }
 
-    public function getCategoryLabelAttribute(): string
-    {
-        return $this->category?->label() ?? 'N/A';
-    }
-
     public function getStockStatusAttribute(): string
     {
-        if ($this->stock <= 0) {
-            return 'Agotado';
-        }
-
-        if ($this->stock <= $this->min_stock) {
-            return 'Stock bajo';
-        }
-
+        $stock = $this->stock_quantity;
+        $min = $this->min_stock_alert;
+        if ($stock <= 0) return 'Agotado';
+        if ($stock <= $min) return 'Stock bajo';
         return 'Disponible';
     }
 
     public function getStockStatusColorAttribute(): string
     {
-        if ($this->stock <= 0) {
-            return 'danger';
-        }
-
-        if ($this->stock <= $this->min_stock) {
-            return 'warning';
-        }
-
+        $stock = $this->stock_quantity;
+        $min = $this->min_stock_alert;
+        if ($stock <= 0) return 'danger';
+        if ($stock <= $min) return 'warning';
         return 'success';
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Scopes
-    |--------------------------------------------------------------------------
-    */
 
     public function scopeActive($query)
     {
@@ -169,12 +131,12 @@ class Product extends Model
 
     public function scopeLowStock($query)
     {
-        return $query->whereColumn('stock', '<=', 'min_stock');
+        return $query->whereColumn('stock_quantity', '<=', 'min_stock_alert');
     }
 
     public function scopeOutOfStock($query)
     {
-        return $query->where('stock', '<=', 0);
+        return $query->where('stock_quantity', '<=', 0);
     }
 
     public function scopeCategory($query, ProductCategory|string $category)
@@ -188,26 +150,9 @@ class Product extends Model
         return $query->where(fn ($q) => $q
             ->where('name', 'like', "%{$term}%")
             ->orWhere('sku', 'like', "%{$term}%")
-            ->orWhere('barcode', 'like', "%{$term}%")
             ->orWhere('description', 'like', "%{$term}%")
         );
     }
-
-    public function scopeOrderByPrice($query, string $direction = 'asc')
-    {
-        return $query->orderBy('price', $direction);
-    }
-
-    public function scopeOrderByStock($query, string $direction = 'asc')
-    {
-        return $query->orderBy('stock', $direction);
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Relationships
-    |--------------------------------------------------------------------------
-    */
 
     public function quotationItems(): HasMany
     {
@@ -219,39 +164,25 @@ class Product extends Model
         return $this->hasMany(SaleItem::class);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Helper Methods
-    |--------------------------------------------------------------------------
-    */
-
     public function isAvailable(): bool
     {
-        return $this->is_active && $this->stock > 0;
+        return $this->is_active && $this->stock_quantity > 0;
     }
 
     public function isLowStock(): bool
     {
-        return $this->stock > 0 && $this->stock <= $this->min_stock;
-    }
-
-    public function isOutOfStock(): bool
-    {
-        return $this->stock <= 0;
+        return $this->stock_quantity > 0 && $this->stock_quantity <= $this->min_stock_alert;
     }
 
     public function decrementStock(int $quantity): bool
     {
-        if ($this->stock < $quantity) {
-            return false;
-        }
-
-        $this->decrement('stock', $quantity);
+        if ($this->stock_quantity < $quantity) return false;
+        $this->decrement('stock_quantity', $quantity);
         return true;
     }
 
     public function incrementStock(int $quantity): void
     {
-        $this->increment('stock', $quantity);
+        $this->increment('stock_quantity', $quantity);
     }
 }

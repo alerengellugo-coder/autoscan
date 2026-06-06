@@ -44,12 +44,12 @@ php artisan migrate --force --no-interaction
 echo "Running seeders..."
 php artisan db:seed --force --no-interaction 2>/dev/null || echo "WARNING: Seeder failed, continuing..."
 
-# Clear and rebuild caches
+# Clear and rebuild caches (view:cache skipped - Inertia.js doesn't use Blade views)
 echo "Optimizing application..."
 php artisan config:cache
 php artisan route:cache
-php artisan view:cache
-php artisan event:cache
+php artisan view:cache 2>/dev/null || echo "NOTE: view:cache skipped (no Blade views)"
+php artisan event:cache 2>/dev/null || true
 
 # Create storage link
 php artisan storage:link --force 2>/dev/null || true
