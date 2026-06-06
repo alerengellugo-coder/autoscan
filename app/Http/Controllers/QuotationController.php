@@ -121,7 +121,7 @@ class QuotationController extends Controller
     {
         $user = Auth::user();
 
-        Gate::authorize('create', Quotation::class);
+        Gate::authorize('manage-quotations');
 
         $validated = $request->validate([
             'client_id'           => ['required', 'exists:users,id'],
@@ -168,7 +168,7 @@ class QuotationController extends Controller
         });
 
         return redirect()
-            ->route('quotations.show', $quotation)
+            ->route('admin.cotizaciones.show', $quotation)
             ->with('success', "Cotización {$quotation->quotation_number} creada exitosamente.");
     }
 
@@ -177,7 +177,7 @@ class QuotationController extends Controller
      */
     public function show(Quotation $quotation): Response
     {
-        Gate::authorize('view', $quotation);
+        Gate::authorize('manage-quotations');
 
         $quotation->load([
             'client',
@@ -201,7 +201,7 @@ class QuotationController extends Controller
      */
     public function update(Request $request, Quotation $quotation)
     {
-        Gate::authorize('update', $quotation);
+        Gate::authorize('manage-quotations');
 
         if (! $quotation->status->isEditable()) {
             return back()->with('error', 'No se puede editar una cotización que ya fue aprobada o rechazada.');
@@ -251,7 +251,7 @@ class QuotationController extends Controller
         });
 
         return redirect()
-            ->route('quotations.show', $quotation)
+            ->route('admin.cotizaciones.show', $quotation)
             ->with('success', 'Cotización actualizada exitosamente.');
     }
 
@@ -271,7 +271,7 @@ class QuotationController extends Controller
         $newStatus = QuotationStatus::from($validated['status']);
         $user = Auth::user();
 
-        Gate::authorize('updateStatus', $quotation);
+        Gate::authorize('manage-quotations');
 
         DB::transaction(function () use ($quotation, $newStatus, $user) {
             switch ($newStatus) {
@@ -308,7 +308,7 @@ class QuotationController extends Controller
      */
     public function generatePdf(Quotation $quotation)
     {
-        Gate::authorize('view', $quotation);
+        Gate::authorize('manage-quotations');
 
         $quotation->load(['client', 'vehicle', 'technician', 'items.product']);
 
@@ -327,7 +327,7 @@ class QuotationController extends Controller
      */
     public function convertToSale(Quotation $quotation)
     {
-        Gate::authorize('convertToSale', $quotation);
+        Gate::authorize('convert-quotation');
 
         if ($quotation->status !== QuotationStatus::Approved) {
             return back()->with('error', 'Solo se pueden convertir cotizaciones aprobadas.');
@@ -380,7 +380,7 @@ class QuotationController extends Controller
         });
 
         return redirect()
-            ->route('sales.show', $sale)
+            ->route('admin.ventas.show', $sale)
             ->with('success', "Cotización {$quotation->quotation_number} convertida a venta {$sale->sale_number} exitosamente.");
     }
 

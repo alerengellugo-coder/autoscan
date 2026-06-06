@@ -81,7 +81,7 @@ class ProductController extends Controller
      */
     public function create(): Response
     {
-        $this->authorize('create', Product::class);
+        Gate::authorize('manage-products');
 
         return Inertia::render('Products/Create', [
             'categories' => ProductCategory::cases(),
@@ -95,7 +95,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create', Product::class);
+        Gate::authorize('manage-products');
 
         $validated = $request->validate([
             'name'        => ['required', 'string', 'max:255'],
@@ -116,7 +116,7 @@ class ProductController extends Controller
         $product = Product::create($validated);
 
         return redirect()
-            ->route('products.show', $product)
+            ->route('admin.productos.show', $product)
             ->with('success', 'Producto creado exitosamente.');
     }
 
@@ -135,7 +135,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product): Response
     {
-        $this->authorize('update', $product);
+        Gate::authorize('manage-products');
 
         return Inertia::render('Products/Edit', [
             'product'    => $product,
@@ -150,7 +150,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $this->authorize('update', $product);
+        Gate::authorize('manage-products');
 
         $validated = $request->validate([
             'name'        => ['required', 'string', 'max:255'],
@@ -169,7 +169,7 @@ class ProductController extends Controller
         $product->update($validated);
 
         return redirect()
-            ->route('products.show', $product)
+            ->route('admin.productos.show', $product)
             ->with('success', 'Producto actualizado exitosamente.');
     }
 
@@ -181,13 +181,13 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $this->authorize('delete', $product);
+        Gate::authorize('manage-products');
 
         // Soft delete by deactivating
         $product->update(['is_active' => false]);
 
         return redirect()
-            ->route('products.index')
+            ->route('admin.productos.index')
             ->with('success', "Producto '{$product->name}' desactivado exitosamente.");
     }
 

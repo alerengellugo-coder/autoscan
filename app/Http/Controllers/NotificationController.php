@@ -45,15 +45,11 @@ class NotificationController extends Controller
      * Accepts the notification ID in the request body.
      * Returns the updated unread count for Inertia reactivity.
      */
-    public function markAsRead(Request $request)
+    public function markAsRead(string $id)
     {
         $user = Auth::user();
 
-        $validated = $request->validate([
-            'id' => ['required', 'string'],
-        ]);
-
-        $notification = $user->notifications()->where('id', $validated['id'])->first();
+        $notification = $user->notifications()->where('id', $id)->first();
 
         if ($notification && $notification->unread()) {
             $notification->markAsRead();

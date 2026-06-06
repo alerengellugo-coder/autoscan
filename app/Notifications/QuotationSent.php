@@ -53,7 +53,7 @@ class QuotationSent extends Notification implements ShouldQueue
         $mail->line("")
              ->line("**Resumen de la cotización:**")
              ->line("**Subtotal:** $" . number_format($this->quotation->subtotal, 2))
-             ->line("**Impuesto:** $" . number_format($this->quotation->tax_amount, 2))
+             ->line("**Impuesto:** $" . number_format($this->quotation->tax, 2))
              ->line("**Total:** $" . number_format($this->quotation->total, 2))
              ->line("");
 
@@ -98,7 +98,7 @@ class QuotationSent extends Notification implements ShouldQueue
             'order_id'          => $this->quotation->serviceOrder ? $this->quotation->serviceOrder->id : null,
             'order_number'      => $this->quotation->serviceOrder ? $this->quotation->serviceOrder->order_number : null,
             'subtotal'          => $this->quotation->subtotal,
-            'tax_amount'        => $this->quotation->tax_amount,
+            'tax_amount'        => $this->quotation->tax,
             'total'             => $this->quotation->total,
             'status'            => $this->quotation->status->value,
             'valid_until'       => $this->quotation->valid_until?->toDateTimeString(),

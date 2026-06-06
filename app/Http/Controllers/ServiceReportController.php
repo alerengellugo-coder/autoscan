@@ -87,7 +87,7 @@ class ServiceReportController extends Controller
     {
         $user = Auth::user();
 
-        Gate::authorize('create', ServiceReport::class);
+        Gate::authorize('manage-orders');
 
         $validated = $request->validate([
             'service_order_id' => ['required', 'exists:service_orders,id'],
@@ -108,7 +108,7 @@ class ServiceReportController extends Controller
 
         $serviceOrder = ServiceOrder::findOrFail($validated['service_order_id']);
 
-        Gate::authorize('addReport', $serviceOrder);
+        Gate::authorize('manage-orders');
 
         $validated['technician_id'] = $user->id;
 
@@ -122,7 +122,7 @@ class ServiceReportController extends Controller
         }
 
         return redirect()
-            ->route('service-reports.show', $report)
+            ->route('admin.reports.show', $report)
             ->with('success', 'Informe de servicio creado exitosamente.');
     }
 
@@ -131,7 +131,7 @@ class ServiceReportController extends Controller
      */
     public function show(ServiceReport $serviceReport): Response
     {
-        Gate::authorize('view', $serviceReport);
+        Gate::authorize('view-reports');
 
         $serviceReport->load([
             'serviceOrder' => function ($query) {
@@ -152,7 +152,7 @@ class ServiceReportController extends Controller
      */
     public function update(Request $request, ServiceReport $serviceReport)
     {
-        Gate::authorize('update', $serviceReport);
+        Gate::authorize('view-reports');
 
         $validated = $request->validate([
             'report_date'      => ['required', 'date'],
@@ -173,7 +173,7 @@ class ServiceReportController extends Controller
         $serviceReport->update($validated);
 
         return redirect()
-            ->route('service-reports.show', $serviceReport)
+            ->route('admin.reports.show', $serviceReport)
             ->with('success', 'Informe de servicio actualizado exitosamente.');
     }
 
@@ -184,12 +184,12 @@ class ServiceReportController extends Controller
      */
     public function destroy(ServiceReport $serviceReport)
     {
-        Gate::authorize('delete', $serviceReport);
+        Gate::authorize('delete-reports');
 
         $serviceReport->delete();
 
         return redirect()
-            ->route('service-reports.index')
+            ->route('admin.reports.index')
             ->with('success', 'Informe de servicio eliminado exitosamente.');
     }
 }

@@ -219,7 +219,7 @@ class ServiceOrderController extends Controller
         $order = ServiceOrder::create($validated);
 
         return redirect()
-            ->route('service-orders.show', $order)
+            ->route('admin.ordenes.show', $order)
             ->with('success', "Orden de servicio {$order->order_number} creada exitosamente.");
     }
 
@@ -231,7 +231,7 @@ class ServiceOrderController extends Controller
      */
     public function show(ServiceOrder $serviceOrder): Response
     {
-        Gate::authorize('view', $serviceOrder);
+        Gate::authorize('manage-orders');
 
         $serviceOrder->load([
             'vehicle.client',
@@ -260,7 +260,7 @@ class ServiceOrderController extends Controller
      */
     public function updateStatus(Request $request, ServiceOrder $serviceOrder)
     {
-        Gate::authorize('updateStatus', $serviceOrder);
+        Gate::authorize('manage-orders');
 
         $validated = $request->validate([
             'status' => ['required', 'string', 'in:' . implode(',', array_column(OrderStatus::cases(), 'value'))],
@@ -313,7 +313,7 @@ class ServiceOrderController extends Controller
      */
     public function addReport(Request $request, ServiceOrder $serviceOrder)
     {
-        Gate::authorize('addReport', $serviceOrder);
+        Gate::authorize('manage-orders');
 
         $validated = $request->validate([
             'report_date'     => ['required', 'date'],
@@ -337,7 +337,7 @@ class ServiceOrderController extends Controller
         $report = $serviceOrder->reports()->create($validated);
 
         return redirect()
-            ->route('service-orders.show', $serviceOrder)
+            ->back()
             ->with('success', 'Informe de servicio agregado exitosamente.');
     }
 
@@ -348,7 +348,7 @@ class ServiceOrderController extends Controller
      */
     public function destroy(ServiceOrder $serviceOrder)
     {
-        $this->authorize('delete', $serviceOrder);
+        Gate::authorize('manage-orders');
 
         if ($serviceOrder->status->isFinal()) {
             return back()->with('error', 'No se puede cancelar una orden que ya está completada o entregada.');
@@ -364,7 +364,7 @@ class ServiceOrderController extends Controller
         });
 
         return redirect()
-            ->route('service-orders.index')
+            ->route('admin.ordenes.index')
             ->with('success', "Orden de servicio {$serviceOrder->order_number} cancelada exitosamente.");
     }
 }

@@ -132,7 +132,7 @@ class VehicleController extends Controller
         $vehicle = Vehicle::create($validated);
 
         return redirect()
-            ->route('vehicles.show', $vehicle)
+            ->route('admin.vehiculos.show', $vehicle)
             ->with('success', 'Vehículo registrado exitosamente.');
     }
 
@@ -144,7 +144,7 @@ class VehicleController extends Controller
      */
     public function show(Vehicle $vehicle): Response
     {
-        Gate::authorize('view', $vehicle);
+        Gate::authorize('manage-vehicles');
 
         $vehicle->load([
             'client',
@@ -163,7 +163,7 @@ class VehicleController extends Controller
      */
     public function edit(Vehicle $vehicle): Response
     {
-        Gate::authorize('update', $vehicle);
+        Gate::authorize('manage-vehicles');
 
         $user = Auth::user();
 
@@ -185,7 +185,7 @@ class VehicleController extends Controller
      */
     public function update(Request $request, Vehicle $vehicle)
     {
-        Gate::authorize('update', $vehicle);
+        Gate::authorize('manage-vehicles');
 
         $validated = $request->validate([
             'client_id'     => ['required', 'exists:users,id'],
@@ -205,7 +205,7 @@ class VehicleController extends Controller
         $vehicle->update($validated);
 
         return redirect()
-            ->route('vehicles.show', $vehicle)
+            ->route('admin.vehiculos.show', $vehicle)
             ->with('success', 'Vehículo actualizado exitosamente.');
     }
 
@@ -216,7 +216,7 @@ class VehicleController extends Controller
      */
     public function destroy(Vehicle $vehicle)
     {
-        $this->authorize('delete', $vehicle);
+        Gate::authorize('manage-vehicles');
 
         // Prevent deletion if vehicle has active service orders
         if ($vehicle->serviceOrders()->active()->exists()) {
@@ -226,7 +226,7 @@ class VehicleController extends Controller
         $vehicle->delete();
 
         return redirect()
-            ->route('vehicles.index')
+            ->route('admin.vehiculos.index')
             ->with('success', 'Vehículo eliminado exitosamente.');
     }
 
@@ -238,7 +238,7 @@ class VehicleController extends Controller
      */
     public function addVehicleForClient(Request $request)
     {
-        $this->authorize('create', Vehicle::class);
+        Gate::authorize('manage-vehicles');
 
         $validated = $request->validate([
             'client_id'     => ['required', 'exists:users,id'],
@@ -266,7 +266,7 @@ class VehicleController extends Controller
         }
 
         return redirect()
-            ->route('vehicles.show', $vehicle)
+            ->route('admin.vehiculos.show', $vehicle)
             ->with('success', 'Vehículo registrado exitosamente para el cliente.');
     }
 }

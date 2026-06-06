@@ -22,7 +22,7 @@ class TechnicianUserSeeder extends Seeder
                 'name'     => 'Pedro Martínez',
                 'password' => Hash::make('password'),
                 'phone'    => '+58 416-7778899',
-                'active'   => true,
+                'is_active'   => true,
             ]
         );
         $technician->assignRole('technician');

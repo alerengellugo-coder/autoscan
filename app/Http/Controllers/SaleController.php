@@ -97,7 +97,7 @@ class SaleController extends Controller
      */
     public function create(Request $request): Response
     {
-        Gate::authorize('create', Sale::class);
+        Gate::authorize('manage-sales');
 
         // Pre-fill from quotation if provided
         $quotation = null;
@@ -128,7 +128,7 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
-        Gate::authorize('create', Sale::class);
+        Gate::authorize('manage-sales');
 
         $validated = $request->validate([
             'client_id'     => ['required', 'exists:users,id'],
@@ -185,7 +185,7 @@ class SaleController extends Controller
         });
 
         return redirect()
-            ->route('sales.show', $sale)
+            ->route('admin.ventas.show', $sale)
             ->with('success', "Venta {$sale->sale_number} registrada exitosamente.");
     }
 
@@ -194,7 +194,7 @@ class SaleController extends Controller
      */
     public function show(Sale $sale): Response
     {
-        Gate::authorize('view', $sale);
+        Gate::authorize('manage-sales');
 
         $sale->load([
             'client',
@@ -217,7 +217,7 @@ class SaleController extends Controller
      */
     public function registerPayment(Request $request, Sale $sale)
     {
-        Gate::authorize('registerPayment', $sale);
+        Gate::authorize('register-payment');
 
         if ($sale->status === SaleStatus::Cancelled) {
             return back()->with('error', 'No se puede registrar pagos en una venta cancelada.');
@@ -282,7 +282,7 @@ class SaleController extends Controller
      */
     public function cancel(Sale $sale)
     {
-        Gate::authorize('cancel', $sale);
+        Gate::authorize('cancel-sale');
 
         if ($sale->status === SaleStatus::Cancelled) {
             return back()->with('error', 'Esta venta ya se encuentra cancelada.');
@@ -297,7 +297,7 @@ class SaleController extends Controller
         });
 
         return redirect()
-            ->route('sales.index')
+            ->route('admin.ventas.index')
             ->with('success', "Venta {$sale->sale_number} cancelada exitosamente. Stock restaurado.");
     }
 

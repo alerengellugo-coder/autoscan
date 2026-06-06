@@ -26,7 +26,7 @@ class AdminUserSeeder extends Seeder
                 'name'     => 'Administrador',
                 'password' => Hash::make('password'),
                 'phone'    => '+58 412-0000000',
-                'active'   => true,
+                'is_active'   => true,
             ]
         );
         $admin->assignRole('admin');
@@ -43,7 +43,7 @@ class AdminUserSeeder extends Seeder
                 'name'     => 'Carlos García',
                 'password' => Hash::make('password'),
                 'phone'    => '+58 414-1112233',
-                'active'   => true,
+                'is_active'   => true,
             ]
         );
         $client1->assignRole('client');
@@ -55,7 +55,7 @@ class AdminUserSeeder extends Seeder
                 'name'     => 'María López',
                 'password' => Hash::make('password'),
                 'phone'    => '+58 412-4445566',
-                'active'   => true,
+                'is_active'   => true,
             ]
         );
         $client2->assignRole('client');

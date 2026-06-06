@@ -52,8 +52,11 @@ Route::middleware('guest')->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/logout', 'App\Http\Controllers\Auth\AuthenticatedSessionController@destroy')->name('logout');
 
-    // Dashboard
+    // Dashboard routes
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    Route::get('/admin/dashboard', DashboardController::class)->name('admin.dashboard');
+    Route::get('/tecnico/dashboard', DashboardController::class)->name('technician.dashboard');
+    Route::get('/mi-cuenta/dashboard', DashboardController::class)->name('client.dashboard');
 
     // Notifications
     Route::get('/notificaciones', [NotificationController::class, 'index'])->name('notifications.index');

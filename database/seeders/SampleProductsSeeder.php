@@ -26,7 +26,7 @@ class SampleProductsSeeder extends Seeder
                 'stock'       => 25,
                 'min_stock'   => 5,
                 'unit'        => 'galón',
-                'active'      => true,
+                'is_active'   => true,
             ],
             [
                 'name'        => 'Filtro de aceite universal',
@@ -38,7 +38,7 @@ class SampleProductsSeeder extends Seeder
                 'stock'       => 40,
                 'min_stock'   => 10,
                 'unit'        => 'unidad',
-                'active'      => true,
+                'is_active'   => true,
             ],
             [
                 'name'        => 'Filtro de aire',
@@ -50,7 +50,7 @@ class SampleProductsSeeder extends Seeder
                 'stock'       => 35,
                 'min_stock'   => 8,
                 'unit'        => 'unidad',
-                'active'      => true,
+                'is_active'   => true,
             ],
             [
                 'name'        => 'Pastillas de freno cerámicas',
@@ -62,7 +62,7 @@ class SampleProductsSeeder extends Seeder
                 'stock'       => 20,
                 'min_stock'   => 5,
                 'unit'        => 'juego',
-                'active'      => true,
+                'is_active'   => true,
             ],
             [
                 'name'        => 'Disco de freno ventilado',
@@ -74,7 +74,7 @@ class SampleProductsSeeder extends Seeder
                 'stock'       => 15,
                 'min_stock'   => 4,
                 'unit'        => 'unidad',
-                'active'      => true,
+                'is_active'   => true,
             ],
             [
                 'name'        => 'Batería 12V 60Ah',
@@ -86,7 +86,7 @@ class SampleProductsSeeder extends Seeder
                 'stock'       => 10,
                 'min_stock'   => 3,
                 'unit'        => 'unidad',
-                'active'      => true,
+                'is_active'   => true,
             ],
             [
                 'name'        => 'Batería AGM 12V 70Ah',
@@ -98,7 +98,7 @@ class SampleProductsSeeder extends Seeder
                 'stock'       => 8,
                 'min_stock'   => 2,
                 'unit'        => 'unidad',
-                'active'      => true,
+                'is_active'   => true,
             ],
             [
                 'name'        => 'Escáner OBD2 profesional',
@@ -110,7 +110,7 @@ class SampleProductsSeeder extends Seeder
                 'stock'       => 5,
                 'min_stock'   => 2,
                 'unit'        => 'unidad',
-                'active'      => true,
+                'is_active'   => true,
             ],
             [
                 'name'        => 'Multímetro digital',
@@ -122,7 +122,7 @@ class SampleProductsSeeder extends Seeder
                 'stock'       => 12,
                 'min_stock'   => 3,
                 'unit'        => 'unidad',
-                'active'      => true,
+                'is_active'   => true,
             ],
             [
                 'name'        => 'Cable de batería (juego)',
@@ -134,7 +134,7 @@ class SampleProductsSeeder extends Seeder
                 'stock'       => 18,
                 'min_stock'   => 5,
                 'unit'        => 'juego',
-                'active'      => true,
+                'is_active'   => true,
             ],
             [
                 'name'        => 'Kit de herramientas básico',
@@ -146,7 +146,7 @@ class SampleProductsSeeder extends Seeder
                 'stock'       => 8,
                 'min_stock'   => 2,
                 'unit'        => 'juego',
-                'active'      => true,
+                'is_active'   => true,
             ],
             [
                 'name'        => 'Coolant / Refrigerante verde',
@@ -158,7 +158,7 @@ class SampleProductsSeeder extends Seeder
                 'stock'       => 50,
                 'min_stock'   => 15,
                 'unit'        => 'galón',
-                'active'      => true,
+                'is_active'   => true,
             ],
             [
                 'name'        => 'Líquido de frenos DOT4',
@@ -170,7 +170,7 @@ class SampleProductsSeeder extends Seeder
                 'stock'       => 60,
                 'min_stock'   => 15,
                 'unit'        => 'litro',
-                'active'      => true,
+                'is_active'   => true,
             ],
             [
                 'name'        => 'Bujía de encendido iridium',
@@ -182,7 +182,7 @@ class SampleProductsSeeder extends Seeder
                 'stock'       => 100,
                 'min_stock'   => 25,
                 'unit'        => 'unidad',
-                'active'      => true,
+                'is_active'   => true,
             ],
             [
                 'name'        => 'Correa de distribución',
@@ -194,7 +194,7 @@ class SampleProductsSeeder extends Seeder
                 'stock'       => 12,
                 'min_stock'   => 3,
                 'unit'        => 'unidad',
-                'active'      => true,
+                'is_active'   => true,
             ],
         ];
 

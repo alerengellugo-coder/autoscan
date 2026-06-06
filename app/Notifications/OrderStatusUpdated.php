@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\ServiceOrder;
+use App\Models\Enums\OrderStatus;
 
 class OrderStatusUpdated extends Notification implements ShouldQueue
 {
@@ -17,8 +18,8 @@ class OrderStatusUpdated extends Notification implements ShouldQueue
      */
     public function __construct(
         public ServiceOrder $order,
-        public string $oldStatus,
-        public string $newStatus,
+        public OrderStatus $oldStatus,
+        public OrderStatus $newStatus,
     ) {}
 
     /**
@@ -44,8 +45,8 @@ class OrderStatusUpdated extends Notification implements ShouldQueue
             'cancelled'   => 'Cancelada',
         ];
 
-        $oldStatusLabel = $statusLabels[$this->oldStatus] ?? $this->oldStatus;
-        $newStatusLabel = $statusLabels[$this->newStatus] ?? $this->newStatus;
+        $oldStatusLabel = $statusLabels[$this->oldStatus->value] ?? $this->oldStatus->value;
+        $newStatusLabel = $statusLabels[$this->newStatus->value] ?? $this->newStatus->value;
 
         $mail = (new MailMessage)
             ->subject("Actualización de su orden de servicio #{$this->order->order_number}")
@@ -57,16 +58,16 @@ class OrderStatusUpdated extends Notification implements ShouldQueue
             ->line("**Nuevo estado:** {$newStatusLabel}");
 
         // Add contextual message based on new status
-        if ($this->newStatus === 'completed') {
+        if ($this->newStatus->value === 'completed') {
             $mail->line('Su vehículo ha sido diagnosticado y reparado exitosamente. Puede pasar a recogerlo en nuestro taller.')
                  ->action('Ver Orden de Servicio', url("/mi-cuenta/ordenes/{$this->order->id}"));
-        } elseif ($this->newStatus === 'waiting') {
+        } elseif ($this->newStatus->value === 'waiting') {
             $mail->line('Estamos esperando la disponibilidad de repuestos o su aprobación para continuar con el servicio.')
                  ->action('Ver Orden de Servicio', url("/mi-cuenta/ordenes/{$this->order->id}"));
-        } elseif ($this->newStatus === 'in_progress') {
+        } elseif ($this->newStatus->value === 'in_progress') {
             $mail->line('Nuestros técnicos están trabajando en su vehículo. Le notificaremos cuando el servicio esté completo.')
                  ->action('Ver Orden de Servicio', url("/mi-cuenta/ordenes/{$this->order->id}"));
-        } elseif ($this->newStatus === 'cancelled') {
+        } elseif ($this->newStatus->value === 'cancelled') {
             $mail->line('La orden de servicio ha sido cancelada. Si tiene alguna pregunta, no dude en contactarnos.');
         } else {
             $mail->action('Ver Orden de Servicio', url("/mi-cuenta/ordenes/{$this->order->id}"));
@@ -92,10 +93,10 @@ class OrderStatusUpdated extends Notification implements ShouldQueue
                 'model' => $this->order->vehicle->model,
                 'plate' => $this->order->vehicle->plate,
             ],
-            'old_status'    => $this->oldStatus,
-            'new_status'    => $this->newStatus,
+            'old_status'    => $this->oldStatus->value,
+            'new_status'    => $this->newStatus->value,
             'title'         => "Orden #{$this->order->order_number} actualizada",
-            'message'       => "El estado cambió de {$this->oldStatus} a {$this->newStatus}.",
+            'message'       => "El estado cambió de {$this->oldStatus->value} a {$this->newStatus->value}.",
             'type'          => 'order_status_update',
             'url'           => url("/mi-cuenta/ordenes/{$this->order->id}"),
         ];
