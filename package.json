@@ -14,7 +14,8 @@
         "@heroicons/react": "^2.1.5",
         "@inertiajs/react": "^2.0.0",
         "react": "^18.3.1",
-        "react-dom": "^18.3.1"
+        "react-dom": "^18.3.1",
+        "@headlessui/react": "^2.2.0"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.9",
