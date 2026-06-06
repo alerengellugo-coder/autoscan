@@ -45,6 +45,11 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . .
 
+# Create required directories BEFORE composer install (needed for package:discover)
+RUN mkdir -p storage/framework/{cache,sessions,views} \
+    && mkdir -p storage/logs \
+    && mkdir -p bootstrap/cache
+
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction \
     && composer dump-autoload --optimize
@@ -56,9 +61,6 @@ RUN npm install \
 # Configure permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
-    && mkdir -p /var/www/html/storage/framework/{cache,sessions,views} \
-    && mkdir -p /var/www/html/storage/logs \
-    && mkdir -p /var/www/html/bootstrap/cache \
     && chown -R www-data:www-data /var/www/html/storage \
     && chown -R www-data:www-data /var/www/html/bootstrap/cache
 
