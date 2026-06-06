@@ -1,0 +1,17 @@
+.git
+.gitignore
+.github
+*.md
+LICENSE
+node_modules
+vendor
+public/build
+.env
+.env.*
+!.env.example
+render.yaml
+.idea
+.vscode
+*.swp
+.DS_Store
+Thumbs.db
