@@ -1,0 +1,54 @@
+/.idea
+/.vscode
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/public/fonts
+/storage/*.key
+/storage/app/public
+/storage/framework/cache
+/storage/framework/cache/data/*
+/storage/framework/sessions
+/storage/framework/sessions/*
+/storage/framework/views
+/storage/framework/views/*
+/storage/logs
+/vendor
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+phpunit.xml
+phpunit.xml.dist
+Thumbs.db
+
+# Vite
+.vite
+
+# Editor
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# Testing
+coverage/
+tests/coverage/
+
+# Docker
+docker-compose.override.yml
+
+# Sail
+.dockerignore
