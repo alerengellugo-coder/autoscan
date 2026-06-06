@@ -3,13 +3,16 @@ set -e
 
 echo "Starting AutoScan deployment..."
 
-# Generate application key if not set (MUST be before migrations & config:cache)
+# Clear any stale config cache from build
+php artisan config:clear 2>/dev/null || true
+
+# Generate application key if not set (MUST be before any encrypted operations)
 if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "SomeRandomStringSomeRandomString" ] || [ "$APP_KEY" = "null" ]; then
     echo "Generating application key..."
     php artisan key:generate --force
 fi
 
-# Wait for database (works with Neon external DB)
+# Wait for database
 if [ -n "$DB_HOST" ]; then
     echo "Waiting for PostgreSQL at $DB_HOST:${DB_PORT:-5432}..."
     for i in $(seq 1 30); do
@@ -26,13 +29,20 @@ if [ -n "$DB_HOST" ]; then
     done
 fi
 
-# Run migrations (fresh to handle re-deploys cleanly)
-echo "Running database migrations..."
-php artisan migrate:fresh --force --no-interaction
+# Drop all existing tables and views (clean slate for Neon)
+echo "Wiping existing database tables..."
+php artisan db:wipe --force --no-interaction 2>/dev/null || true
 
-# Always run seeders after fresh migration
+# Small delay to let Neon pooler release connections after wipe
+sleep 2
+
+# Run migrations fresh
+echo "Running database migrations..."
+php artisan migrate --force --no-interaction
+
+# Always run seeders
 echo "Running seeders..."
-php artisan db:seed --force --no-interaction
+php artisan db:seed --force --no-interaction 2>/dev/null || echo "WARNING: Seeder failed, continuing..."
 
 # Clear and rebuild caches
 echo "Optimizing application..."
