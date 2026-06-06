@@ -1,7 +1,5 @@
 <?php
 
-use Laravel\Sanctum\Sanctum;
-
 return [
 
     /*
@@ -92,7 +90,6 @@ return [
     'personal_access_tokens' => [
         'table' => 'personal_access_tokens',
         'expire_in' => null,
-        'permissible' => Sanctum::$permissible,
     ],
 
 ];
