@@ -23,6 +23,12 @@ use Inertia\Inertia;
 |
 */
 
+// Health check endpoint for Render
+Route::get('/up', function () {
+    return response('OK', 200)->header('Content-Type', 'text/plain');
+});
+
+
 // ---------------------------------------------------------------------------
 // Public pages
 // ---------------------------------------------------------------------------
