@@ -1,6 +1,6 @@
 import React from 'react';
 import { usePage, Link, useForm, router } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AuthenticatedLayout from '../../../Layouts/AuthenticatedLayout';
 import StatusBadge from '@/Components/StatusBadge';
 import { DocumentTextIcon, CheckIcon, XMarkIcon, ArrowPathIcon, TrashIcon } from '@heroicons/react/24/outline';
 

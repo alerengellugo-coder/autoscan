@@ -1,6 +1,6 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
-import PublicLayout from '../../Layouts/PublicLayout';
+import PublicLayout from '../Layouts/PublicLayout';
 import {
     CpuChipIcon,
     EyeIcon,

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
-import PublicLayout from '../../Layouts/PublicLayout';
+import PublicLayout from '../Layouts/PublicLayout';
 import {
     BoltIcon,
     CpuChipIcon,
@@ -17,7 +17,7 @@ import {
     DocumentTextIcon,
     PlayIcon,
 } from '@heroicons/react/24/outline';
-import { PageProps } from '../../types';
+import { PageProps } from '../types';
 
 const services = [
     {

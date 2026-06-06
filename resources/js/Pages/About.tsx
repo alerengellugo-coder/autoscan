@@ -1,6 +1,6 @@
 import React from 'react';
 import { Head } from '@inertiajs/react';
-import PublicLayout from '../../Layouts/PublicLayout';
+import PublicLayout from '../Layouts/PublicLayout';
 import {
     ShieldCheckIcon,
     UsersIcon,

@@ -44,7 +44,7 @@ export default defineConfig({
             output: {
                 manualChunks: {
                     'vendor-react': ['react', 'react-dom'],
-                    'vendor-inertia': ['@inertiajs/react', '@inertiajs/node'],
+                    'vendor-inertia': ['@inertiajs/react'],
                 },
             },
         },
