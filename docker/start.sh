@@ -3,6 +3,9 @@ set -e
 
 echo "Starting AutoScan deployment..."
 
+# Create supervisor log directory (needed at runtime)
+mkdir -p /var/log/supervisor /var/run
+
 # Clear any stale config cache from build
 php artisan config:clear 2>/dev/null || true
 
