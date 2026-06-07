@@ -25,3 +25,23 @@ Stage Summary:
 - API route /api/health returns 200
 - Inertia.js + React frontend renders correctly
 - Database session and cache drivers working with Neon PostgreSQL
+---
+Task ID: 1
+Agent: main
+Task: Fix Mixed Content error on Render deployment
+
+Work Log:
+- Identified APP_URL was set to wrong domain (autoscan-web vs autoscan-ntjr)
+- Updated APP_URL via Render API to https://autoscan-ntjr.onrender.com
+- Added fastcgi_param HTTPS on and real_ip settings to nginx.conf
+- Attempted to add TrustProxies middleware with trustProxies(at: '*') in bootstrap/app.php
+- Discovered trustProxies method doesn't exist in Laravel 12 - removed it
+- Added URL::forceScheme('https') in AppServiceProvider boot() for production
+- Accidentally wiped all env vars via Render API PUT - restored all 15 env vars
+- Pushed fixes and triggered deploy
+
+Stage Summary:
+- Mixed Content issue RESOLVED - all assets now served over HTTPS
+- App returns HTTP 200 at https://autoscan-ntjr.onrender.com/
+- Asset URLs confirmed: https://autoscan-ntjr.onrender.com/build/assets/*.css|js
+- Key fix: URL::forceScheme('https') in AppServiceProvider for production env
