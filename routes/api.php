@@ -6,48 +6,45 @@ Route::get('/health', function () {
     return response()->json(['status' => 'ok', 'timestamp' => now()->toIso8601String()]);
 });
 
-// Temporary diagnostic route - REMOVE AFTER DEBUGGING
 Route::get('/diag', function () {
     try {
         $result = [];
         
-        // Check view compiled path
-        $result['view_config'] = config('view');
-        $result['view_compiled'] = config('view.compiled');
-        $result['storage_path'] = storage_path('framework/views');
-        $result['storage_path_exists'] = is_dir(storage_path('framework/views'));
-        $result['storage_path_writable'] = is_writable(storage_path('framework/views'));
-        $result['path_storage'] = app('path.storage');
-        
-        // Check Settings
+        // Read log file - look for errors
         try {
-            $result['settings'] = [
-                'workshop_name' => \App\Models\Setting::get('workshop_name', 'AutoScan'),
-                'currency' => \App\Models\Setting::get('currency', 'USD'),
-                'tax_percentage' => \App\Models\Setting::get('tax_percentage', 16),
-            ];
+            $logPath = storage_path('logs/laravel.log');
+            if (file_exists($logPath)) {
+                $logContent = file_get_contents($logPath);
+                $lines = explode("\n", $logContent);
+                
+                // Find the LAST error entry
+                $errorStart = -1;
+                for ($i = count($lines) - 1; $i >= 0; $i--) {
+                    if (strpos($lines[$i], '[') === 0 && strpos($lines[$i], 'local.ERROR') !== false) {
+                        $errorStart = $i;
+                        break;
+                    }
+                }
+                
+                if ($errorStart >= 0) {
+                    // Get 30 lines from the error
+                    $errorLines = array_slice($lines, $errorStart, min(40, count($lines) - $errorStart));
+                    $result['error_log'] = $errorLines;
+                } else {
+                    $result['log_note'] = 'No error entries found in log';
+                    $result['last_lines'] = array_slice($lines, -20);
+                }
+            } else {
+                $result['log_path'] = $logPath;
+                $result['log_exists'] = false;
+                $result['log_dir'] = is_dir(dirname($logPath)) ? scandir(dirname($logPath)) : [];
+            }
         } catch (\Throwable $e) {
-            $result['settings_error'] = get_class($e) . ': ' . $e->getMessage();
+            $result['log_error'] = $e->getMessage();
         }
-        
-        // Check Inertia
-        try {
-            $page = \Inertia\Inertia::render('Home')->toResponse(request());
-            $result['inertia_ok'] = true;
-        } catch (\Throwable $e) {
-            $result['inertia_error'] = get_class($e) . ': ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine();
-        }
-        
-        // Check env
-        $result['app_key'] = config('app.key') ? 'SET' : 'MISSING';
-        $result['app_env'] = config('app.env');
-        $result['app_debug'] = config('app.debug');
         
         return response()->json($result);
     } catch (\Throwable $e) {
-        return response()->json([
-            'fatal' => get_class($e) . ': ' . $e->getMessage(),
-            'file' => $e->getFile() . ':' . $e->getLine(),
-        ], 500);
+        return response()->json(['fatal' => $e->getMessage()], 500);
     }
 });
