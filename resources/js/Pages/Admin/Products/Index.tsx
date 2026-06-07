@@ -48,7 +48,7 @@ export default function ProductsIndex({
 
     const handleFilter = (e: React.FormEvent) => {
         e.preventDefault();
-        router.get('/products', { search, category }, { preserveState: true });
+        router.get('/admin/productos', { search, category }, { preserveState: true });
     };
 
     return (
@@ -61,7 +61,7 @@ export default function ProductsIndex({
                             Gestión de Productos
                         </h1>
                         <Link
-                            href="/products/create"
+                            href="/admin/productos/crear"
                             className="inline-flex items-center gap-2 btn-primary"
                         >
                             <PlusCircleIcon className="h-5 w-5" />

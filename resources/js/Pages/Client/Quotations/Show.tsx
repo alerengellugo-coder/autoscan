@@ -70,7 +70,7 @@ export default function ClientQuotationShow() {
     const confirmAction = () => {
         const action = confirmModal.action;
         router.patch(
-            `/quotations/${quotation.id}/${action}`,
+            `/mi-cuenta/cotizaciones/${quotation.id}/${action}`,
             {},
             {
                 onSuccess: () => {
@@ -86,7 +86,7 @@ export default function ClientQuotationShow() {
             header={
                 <div className="flex items-center gap-3">
                     <Link
-                        href="/quotations"
+                        href="/mi-cuenta/cotizaciones"
                         className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 transition-colors"
                     >
                         <XMarkIcon className="h-4 w-4" />

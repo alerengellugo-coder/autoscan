@@ -129,7 +129,7 @@ export default function TechnicianOrderShow() {
 
     const handleReportSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        reportForm.post(`/technician/orders/${order.id}/reports`, {
+        reportForm.post(`/tecnico/ordenes/${order.id}/reports`, {
             onSuccess: () => {
                 setIsReportModalOpen(false);
                 reportForm.reset();
@@ -140,7 +140,7 @@ export default function TechnicianOrderShow() {
 
     const handleStatusSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        statusForm.put(`/technician/orders/${order.id}/status`, {
+        statusForm.put(`/tecnico/ordenes/${order.id}/status`, {
             onSuccess: () => {
                 setIsStatusModalOpen(false);
                 statusForm.reset();
@@ -154,7 +154,7 @@ export default function TechnicianOrderShow() {
             header={
                 <div className="flex items-center gap-3">
                     <Link
-                        href="/technician/orders"
+                        href="/tecnico/ordenes"
                         className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 transition-colors"
                     >
                         <XMarkIcon className="h-4 w-4" />
@@ -425,7 +425,7 @@ export default function TechnicianOrderShow() {
                                         )}
                                         <div className="ml-auto">
                                             <Link
-                                                href={`/technician/orders/${order.id}/reports/${report.id}`}
+                                                href={`/tecnico/ordenes/${order.id}/reports/${report.id}`}
                                                 className="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
                                             >
                                                 <EyeIcon className="h-3.5 w-3.5" />

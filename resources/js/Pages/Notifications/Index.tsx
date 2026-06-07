@@ -74,14 +74,14 @@ export default function NotificationsIndex({
     const [activeFilter, setActiveFilter] = useState<'all' | 'unread'>('all');
 
     const handleMarkAllRead = () => {
-        router.post('/notifications/mark-all-read', {}, {
+        router.post('/notificaciones/mark-all-read', {}, {
             preserveState: true,
             preserveScroll: true,
         });
     };
 
     const handleMarkRead = (id: string) => {
-        router.post(`/notifications/${id}/mark-read`, {}, {
+        router.post(`/notificaciones/${id}/mark-read`, {}, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -89,7 +89,7 @@ export default function NotificationsIndex({
 
     const handleDelete = (id: string) => {
         if (confirm('¿Deseas eliminar esta notificación?')) {
-            router.delete(`/notifications/${id}`, {
+            router.delete(`/notificaciones/${id}`, {
                 preserveState: true,
                 preserveScroll: true,
             });
@@ -98,13 +98,13 @@ export default function NotificationsIndex({
 
     const getNotificationLink = (notification: AppNotification): string | null => {
         if (notification.type === 'order_status' && notification.data.order_number) {
-            return `/orders?search=${notification.data.order_number}`;
+            return `/admin/ordenes?search=${notification.data.order_number}`;
         }
         if (notification.type === 'quotation_status' && notification.data.quotation_number) {
             return `/quotations?search=${notification.data.quotation_number}`;
         }
         if (notification.type === 'report_created' && notification.data.order_number) {
-            return `/orders?search=${notification.data.order_number}`;
+            return `/admin/ordenes?search=${notification.data.order_number}`;
         }
         return null;
     };

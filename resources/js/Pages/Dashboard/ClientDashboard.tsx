@@ -170,7 +170,7 @@ export default function ClientDashboard({
                                         </div>
                                         <div className="mt-3 pt-3 border-t border-gray-100">
                                             <Link
-                                                href={`/vehicles/${vehicle.id}`}
+                                                href={`/mi-cuenta/vehiculos/${vehicle.id}`}
                                                 className="text-sm font-medium text-primary-600 hover:text-primary-700"
                                             >
                                                 Ver detalles →
@@ -281,7 +281,7 @@ export default function ClientDashboard({
                                                 </p>
                                             </div>
                                             <Link
-                                                href={`/orders/${order.id}`}
+                                                href={`/mi-cuenta/ordenes/${order.id}`}
                                                 className="text-sm font-medium text-primary-600 hover:text-primary-700"
                                             >
                                                 Ver detalles

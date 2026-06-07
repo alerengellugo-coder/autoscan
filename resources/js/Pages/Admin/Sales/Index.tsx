@@ -56,7 +56,7 @@ export default function SalesIndex({
 
     const handleFilter = (e: React.FormEvent) => {
         e.preventDefault();
-        router.get('/sales', {
+        router.get('/admin/ventas', {
             status: statusFilter,
             payment_method: paymentMethodFilter,
         }, { preserveState: true });
@@ -64,7 +64,7 @@ export default function SalesIndex({
 
     const handleCancel = (id: number) => {
         if (confirm('¿Estás seguro de cancelar esta venta? Esta acción no se puede deshacer.')) {
-            router.put(`/sales/${id}/cancel`);
+            router.post(`/admin/ventas/${id}/cancelar`);
         }
     };
 
@@ -82,7 +82,7 @@ export default function SalesIndex({
                             Ventas
                         </h1>
                         <Link
-                            href="/sales/create"
+                            href="/admin/ventas/crear"
                             className="inline-flex items-center gap-2 btn-primary"
                         >
                             <PlusCircleIcon className="h-5 w-5" />
@@ -160,7 +160,7 @@ export default function SalesIndex({
                         </button>
                         {(statusFilter || paymentMethodFilter) && (
                             <Link
-                                href="/sales"
+                                href="/admin/ventas"
                                 className="text-sm text-gray-500 hover:text-gray-700 underline"
                             >
                                 Limpiar filtros
@@ -246,7 +246,7 @@ export default function SalesIndex({
                                                 <td className="px-6 py-4 whitespace-nowrap text-right">
                                                     <div className="flex items-center justify-end gap-1">
                                                         <Link
-                                                            href={`/sales/${sale.id}`}
+                                                            href={`/admin/ventas/${sale.id}`}
                                                             className="text-primary-600 hover:text-primary-700 p-1 rounded-lg hover:bg-primary-50 transition-colors"
                                                             title="Ver"
                                                         >
@@ -254,7 +254,7 @@ export default function SalesIndex({
                                                         </Link>
                                                         {(sale.status === 'pending' || sale.status === 'partially_paid') && (
                                                             <Link
-                                                                href={`/sales/${sale.id}/payments/create`}
+                                                                href={`/admin/ventas/${sale.id}/pago`}
                                                                 className="text-green-600 hover:text-green-700 p-1 rounded-lg hover:bg-green-50 transition-colors"
                                                                 title="Registrar Pago"
                                                             >

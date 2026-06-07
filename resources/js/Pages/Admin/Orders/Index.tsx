@@ -52,12 +52,12 @@ export default function OrdersIndex({
     };
 
     const applyFilters = () => {
-        router.get('/orders', localFilters, { preserveState: true });
+        router.get('/admin/ordenes', localFilters, { preserveState: true });
     };
 
     const clearFilters = () => {
         setLocalFilters({ status: '', priority: '', technician_id: '', date_from: '', date_to: '' });
-        router.get('/orders', {}, { preserveState: true });
+        router.get('/admin/ordenes', {}, { preserveState: true });
     };
 
     return (
@@ -70,7 +70,7 @@ export default function OrdersIndex({
                             Órdenes de Servicio
                         </h1>
                         <Link
-                            href="/orders/create"
+                            href="/admin/ordenes/crear"
                             className="inline-flex items-center gap-2 btn-primary"
                         >
                             <PlusCircleIcon className="h-5 w-5" />
@@ -281,7 +281,7 @@ export default function OrdersIndex({
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
                                                 <Link
-                                                    href={`/orders/${order.id}`}
+                                                    href={`/admin/ordenes/${order.id}`}
                                                     className="inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:text-primary-700"
                                                 >
                                                     <EyeIcon className="h-4 w-4" />

@@ -92,9 +92,9 @@ export default function TechnicianReportCreate() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        form.post('/technician/reports', {
+        form.post('/tecnico/reportes', {
             onSuccess: () => {
-                router.visit('/technician/orders');
+                router.visit('/tecnico/ordenes');
             },
         });
     };
@@ -104,7 +104,7 @@ export default function TechnicianReportCreate() {
             header={
                 <div className="flex items-center gap-3">
                     <Link
-                        href="/technician/orders"
+                        href="/tecnico/ordenes"
                         className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 transition-colors"
                     >
                         <XMarkIcon className="h-4 w-4" />
@@ -437,7 +437,7 @@ export default function TechnicianReportCreate() {
                     {/* Submit / Cancel */}
                     <div className="flex items-center justify-end gap-3">
                         <Link
-                            href="/technician/orders"
+                            href="/tecnico/ordenes"
                             className="px-6 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                         >
                             Cancelar

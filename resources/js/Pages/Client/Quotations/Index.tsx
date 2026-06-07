@@ -65,7 +65,7 @@ export default function ClientQuotationsIndex() {
         const { quotationId, action } = confirmModal;
         const method = action === 'approve' ? 'patch' : 'patch';
         router[method](
-            `/quotations/${quotationId}/${action}`,
+            `/mi-cuenta/cotizaciones/${quotationId}/${action}`,
             {},
             {
                 onSuccess: () => {
@@ -111,7 +111,7 @@ export default function ClientQuotationsIndex() {
                                     <div className="flex items-start justify-between mb-3">
                                         <div>
                                             <Link
-                                                href={`/quotations/${quotation.id}`}
+                                                href={`/mi-cuenta/cotizaciones/${quotation.id}`}
                                                 className="text-lg font-bold text-primary-600 hover:text-primary-700 transition-colors"
                                             >
                                                 {quotation.quotation_number}
@@ -168,7 +168,7 @@ export default function ClientQuotationsIndex() {
                                     {/* Actions */}
                                     <div className="flex items-center gap-2 pt-4 border-t border-gray-100">
                                         <Link
-                                            href={`/quotations/${quotation.id}`}
+                                            href={`/mi-cuenta/cotizaciones/${quotation.id}`}
                                             className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-primary-50 text-primary-700 rounded-lg text-sm font-medium hover:bg-primary-100 transition-colors"
                                         >
                                             <EyeIcon className="h-4 w-4" />

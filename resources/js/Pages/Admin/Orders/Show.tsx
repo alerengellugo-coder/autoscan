@@ -42,7 +42,7 @@ export default function OrdersShow({
 
     const handleStatusUpdate = (e: React.FormEvent) => {
         e.preventDefault();
-        put(`/orders/${order.id}/status`, {
+        put(`/admin/ordenes/${order.id}/status`, {
             onSuccess: () => {
                 setShowStatusModal(false);
                 reset();
@@ -52,7 +52,7 @@ export default function OrdersShow({
 
     const handleCancelOrder = () => {
         if (confirm('¿Estás seguro de cancelar esta orden de servicio? Esta acción no se puede deshacer.')) {
-            router.put(`/orders/${order.id}/status`, { status: 'cancelled' });
+            router.put(`/admin/ordenes/${order.id}/status`, { status: 'cancelled' });
         }
     };
 
@@ -74,7 +74,7 @@ export default function OrdersShow({
                 header={
                     <div className="flex items-center gap-4">
                         <Link
-                            href="/orders"
+                            href="/admin/ordenes"
                             className="text-gray-500 hover:text-gray-700 transition-colors"
                         >
                             <ArrowLeftIcon className="h-5 w-5" />
@@ -125,7 +125,7 @@ export default function OrdersShow({
                             <div>
                                 <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Vehículo</p>
                                 <Link
-                                    href={`/vehicles/${order.vehicle?.id}`}
+                                    href={`/admin/vehiculos/${order.vehicle?.id}`}
                                     className="text-sm font-semibold text-gray-900 hover:text-primary-600"
                                 >
                                     {order.vehicle?.brand} {order.vehicle?.model}
@@ -217,7 +217,7 @@ export default function OrdersShow({
                                     Reportes de Servicio ({reports.length})
                                 </h3>
                                 <Link
-                                    href={`/orders/${order.id}/reports/create`}
+                                    href={`/admin/ordenes/${order.id}/reports`}
                                     className="inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:text-primary-700"
                                 >
                                     <PlusCircleIcon className="h-4 w-4" />
@@ -326,7 +326,7 @@ export default function OrdersShow({
                                     </button>
                                 )}
                                 <Link
-                                    href={`/orders/${order.id}/reports/create`}
+                                    href={`/admin/ordenes/${order.id}/reports`}
                                     className="w-full btn-secondary py-2.5 flex items-center justify-center gap-2"
                                 >
                                     <DocumentTextIcon className="h-4 w-4" />
@@ -342,7 +342,7 @@ export default function OrdersShow({
                                     </button>
                                 )}
                                 <Link
-                                    href={`/orders/${order.id}/pdf`}
+                                    href={`/admin/ordenes/${order.id}/pdf`}
                                     className="w-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
                                 >
                                     <DocumentArrowDownIcon className="h-4 w-4" />

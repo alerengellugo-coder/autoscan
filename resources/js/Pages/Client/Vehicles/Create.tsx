@@ -29,7 +29,7 @@ export default function ClientVehicleCreate() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        form.post('/vehicles', {
+        form.post('/mi-cuenta/vehiculos', {
             onSuccess: () => {
                 // Redirect handled by backend
             },
@@ -43,7 +43,7 @@ export default function ClientVehicleCreate() {
             header={
                 <div className="flex items-center gap-3">
                     <Link
-                        href="/vehicles"
+                        href="/mi-cuenta/vehiculos"
                         className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 transition-colors"
                     >
                         <XMarkIcon className="h-4 w-4" />
@@ -266,7 +266,7 @@ export default function ClientVehicleCreate() {
                     {/* Submit / Cancel */}
                     <div className="flex items-center justify-end gap-3">
                         <Link
-                            href="/vehicles"
+                            href="/mi-cuenta/vehiculos"
                             className="px-6 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                         >
                             Cancelar

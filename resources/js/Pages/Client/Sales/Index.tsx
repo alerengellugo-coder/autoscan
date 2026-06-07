@@ -89,7 +89,7 @@ export default function ClientSalesIndex() {
                                 <div className="flex items-start justify-between mb-3">
                                     <div>
                                         <Link
-                                            href={`/sales/${sale.id}`}
+                                            href={`/mi-cuenta/ventas/${sale.id}`}
                                             className="text-lg font-bold text-primary-600 hover:text-primary-700 transition-colors"
                                         >
                                             {sale.sale_number}
@@ -160,7 +160,7 @@ export default function ClientSalesIndex() {
                                 {/* Action */}
                                 <div className="pt-4 border-t border-gray-100">
                                     <Link
-                                        href={`/sales/${sale.id}`}
+                                        href={`/mi-cuenta/ventas/${sale.id}`}
                                         className="flex items-center justify-center gap-1.5 w-full px-3 py-2 bg-primary-50 text-primary-700 rounded-lg text-sm font-medium hover:bg-primary-100 transition-colors"
                                     >
                                         <EyeIcon className="h-4 w-4" />

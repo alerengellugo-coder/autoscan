@@ -75,7 +75,7 @@ export default function TechnicianDashboard({
                                 Mis Órdenes Activas
                             </h2>
                             <button
-                                onClick={() => router.get('/orders')}
+                                onClick={() => router.get('/tecnico/ordenes')}
                                 className="text-sm font-medium text-primary-600 hover:text-primary-700"
                             >
                                 Ver todas
@@ -146,14 +146,14 @@ export default function TechnicianDashboard({
                                             </span>
                                             <div className="flex items-center gap-2">
                                                 <Link
-                                                    href={`/orders/${order.id}`}
+                                                    href={`/tecnico/ordenes/${order.id}`}
                                                     className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors"
                                                 >
                                                     <EyeIcon className="h-3.5 w-3.5" />
                                                     Ver
                                                 </Link>
                                                 <button
-                                                    onClick={() => router.get(`/orders/${order.id}`)}
+                                                    onClick={() => router.get(`/tecnico/ordenes/${order.id}`)}
                                                     className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-secondary-600 bg-secondary-50 rounded-lg hover:bg-secondary-100 transition-colors"
                                                 >
                                                     <PencilSquareIcon className="h-3.5 w-3.5" />

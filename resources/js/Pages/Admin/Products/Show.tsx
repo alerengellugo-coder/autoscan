@@ -24,7 +24,7 @@ export default function ProductsShow({ product, recent_sales }: ProductsShowProp
             alert('No se puede tener stock negativo.');
             return;
         }
-        router.put(`/products/${product.id}/stock`, { stock: newStock });
+        router.put(`/admin/productos/${product.id}/stock`, { stock: newStock });
     };
 
     const profitMargin = product.profit_margin !== undefined
@@ -40,7 +40,7 @@ export default function ProductsShow({ product, recent_sales }: ProductsShowProp
                 header={
                     <div className="flex items-center gap-4">
                         <Link
-                            href="/products"
+                            href="/admin/productos"
                             className="text-gray-500 hover:text-gray-700 transition-colors"
                         >
                             <ArrowLeftIcon className="h-5 w-5" />
@@ -128,7 +128,7 @@ export default function ProductsShow({ product, recent_sales }: ProductsShowProp
                             {/* Actions */}
                             <div className="flex items-center gap-3 mt-6 pt-4 border-t border-gray-200">
                                 <Link
-                                    href={`/products/${product.id}/edit`}
+                                    href={`/admin/productos/${product.id}/edit`}
                                     className="flex-1 btn-primary py-2 text-center text-sm inline-flex items-center justify-center gap-1"
                                 >
                                     <PencilSquareIcon className="h-4 w-4" />
@@ -227,7 +227,7 @@ export default function ProductsShow({ product, recent_sales }: ProductsShowProp
                                             recent_sales.map((item) => (
                                                 <tr key={item.id} className="hover:bg-gray-50 transition-colors">
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                        <Link href={`/sales/${item.sale_id}`} className="hover:text-primary-600">
+                                                        <Link href={`/admin/ventas/${item.sale_id}`} className="hover:text-primary-600">
                                                             Venta #{item.sale_id}
                                                         </Link>
                                                     </td>

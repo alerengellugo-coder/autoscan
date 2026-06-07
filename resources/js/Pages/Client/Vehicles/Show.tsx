@@ -81,7 +81,7 @@ export default function ClientVehicleShow() {
             header={
                 <div className="flex items-center gap-3">
                     <Link
-                        href="/vehicles"
+                        href="/mi-cuenta/vehiculos"
                         className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 transition-colors"
                     >
                         <XMarkIcon className="h-4 w-4" />
@@ -183,7 +183,7 @@ export default function ClientVehicleShow() {
                 {vehicle.status === 'active' && (
                     <div className="flex justify-end">
                         <Link
-                            href={`/orders/create?vehicle_id=${vehicle.id}`}
+                            href={`/mi-cuenta/ordenes/create?vehicle_id=${vehicle.id}`}
                             className="btn-primary flex items-center gap-2"
                         >
                             <PlusIcon className="h-4 w-4" />
@@ -221,7 +221,7 @@ export default function ClientVehicleShow() {
                                     <div className="flex items-start justify-between mb-3">
                                         <div>
                                             <Link
-                                                href={`/orders/${order.id}`}
+                                                href={`/mi-cuenta/ordenes/${order.id}`}
                                                 className="text-sm font-bold text-primary-600 hover:text-primary-700 transition-colors"
                                             >
                                                 {order.order_number}
@@ -251,7 +251,7 @@ export default function ClientVehicleShow() {
                                             <span>Última actualización: {formatDateTime(order.updated_at)}</span>
                                         </div>
                                         <Link
-                                            href={`/orders/${order.id}`}
+                                            href={`/mi-cuenta/ordenes/${order.id}`}
                                             className="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
                                         >
                                             <EyeIcon className="h-3.5 w-3.5" />
@@ -305,7 +305,7 @@ export default function ClientVehicleShow() {
                                         <div className="flex items-start justify-between">
                                             <div>
                                                 <Link
-                                                    href={`/orders/${order.id}`}
+                                                    href={`/mi-cuenta/ordenes/${order.id}`}
                                                     className="text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors"
                                                 >
                                                     {order.order_number}

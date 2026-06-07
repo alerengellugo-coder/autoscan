@@ -101,7 +101,7 @@ export default function TechnicianOrdersIndex() {
     const handleFilter = useCallback((status: string) => {
         setActiveFilter(status);
         router.get(
-            '/technician/orders',
+            '/tecnico/ordenes',
             { status: status || undefined },
             { preserveState: true, preserveScroll: true }
         );
@@ -109,7 +109,7 @@ export default function TechnicianOrdersIndex() {
 
     const handleQuickStatus = useCallback((orderId: number, newStatus: string) => {
         router.put(
-            `/technician/orders/${orderId}/status`,
+            `/tecnico/ordenes/${orderId}/status`,
             { status: newStatus, notes: '' },
             { preserveState: true }
         );
@@ -257,7 +257,7 @@ export default function TechnicianOrdersIndex() {
                                     <div className="flex items-start justify-between mb-4">
                                         <div>
                                             <Link
-                                                href={`/technician/orders/${order.id}`}
+                                                href={`/tecnico/ordenes/${order.id}`}
                                                 className="text-lg font-bold text-primary-600 hover:text-primary-700 transition-colors"
                                             >
                                                 {order.order_number}
@@ -321,7 +321,7 @@ export default function TechnicianOrdersIndex() {
                                     {/* Actions */}
                                     <div className="flex items-center gap-2 pt-4 border-t border-gray-100">
                                         <Link
-                                            href={`/technician/orders/${order.id}`}
+                                            href={`/tecnico/ordenes/${order.id}`}
                                             className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-primary-50 text-primary-700 rounded-lg text-sm font-medium hover:bg-primary-100 transition-colors"
                                         >
                                             <EyeIcon className="h-4 w-4" />
@@ -407,7 +407,7 @@ export default function TechnicianOrdersIndex() {
                                                 <button
                                                     type="button"
                                                     onClick={() =>
-                                                        router.get(`/technician/orders?page=${page}&status=${activeFilter || ''}`)
+                                                        router.get(`/tecnico/ordenes?page=${page}&status=${activeFilter || ''}`)
                                                     }
                                                     className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-colors ${
                                                         page === orders.current_page

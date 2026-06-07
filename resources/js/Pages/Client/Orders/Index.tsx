@@ -88,7 +88,7 @@ export default function ClientOrdersIndex() {
     const handleFilter = useCallback((status: string) => {
         setActiveFilter(status);
         router.get(
-            '/orders',
+            '/mi-cuenta/ordenes',
             { status: status || undefined },
             { preserveState: true, preserveScroll: true }
         );
@@ -174,7 +174,7 @@ export default function ClientOrdersIndex() {
                                         <div className="flex items-center gap-3">
                                             <div>
                                                 <Link
-                                                    href={`/orders/${order.id}`}
+                                                    href={`/mi-cuenta/ordenes/${order.id}`}
                                                     className="text-lg font-bold text-primary-600 hover:text-primary-700 transition-colors"
                                                 >
                                                     {order.order_number}
@@ -258,7 +258,7 @@ export default function ClientOrdersIndex() {
                                             )}
                                         </div>
                                         <Link
-                                            href={`/orders/${order.id}`}
+                                            href={`/mi-cuenta/ordenes/${order.id}`}
                                             className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary-50 text-primary-700 rounded-lg text-sm font-medium hover:bg-primary-100 transition-colors self-start sm:self-auto"
                                         >
                                             <EyeIcon className="h-4 w-4" />
@@ -306,7 +306,7 @@ export default function ClientOrdersIndex() {
                                                 <button
                                                     type="button"
                                                     onClick={() =>
-                                                        router.get(`/orders?page=${page}&status=${activeFilter || ''}`)
+                                                        router.get(`/mi-cuenta/ordenes?page=${page}&status=${activeFilter || ''}`)
                                                     }
                                                     className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-colors ${
                                                         page === orders.current_page

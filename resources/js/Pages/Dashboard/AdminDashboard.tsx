@@ -147,7 +147,7 @@ export default function AdminDashboard({
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                                                     <Link
-                                                        href={`/orders/${order.id}`}
+                                                        href={`/admin/ordenes/${order.id}`}
                                                         className="text-primary-600 hover:text-primary-700 font-medium"
                                                     >
                                                         Ver

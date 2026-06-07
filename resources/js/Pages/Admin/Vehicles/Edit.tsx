@@ -26,12 +26,12 @@ export default function VehiclesEdit({ vehicle, clients }: VehiclesEditProps) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(`/vehicles/${vehicle.id}`);
+        put(`/admin/vehiculos/${vehicle.id}`);
     };
 
     const handleDelete = () => {
         if (confirm('¿Estás seguro de eliminar este vehículo? Esta acción no se puede deshacer.')) {
-            router.delete(`/vehicles/${vehicle.id}`);
+            router.delete(`/admin/vehiculos/${vehicle.id}`);
         }
     };
 
@@ -45,7 +45,7 @@ export default function VehiclesEdit({ vehicle, clients }: VehiclesEditProps) {
                 header={
                     <div className="flex items-center gap-4">
                         <Link
-                            href={`/vehicles/${vehicle.id}`}
+                            href={`/admin/vehiculos/${vehicle.id}`}
                             className="text-gray-500 hover:text-gray-700 transition-colors"
                         >
                             <ArrowLeftIcon className="h-5 w-5" />
@@ -264,7 +264,7 @@ export default function VehiclesEdit({ vehicle, clients }: VehiclesEditProps) {
                             </button>
                             <div className="flex items-center gap-3">
                                 <Link
-                                    href={`/vehicles/${vehicle.id}`}
+                                    href={`/admin/vehiculos/${vehicle.id}`}
                                     className="px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                                 >
                                     Cancelar

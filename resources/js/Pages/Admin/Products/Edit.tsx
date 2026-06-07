@@ -29,18 +29,18 @@ export default function ProductsEdit({ product, categories, units }: ProductsEdi
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(`/products/${product.id}`);
+        put(`/admin/productos/${product.id}`);
     };
 
     const handleDelete = () => {
         if (confirm('¿Estás seguro de eliminar este producto? Esta acción no se puede deshacer.')) {
-            router.delete(`/products/${product.id}`);
+            router.delete(`/admin/productos/${product.id}`);
         }
     };
 
     const handleDeactivate = () => {
         if (confirm('¿Estás seguro de desactivar este producto?')) {
-            router.put(`/products/${product.id}/toggle-active`);
+            router.put(`/admin/productos/${product.id}/toggle-active`);
         }
     };
 
@@ -60,7 +60,7 @@ export default function ProductsEdit({ product, categories, units }: ProductsEdi
                 header={
                     <div className="flex items-center gap-4">
                         <Link
-                            href={`/products/${product.id}`}
+                            href={`/admin/productos/${product.id}`}
                             className="text-gray-500 hover:text-gray-700 transition-colors"
                         >
                             <ArrowLeftIcon className="h-5 w-5" />
@@ -324,7 +324,7 @@ export default function ProductsEdit({ product, categories, units }: ProductsEdi
                             </div>
                             <div className="flex items-center gap-3">
                                 <Link
-                                    href={`/products/${product.id}`}
+                                    href={`/admin/productos/${product.id}`}
                                     className="px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                                 >
                                     Cancelar

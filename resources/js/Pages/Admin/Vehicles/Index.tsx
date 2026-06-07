@@ -28,7 +28,7 @@ export default function VehiclesIndex({
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        router.get('/vehicles', { search }, { preserveState: true });
+        router.get('/admin/vehiculos', { search }, { preserveState: true });
     };
 
     return (
@@ -41,7 +41,7 @@ export default function VehiclesIndex({
                             Gestión de Vehículos
                         </h1>
                         <Link
-                            href="/vehicles/create"
+                            href="/admin/vehiculos/crear"
                             className="inline-flex items-center gap-2 btn-primary"
                         >
                             <PlusCircleIcon className="h-5 w-5" />
@@ -140,14 +140,14 @@ export default function VehiclesIndex({
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
                                                 <div className="flex items-center justify-end gap-2">
                                                     <Link
-                                                        href={`/vehicles/${vehicle.id}`}
+                                                        href={`/admin/vehiculos/${vehicle.id}`}
                                                         className="text-primary-600 hover:text-primary-700 p-1 rounded-lg hover:bg-primary-50 transition-colors"
                                                         title="Ver"
                                                     >
                                                         <EyeIcon className="h-4 w-4" />
                                                     </Link>
                                                     <Link
-                                                        href={`/vehicles/${vehicle.id}/edit`}
+                                                        href={`/admin/vehiculos/${vehicle.id}/edit`}
                                                         className="text-yellow-600 hover:text-yellow-700 p-1 rounded-lg hover:bg-yellow-50 transition-colors"
                                                         title="Editar"
                                                     >
@@ -156,7 +156,7 @@ export default function VehiclesIndex({
                                                     <button
                                                         onClick={() => {
                                                             if (confirm('¿Estás seguro de eliminar este vehículo?')) {
-                                                                router.delete(`/vehicles/${vehicle.id}`);
+                                                                router.delete(`/admin/vehiculos/${vehicle.id}`);
                                                             }
                                                         }}
                                                         className="text-red-600 hover:text-red-700 p-1 rounded-lg hover:bg-red-50 transition-colors"

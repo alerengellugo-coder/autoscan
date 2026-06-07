@@ -32,16 +32,16 @@ export default function QuotationsIndex({
 
     const handleFilter = (e: React.FormEvent) => {
         e.preventDefault();
-        router.get('/quotations', { status: statusFilter }, { preserveState: true });
+        router.get('/admin/cotizaciones', { status: statusFilter }, { preserveState: true });
     };
 
     const handleAction = (id: number, action: string) => {
         if (action === 'delete') {
             if (confirm('¿Estás seguro de eliminar esta cotización?')) {
-                router.delete(`/quotations/${id}`);
+                router.delete(`/admin/cotizaciones/${id}`);
             }
         } else {
-            router.put(`/quotations/${id}/${action}`);
+            router.put(`/admin/cotizaciones/${id}/${action}`);
         }
     };
 
@@ -55,7 +55,7 @@ export default function QuotationsIndex({
                             Cotizaciones
                         </h1>
                         <Link
-                            href="/quotations/create"
+                            href="/admin/cotizaciones/crear"
                             className="inline-flex items-center gap-2 btn-primary"
                         >
                             <PlusCircleIcon className="h-5 w-5" />
@@ -147,7 +147,7 @@ export default function QuotationsIndex({
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
                                                 <div className="flex items-center justify-end gap-1">
                                                     <Link
-                                                        href={`/quotations/${quotation.id}`}
+                                                        href={`/admin/cotizaciones/${quotation.id}`}
                                                         className="text-primary-600 hover:text-primary-700 p-1 rounded-lg hover:bg-primary-50 transition-colors"
                                                         title="Ver"
                                                     >
@@ -156,7 +156,7 @@ export default function QuotationsIndex({
                                                     {quotation.status === 'draft' && (
                                                         <>
                                                             <Link
-                                                                href={`/quotations/${quotation.id}/edit`}
+                                                                href={`/admin/cotizaciones/${quotation.id}/edit`}
                                                                 className="text-yellow-600 hover:text-yellow-700 p-1 rounded-lg hover:bg-yellow-50 transition-colors"
                                                                 title="Editar"
                                                             >

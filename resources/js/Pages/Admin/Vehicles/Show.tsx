@@ -28,7 +28,7 @@ export default function VehiclesShow({ vehicle, service_orders }: VehiclesShowPr
                 header={
                     <div className="flex items-center gap-4">
                         <Link
-                            href="/vehicles"
+                            href="/admin/vehiculos"
                             className="text-gray-500 hover:text-gray-700 transition-colors"
                         >
                             <ArrowLeftIcon className="h-5 w-5" />
@@ -137,13 +137,13 @@ export default function VehiclesShow({ vehicle, service_orders }: VehiclesShowPr
                             {/* Actions */}
                             <div className="flex items-center gap-3 mt-6 pt-4 border-t border-gray-200">
                                 <Link
-                                    href={`/vehicles/${vehicle.id}/edit`}
+                                    href={`/admin/vehiculos/${vehicle.id}/edit`}
                                     className="flex-1 btn-primary py-2 text-center text-sm"
                                 >
                                     Editar
                                 </Link>
                                 <Link
-                                    href="/orders/create"
+                                    href="/admin/ordenes/crear"
                                     className="flex-1 btn-secondary py-2 text-center text-sm inline-flex items-center justify-center gap-1"
                                 >
                                     <PlusCircleIcon className="h-4 w-4" />
@@ -161,7 +161,7 @@ export default function VehiclesShow({ vehicle, service_orders }: VehiclesShowPr
                                     Historial de Servicios
                                 </h2>
                                 <Link
-                                    href="/orders/create"
+                                    href="/admin/ordenes/crear"
                                     className="inline-flex items-center gap-2 text-sm font-medium text-primary-600 hover:text-primary-700"
                                 >
                                     <PlusCircleIcon className="h-4 w-4" />
@@ -214,7 +214,7 @@ export default function VehiclesShow({ vehicle, service_orders }: VehiclesShowPr
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-right">
                                                         <Link
-                                                            href={`/orders/${order.id}`}
+                                                            href={`/admin/ordenes/${order.id}`}
                                                             className="text-sm font-medium text-primary-600 hover:text-primary-700"
                                                         >
                                                             Ver

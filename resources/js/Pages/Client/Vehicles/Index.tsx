@@ -54,7 +54,7 @@ export default function ClientVehiclesIndex() {
                         </div>
                     </div>
                     <Link
-                        href="/vehicles/create"
+                        href="/mi-cuenta/vehiculos/crear"
                         className="btn-primary flex items-center gap-2"
                     >
                         <PlusIcon className="h-4 w-4" />
@@ -71,7 +71,7 @@ export default function ClientVehiclesIndex() {
                         icon={TruckIcon}
                         action={{
                             label: 'Registrar Vehículo',
-                            href: '/vehicles/create',
+                            href: '/mi-cuenta/vehiculos/crear',
                         }}
                     />
                 ) : (
@@ -159,14 +159,14 @@ export default function ClientVehiclesIndex() {
                                 {/* Actions */}
                                 <div className="flex items-center gap-2 pt-4 border-t border-gray-100">
                                     <Link
-                                        href={`/vehicles/${vehicle.id}`}
+                                        href={`/mi-cuenta/vehiculos/${vehicle.id}`}
                                         className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-primary-50 text-primary-700 rounded-lg text-sm font-medium hover:bg-primary-100 transition-colors"
                                     >
                                         <EyeIcon className="h-4 w-4" />
                                         Ver Detalles
                                     </Link>
                                     <Link
-                                        href={`/vehicles/${vehicle.id}/orders`}
+                                        href={`/mi-cuenta/vehiculos/${vehicle.id}/orders`}
                                         className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-gray-50 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors"
                                     >
                                         <ClipboardDocumentListIcon className="h-4 w-4" />

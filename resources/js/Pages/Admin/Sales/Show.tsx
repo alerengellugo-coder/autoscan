@@ -49,7 +49,7 @@ export default function SalesShow({ sale }: SalesShowProps) {
 
     const handlePaymentSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(`/sales/${sale.id}/payments`, {
+        post(`/admin/ventas/${sale.id}/payments`, {
             onSuccess: () => {
                 setShowPaymentModal(false);
                 reset();
@@ -59,7 +59,7 @@ export default function SalesShow({ sale }: SalesShowProps) {
 
     const handleCancelSale = () => {
         setShowCancelConfirm(false);
-        router.put(`/sales/${sale.id}/cancel`);
+        router.put(`/admin/ventas/${sale.id}/cancel`);
     };
 
     const formatMoney = (amount: number) => {
@@ -83,7 +83,7 @@ export default function SalesShow({ sale }: SalesShowProps) {
                 header={
                     <div className="flex items-center gap-4">
                         <Link
-                            href="/sales"
+                            href="/admin/ventas"
                             className="text-gray-500 hover:text-gray-700 transition-colors"
                         >
                             <ArrowLeftIcon className="h-5 w-5" />
@@ -140,7 +140,7 @@ export default function SalesShow({ sale }: SalesShowProps) {
                                 <div>
                                     <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Cotización</p>
                                     <Link
-                                        href={`/quotations/${sale.quotation.id}`}
+                                        href={`/admin/cotizaciones/${sale.quotation.id}`}
                                         className="text-sm font-semibold text-primary-600 hover:text-primary-700"
                                     >
                                         {sale.quotation.quotation_number}
