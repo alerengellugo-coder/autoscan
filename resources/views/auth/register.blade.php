@@ -17,7 +17,7 @@
             </svg>
             <input type="text" id="name" name="name" required autofocus
                 value="{{ old('name') }}"
-                class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $errors->has('name') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : }}"
+                class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $errors->has('name') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}"
                 placeholder="Tu nombre completo">
         </div>
         @error('name')
@@ -34,7 +34,7 @@
             </svg>
             <input type="email" id="email" name="email" required
                 value="{{ old('email') }}"
-                class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $errors->has('email') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : }}"
+                class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $errors->has('email') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}"
                 placeholder="tu@email.com">
         </div>
         @error('email')
@@ -51,7 +51,7 @@
             </svg>
             <input type="tel" id="phone" name="phone"
                 value="{{ old('phone') }}"
-                class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $errors->has('phone') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : }}"
+                class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $errors->has('phone') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}"
                 placeholder="+52 55 1234 5678">
         </div>
         @error('phone')
@@ -67,7 +67,7 @@
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
             </svg>
             <input type="password" id="password" name="password" required
-                class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $errors->has('password') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : }}"
+                class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $errors->has('password') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}"
                 placeholder="Mínimo 8 caracteres">
         </div>
         @error('password')
@@ -83,7 +83,7 @@
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
             </svg>
             <input type="password" id="password_confirmation" name="password_confirmation" required
-                class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors"
+                class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors"
                 placeholder="Repite tu contraseña">
         </div>
     </div>
