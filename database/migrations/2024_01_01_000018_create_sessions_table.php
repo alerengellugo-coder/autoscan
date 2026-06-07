@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    protected $withinTransaction = false;
+
     public function up(): void
     {
         Schema::create('sessions', function (Blueprint $table) {
@@ -15,7 +17,6 @@ return new class extends Migration
             $table->text('user_agent')->nullable();
             $table->longText('payload');
             $table->integer('last_activity')->index();
-            $table->string('last_activity_ip', 45)->nullable();
         });
     }
 
