@@ -13,7 +13,14 @@ use Illuminate\Support\Facades\Route;
 
 // Debug route (remove after fixing)
 Route::get('/debug', function () {
-    return response('OK - App is running: ' . date('Y-m-d H:i:s'));
+    try {
+        ob_start();
+        $output = view('auth.login')->render();
+        ob_end_clean();
+        return $output;
+    } catch (\Throwable $e) {
+        return response('<h1>Debug Error</h1><pre>' . htmlspecialchars($e->getMessage()) . "\n\nFile: " . $e->getFile() . ':' . $e->getLine() . "\n\n" . htmlspecialchars($e->getTraceAsString()) . '</pre>', 500);
+    }
 });
 
 // Public pages
