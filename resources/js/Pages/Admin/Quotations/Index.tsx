@@ -56,7 +56,7 @@ export default function QuotationsIndex({
                             Cotizaciones
                         </h1>
                         <Link
-                            href="/admin/cotizaciones/crear"
+                            href="/admin/cotizaciones/create"
                             className="inline-flex items-center gap-2 btn-primary"
                         >
                             <PlusCircleIcon className="h-5 w-5" />

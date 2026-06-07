@@ -143,7 +143,7 @@ export default function VehiclesShow({ vehicle, service_orders }: VehiclesShowPr
                                     Editar
                                 </Link>
                                 <Link
-                                    href="/admin/ordenes/crear"
+                                    href="/admin/ordenes/create"
                                     className="flex-1 btn-secondary py-2 text-center text-sm inline-flex items-center justify-center gap-1"
                                 >
                                     <PlusCircleIcon className="h-4 w-4" />
@@ -161,7 +161,7 @@ export default function VehiclesShow({ vehicle, service_orders }: VehiclesShowPr
                                     Historial de Servicios
                                 </h2>
                                 <Link
-                                    href="/admin/ordenes/crear"
+                                    href="/admin/ordenes/create"
                                     className="inline-flex items-center gap-2 text-sm font-medium text-primary-600 hover:text-primary-700"
                                 >
                                     <PlusCircleIcon className="h-4 w-4" />

@@ -54,7 +54,7 @@ export default function ClientVehiclesIndex() {
                         </div>
                     </div>
                     <Link
-                        href="/mi-cuenta/vehiculos/crear"
+                        href="/mi-cuenta/vehiculos/create"
                         className="btn-primary flex items-center gap-2"
                     >
                         <PlusIcon className="h-4 w-4" />
@@ -71,7 +71,7 @@ export default function ClientVehiclesIndex() {
                         icon={TruckIcon}
                         action={{
                             label: 'Registrar Vehículo',
-                            href: '/mi-cuenta/vehiculos/crear',
+                            href: '/mi-cuenta/vehiculos/create',
                         }}
                     />
                 ) : (

@@ -93,7 +93,7 @@ export default function ClientDashboard({
                             </p>
                         </div>
                         <Link
-                            href="/mi-cuenta/vehiculos/crear"
+                            href="/mi-cuenta/vehiculos/create"
                             className="hidden sm:inline-flex items-center gap-2 bg-white text-primary-700 font-semibold py-2.5 px-5 rounded-xl hover:bg-primary-50 transition-colors"
                         >
                             <PlusCircleIcon className="h-5 w-5" />
@@ -101,7 +101,7 @@ export default function ClientDashboard({
                         </Link>
                     </div>
                     <Link
-                        href="/mi-cuenta/vehiculos/crear"
+                        href="/mi-cuenta/vehiculos/create"
                         className="sm:hidden mt-4 inline-flex items-center gap-2 bg-white text-primary-700 font-semibold py-2.5 px-5 rounded-xl hover:bg-primary-50 transition-colors w-full justify-center"
                     >
                         <PlusCircleIcon className="h-5 w-5" />
@@ -133,7 +133,7 @@ export default function ClientDashboard({
                                     Registra tu primer vehículo para comenzar a usar el servicio.
                                 </p>
                                 <Link
-                                    href="/mi-cuenta/vehiculos/crear"
+                                    href="/mi-cuenta/vehiculos/create"
                                     className="btn-primary mt-4 inline-flex items-center gap-2"
                                 >
                                     <PlusCircleIcon className="h-4 w-4" />

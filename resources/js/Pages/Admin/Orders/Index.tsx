@@ -70,7 +70,7 @@ export default function OrdersIndex({
                             Órdenes de Servicio
                         </h1>
                         <Link
-                            href="/admin/ordenes/crear"
+                            href="/admin/ordenes/create"
                             className="inline-flex items-center gap-2 btn-primary"
                         >
                             <PlusCircleIcon className="h-5 w-5" />

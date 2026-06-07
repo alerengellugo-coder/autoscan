@@ -51,7 +51,7 @@
     @apply bg-white rounded-2xl shadow-card border border-dark-100 p-6 transition-all duration-300;
   }
   .card-hover {
-    @apply card hover:shadow-card-hover hover:-translate-y-1 hover:border-primary-200;
+    @apply card hover:shadow-card-hover hover:-translate-y-1.5 hover:border-primary-200;
   }
   .card-glass {
     @apply bg-white/80 backdrop-blur-xl rounded-2xl shadow-card border border-white/50 p-6;
@@ -124,12 +124,12 @@
 
   /* Glow effects */
   .glow-primary {
-    box-shadow: 0 0 50px rgba(51, 144, 255, 0.3);
+    box-shadow: 0 0 60px rgba(59, 130, 246, 0.35);
   }
   .glow-accent {
-    box-shadow: 0 0 50px rgba(6, 182, 212, 0.3);
+    box-shadow: 0 0 60px rgba(139, 92, 246, 0.35);
   }
   .glow-text {
-    text-shadow: 0 0 30px rgba(51, 144, 255, 0.5);
+    text-shadow: 0 0 35px rgba(59, 130, 246, 0.6), 0 0 60px rgba(59, 130, 246, 0.3);
   }
 }

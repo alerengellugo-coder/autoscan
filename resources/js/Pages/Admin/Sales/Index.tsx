@@ -82,7 +82,7 @@ export default function SalesIndex({
                             Ventas
                         </h1>
                         <Link
-                            href="/admin/ventas/crear"
+                            href="/admin/ventas/create"
                             className="inline-flex items-center gap-2 btn-primary"
                         >
                             <PlusCircleIcon className="h-5 w-5" />

@@ -171,7 +171,7 @@ export default function TechnicianDashboard({
                     <div className="space-y-6">
                         {/* Quick Add Report */}
                         <Link
-                            href="/tecnico/reportes/crear"
+                            href="/tecnico/reportes/create"
                             className="flex items-center gap-3 p-4 rounded-xl border-2 border-dashed border-primary-300 hover:border-primary-500 hover:bg-primary-50 transition-all group card"
                         >
                             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-100 group-hover:bg-primary-200 transition-colors">

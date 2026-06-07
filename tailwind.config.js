@@ -75,8 +75,8 @@ export default {
                 'card': '0 1px 3px 0 rgba(16, 42, 67, 0.06), 0 1px 2px -1px rgba(16, 42, 67, 0.06)',
                 'card-hover': '0 10px 25px -5px rgba(16, 42, 67, 0.1), 0 8px 10px -6px rgba(16, 42, 67, 0.08)',
                 'sidebar': '2px 0 20px rgba(16, 42, 67, 0.08)',
-                'glow': '0 0 50px rgba(51, 144, 255, 0.3)',
-                'glow-accent': '0 0 50px rgba(6, 182, 212, 0.3)',
+                'glow': '0 0 60px rgba(59, 130, 246, 0.4)',
+                'glow-accent': '0 0 60px rgba(139, 92, 246, 0.4)',
             },
             borderRadius: {
                 'xl': '0.75rem',
@@ -116,8 +116,8 @@ export default {
                     '100%': { transform: 'translateX(0)', opacity: '1' },
                 },
                 glow: {
-                    '0%': { boxShadow: '0 0 5px rgba(51, 144, 255, 0.2)' },
-                    '100%': { boxShadow: '0 0 20px rgba(51, 144, 255, 0.6)' },
+                    '0%': { boxShadow: '0 0 10px rgba(59, 130, 246, 0.3)' },
+                    '100%': { boxShadow: '0 0 30px rgba(59, 130, 246, 0.7)' },
                 },
                 scanLine: {
                     '0%, 100%': { transform: 'translateY(0)' },

@@ -41,7 +41,7 @@ export default function VehiclesIndex({
                             Gestión de Vehículos
                         </h1>
                         <Link
-                            href="/admin/vehiculos/crear"
+                            href="/admin/vehiculos/create"
                             className="inline-flex items-center gap-2 btn-primary"
                         >
                             <PlusCircleIcon className="h-5 w-5" />

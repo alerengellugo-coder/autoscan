@@ -61,7 +61,7 @@ export default function ProductsIndex({
                             Gestión de Productos
                         </h1>
                         <Link
-                            href="/admin/productos/crear"
+                            href="/admin/productos/create"
                             className="inline-flex items-center gap-2 btn-primary"
                         >
                             <PlusCircleIcon className="h-5 w-5" />
