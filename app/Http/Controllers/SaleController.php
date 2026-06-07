@@ -82,7 +82,7 @@ class SaleController extends Controller
             ->paginate($request->input('per_page', 15))
             ->withQueryString();
 
-        return Inertia::render('Sales/Index', [
+        return Inertia::render('Admin/Sales/Index', [
             'sales'    => $sales,
             'filters'  => $request->only('search', 'status', 'date_from', 'date_to', 'paid_from', 'paid_to', 'per_page'),
             'statuses' => SaleStatus::cases(),
@@ -112,7 +112,7 @@ class SaleController extends Controller
         $products = Product::active()->orderBy('name')->get(['id', 'name', 'sku', 'price', 'stock']);
         $paymentMethods = PaymentMethod::cases();
 
-        return Inertia::render('Sales/Create', [
+        return Inertia::render('Admin/Sales/Create', [
             'clients'        => $clients,
             'products'       => $products,
             'paymentMethods' => $paymentMethods,
@@ -202,7 +202,7 @@ class SaleController extends Controller
             'items.product',
         ]);
 
-        return Inertia::render('Sales/Show', [
+        return Inertia::render('Admin/Sales/Show', [
             'sale'           => $sale,
             'statuses'       => SaleStatus::cases(),
             'paymentMethods' => PaymentMethod::cases(),

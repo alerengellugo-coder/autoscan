@@ -69,7 +69,7 @@ class ProductController extends Controller
         $products = $query->paginate($request->input('per_page', 15))
             ->withQueryString();
 
-        return Inertia::render('Products/Index', [
+        return Inertia::render('Admin/Products/Index', [
             'products'          => $products,
             'filters'           => $request->only('search', 'category', 'stock_status', 'sort', 'direction', 'per_page'),
             'categories'        => ProductCategory::cases(),
@@ -83,7 +83,7 @@ class ProductController extends Controller
     {
         Gate::authorize('manage-products');
 
-        return Inertia::render('Products/Create', [
+        return Inertia::render('Admin/Products/Create', [
             'categories' => ProductCategory::cases(),
         ]);
     }
@@ -125,7 +125,7 @@ class ProductController extends Controller
      */
     public function show(Product $product): Response
     {
-        return Inertia::render('Products/Show', [
+        return Inertia::render('Admin/Products/Show', [
             'product' => $product,
         ]);
     }
@@ -137,7 +137,7 @@ class ProductController extends Controller
     {
         Gate::authorize('manage-products');
 
-        return Inertia::render('Products/Edit', [
+        return Inertia::render('Admin/Products/Edit', [
             'product'    => $product,
             'categories' => ProductCategory::cases(),
         ]);
@@ -215,7 +215,7 @@ class ProductController extends Controller
             ->paginate($request->input('per_page', 20))
             ->withQueryString();
 
-        return Inertia::render('Products/Catalog', [
+        return Inertia::render('Admin/Products/Index', [
             'products'   => $products,
             'filters'    => $request->only('search', 'category', 'per_page'),
             'categories' => ProductCategory::cases(),

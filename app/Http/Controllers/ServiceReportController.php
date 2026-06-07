@@ -70,7 +70,7 @@ class ServiceReportController extends Controller
             ->paginate($request->input('per_page', 15))
             ->withQueryString();
 
-        return Inertia::render('ServiceReports/Index', [
+        return Inertia::render('Admin/ServiceReports/Index', [
             'reports'  => $reports,
             'filters'  => $request->only('search', 'service_order_id', 'date_from', 'date_to', 'per_page'),
         ]);
@@ -140,7 +140,7 @@ class ServiceReportController extends Controller
             'technician',
         ]);
 
-        return Inertia::render('ServiceReports/Show', [
+        return Inertia::render('Admin/ServiceReports/Show', [
             'report' => $serviceReport,
         ]);
     }

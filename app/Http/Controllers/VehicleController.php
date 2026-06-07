@@ -74,7 +74,7 @@ class VehicleController extends Controller
         // Distinct brands for filter dropdown
         $brands = Vehicle::distinct()->orderBy('brand')->pluck('brand');
 
-        return Inertia::render('Vehicles/Index', [
+        return Inertia::render(Auth::user()->isAdmin() ? 'Admin/Vehicles/Index' : 'Client/Vehicles/Index', [
             'vehicles'          => $vehicles,
             'filters'           => $request->only('search', 'brand', 'status', 'sort', 'direction', 'per_page'),
             'brands'            => $brands,
@@ -97,7 +97,7 @@ class VehicleController extends Controller
             $clients = User::clients()->active()->orderBy('name')->get(['id', 'name', 'email']);
         }
 
-        return Inertia::render('Vehicles/Create', [
+        return Inertia::render('Admin/Vehicles/Create', [
             'clients'        => $clients,
             'engineTypes'    => EngineType::cases(),
             'transmissions'  => TransmissionType::cases(),
@@ -153,7 +153,7 @@ class VehicleController extends Controller
             },
         ]);
 
-        return Inertia::render('Vehicles/Show', [
+        return Inertia::render('Admin/Vehicles/Show', [
             'vehicle' => $vehicle,
         ]);
     }
@@ -172,7 +172,7 @@ class VehicleController extends Controller
             $clients = User::clients()->active()->orderBy('name')->get(['id', 'name', 'email']);
         }
 
-        return Inertia::render('Vehicles/Edit', [
+        return Inertia::render('Admin/Vehicles/Edit', [
             'vehicle'       => $vehicle,
             'clients'       => $clients,
             'engineTypes'   => EngineType::cases(),

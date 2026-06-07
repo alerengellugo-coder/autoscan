@@ -107,7 +107,7 @@ class ServiceOrderController extends Controller
             $technicians = User::technicians()->active()->orderBy('name')->get(['id', 'name']);
         }
 
-        return Inertia::render('ServiceOrders/Index', [
+        return Inertia::render($user->isTechnician() ? 'Technician/Orders/Index' : 'Admin/Orders/Index', [
             'orders'           => $orders,
             'filters'          => $request->only('search', 'status', 'priority', 'technician_id', 'date_from', 'date_to', 'sort', 'direction', 'per_page'),
             'statuses'         => OrderStatus::cases(),
@@ -142,7 +142,7 @@ class ServiceOrderController extends Controller
             ->paginate($request->input('per_page', 10))
             ->withQueryString();
 
-        return Inertia::render('Client/ServiceOrders/Index', [
+        return Inertia::render('Client/Orders/Index', [
             'orders'   => $orders,
             'filters'  => $request->only('status', 'per_page'),
             'statuses' => OrderStatus::cases(),
@@ -178,7 +178,7 @@ class ServiceOrderController extends Controller
             $clients = User::clients()->active()->orderBy('name')->get(['id', 'name']);
         }
 
-        return Inertia::render('ServiceOrders/Create', [
+        return Inertia::render($user->isAdmin() ? 'Admin/Orders/Create' : 'Admin/Orders/Create', [
             'vehicles'    => $vehicles,
             'technicians' => $technicians,
             'clients'     => $clients,
@@ -219,7 +219,7 @@ class ServiceOrderController extends Controller
         $order = ServiceOrder::create($validated);
 
         return redirect()
-            ->route('admin.ordenes.show', $order)
+            ->route($user->isAdmin() ? 'admin.ordenes.show' : 'technician.orders.show', $order)
             ->with('success', "Orden de servicio {$order->order_number} creada exitosamente.");
     }
 
@@ -244,7 +244,12 @@ class ServiceOrderController extends Controller
             'quotation',
         ]);
 
-        return Inertia::render('ServiceOrders/Show', [
+        $page = match(true) {
+                $user->isAdmin() => 'Admin/Orders/Show',
+                $user->isTechnician() => 'Technician/Orders/Show',
+                default => 'Client/Orders/Show',
+            };
+        return Inertia::render($page, [
             'serviceOrder' => $serviceOrder,
             'statuses'     => OrderStatus::cases(),
             'priorities'   => OrderPriority::cases(),

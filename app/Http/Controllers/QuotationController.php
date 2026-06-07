@@ -74,7 +74,7 @@ class QuotationController extends Controller
             ->paginate($request->input('per_page', 15))
             ->withQueryString();
 
-        return Inertia::render('Quotations/Index', [
+        return Inertia::render('Admin/Quotations/Index', [
             'quotations' => $quotations,
             'filters'    => $request->only('search', 'status', 'date_from', 'date_to', 'per_page'),
             'statuses'   => QuotationStatus::cases(),
@@ -102,7 +102,7 @@ class QuotationController extends Controller
         $technicians = User::technicians()->active()->orderBy('name')->get(['id', 'name']);
         $products = Product::active()->orderBy('name')->get(['id', 'name', 'sku', 'price', 'stock']);
 
-        return Inertia::render('Quotations/Create', [
+        return Inertia::render('Admin/Quotations/Create', [
             'clients'       => $clients,
             'vehicles'      => $vehicles,
             'technicians'   => $technicians,
@@ -187,7 +187,7 @@ class QuotationController extends Controller
             'items.product',
         ]);
 
-        return Inertia::render('Quotations/Show', [
+        return Inertia::render('Admin/Quotations/Show', [
             'quotation' => $quotation,
             'statuses'  => QuotationStatus::cases(),
         ]);
