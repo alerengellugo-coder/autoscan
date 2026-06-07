@@ -4,269 +4,109 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\Enums\EngineType;
-use App\Models\Enums\TransmissionType;
 use App\Models\User;
 use App\Models\Vehicle;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
-/**
- * Controller: VehicleController
- *
- * Manages vehicle CRUD operations with role-aware access control.
- * - Admin: full access to all vehicles, can add vehicles for any client.
- * - Technician: sees vehicles linked to their assigned service orders.
- * - Client: sees and manages only their own vehicles.
- */
 class VehicleController extends Controller
 {
-    /**
-     * Display a listing of vehicles.
-     *
-     * Returns a paginated list scoped by role:
-     *   - Admin: all vehicles in the system.
-     *   - Technician: vehicles linked to their assigned service orders.
-     *   - Client: only their own vehicles.
-     */
     public function index(Request $request): Response
     {
-        $user = Auth::user();
-
         $query = Vehicle::query()->with('client');
-
-        // Scope by role
-        if ($user->isClient()) {
-            $query->where('client_id', $user->id);
-        } elseif ($user->isTechnician()) {
-            $query->whereHas('serviceOrders', function ($q) use ($user) {
-                $q->where('technician_id', $user->id);
-            });
-        }
-
-        // Apply search filter
         if ($request->filled('search')) {
-            $query->search($request->input('search'));
+            $s = $request->input('search');
+            $query->where('plate', 'like', "%{$s}%")->orWhere('brand', 'like', "%{$s}%")->orWhere('model', 'like', "%{$s}%");
         }
+        if ($request->filled('brand')) $query->where('brand', $request->input('brand'));
+        if ($request->filled('status')) $query->where('status', $request->input('status'));
+        $vehicles = $query->orderByDesc('created_at')->paginate($request->input('per_page', 15))->withQueryString();
 
-        // Apply brand filter
-        if ($request->filled('brand')) {
-            $query->byBrand($request->input('brand'));
+        $totalVehicles = Vehicle::count();
+        $inServiceCount = Vehicle::where('status', 'in_service')->count();
+
+        $page = Auth::user()->isAdmin() ? 'Admin/Vehicles/Index' : 'Client/Vehicles/Index';
+        $data = [
+            'vehicles' => $vehicles,
+            'filters' => $request->only('search', 'brand', 'status', 'per_page'),
+        ];
+        if (Auth::user()->isAdmin()) {
+            $data['total_vehicles'] = $totalVehicles;
+            $data['in_service_count'] = $inServiceCount;
         }
-
-        // Apply status filter
-        if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
-        }
-
-        // Apply sorting
-        $sortField = $request->input('sort', 'created_at');
-        $sortDirection = $request->input('direction', 'desc');
-        $query->orderBy($sortField, $sortDirection);
-
-        $vehicles = $query->paginate($request->input('per_page', 15))
-            ->withQueryString();
-
-        // Distinct brands for filter dropdown
-        $brands = Vehicle::distinct()->orderBy('brand')->pluck('brand');
-
-        return Inertia::render(Auth::user()->isAdmin() ? 'Admin/Vehicles/Index' : 'Client/Vehicles/Index', [
-            'vehicles'          => $vehicles,
-            'filters'           => $request->only('search', 'brand', 'status', 'sort', 'direction', 'per_page'),
-            'brands'            => $brands,
-            'availableStatuses' => ['active', 'in_service', 'sold', 'inactive'],
-        ]);
+        return Inertia::render($page, $data);
     }
 
-    /**
-     * Show the form for creating a new vehicle.
-     *
-     * Admins see a client selection dropdown. Clients create vehicles
-     * directly linked to their own account.
-     */
     public function create(Request $request): Response
     {
-        $user = Auth::user();
-
-        $clients = [];
-        if ($user->isAdmin()) {
-            $clients = User::clients()->active()->orderBy('name')->get(['id', 'name', 'email']);
-        }
-
+        $clients = Auth::user()->isAdmin() ? User::clients()->active()->orderBy('name')->get(['id', 'name']) : [];
         return Inertia::render('Admin/Vehicles/Create', [
-            'clients'        => $clients,
-            'engineTypes'    => EngineType::cases(),
-            'transmissions'  => TransmissionType::cases(),
+            'clients' => $clients,
+            'brands' => Vehicle::select('brand')->distinct()->orderBy('brand')->pluck('brand'),
         ]);
     }
 
-    /**
-     * Store a newly created vehicle in storage.
-     *
-     * Validates the input, creates the vehicle, and redirects to the index
-     * with a success message.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'client_id'     => ['required', 'exists:users,id'],
-            'brand'         => ['required', 'string', 'max:100'],
-            'model'         => ['required', 'string', 'max:100'],
-            'year'          => ['required', 'integer', 'min:1900', 'max:' . (date('Y') + 1)],
-            'plate'         => ['required', 'string', 'max:20', 'unique:vehicles,plate'],
-            'color'         => ['nullable', 'string', 'max:50'],
-            'vin'           => ['nullable', 'string', 'max:50', 'unique:vehicles,vin'],
-            'mileage'       => ['nullable', 'integer', 'min:0'],
-            'engine_type'   => ['nullable', 'string', 'in:' . implode(',', array_column(EngineType::cases(), 'value'))],
-            'transmission'  => ['nullable', 'string', 'in:' . implode(',', array_column(TransmissionType::cases(), 'value'))],
-            'notes'         => ['nullable', 'string', 'max:1000'],
-            'status'        => ['nullable', 'string', 'in:active,in_service,sold,inactive'],
+            'client_id' => Auth::user()->isClient() ? 'prohibited' : 'required|exists:users,id',
+            'brand' => 'required|string|max:100',
+            'model' => 'required|string|max:100',
+            'year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
+            'plate' => 'required|string|max:20|unique:vehicles',
+            'color' => 'nullable|string|max:50',
+            'vin' => 'nullable|string|max:50|unique:vehicles',
+            'mileage' => 'nullable|integer|min:0',
+            'engine_type' => 'nullable|string',
+            'transmission' => 'nullable|string',
+            'notes' => 'nullable|string|max:1000',
         ]);
-
-        $validated['status'] = $validated['status'] ?? 'active';
-
-        $vehicle = Vehicle::create($validated);
-
-        return redirect()
-            ->route('admin.vehiculos.show', $vehicle)
-            ->with('success', 'Vehículo registrado exitosamente.');
+        if (Auth::user()->isClient()) $validated['client_id'] = Auth::id();
+        Vehicle::create($validated);
+        $route = Auth::user()->isAdmin() ? 'admin.vehiculos.index' : 'client.vehicles.index';
+        return redirect()->route($route)->with('success', 'Vehículo registrado.');
     }
 
-    /**
-     * Display the specified vehicle with its service orders.
-     *
-     * Authorization: clients can only view their own vehicles;
-     * admins and technicians can view any vehicle.
-     */
     public function show(Vehicle $vehicle): Response
     {
-        Gate::authorize('manage-vehicles');
-
-        $vehicle->load([
-            'client',
-            'serviceOrders' => function ($query) {
-                $query->orderByDesc('created_at');
-            },
-        ]);
-
-        return Inertia::render('Admin/Vehicles/Show', [
-            'vehicle' => $vehicle,
-        ]);
+        $vehicle->load(['client', 'serviceOrders' => fn ($q) => $q->latest()]);
+        return Inertia::render('Admin/Vehicles/Show', ['vehicle' => $vehicle]);
     }
 
-    /**
-     * Show the form for editing the specified vehicle.
-     */
     public function edit(Vehicle $vehicle): Response
     {
-        Gate::authorize('manage-vehicles');
-
-        $user = Auth::user();
-
-        $clients = [];
-        if ($user->isAdmin()) {
-            $clients = User::clients()->active()->orderBy('name')->get(['id', 'name', 'email']);
-        }
-
-        return Inertia::render('Admin/Vehicles/Edit', [
-            'vehicle'       => $vehicle,
-            'clients'       => $clients,
-            'engineTypes'   => EngineType::cases(),
-            'transmissions' => TransmissionType::cases(),
-        ]);
+        $vehicle->load('client');
+        return Inertia::render('Admin/Vehicles/Edit', ['vehicle' => $vehicle]);
     }
 
-    /**
-     * Update the specified vehicle in storage.
-     */
     public function update(Request $request, Vehicle $vehicle)
     {
-        Gate::authorize('manage-vehicles');
-
         $validated = $request->validate([
-            'client_id'     => ['required', 'exists:users,id'],
-            'brand'         => ['required', 'string', 'max:100'],
-            'model'         => ['required', 'string', 'max:100'],
-            'year'          => ['required', 'integer', 'min:1900', 'max:' . (date('Y') + 1)],
-            'plate'         => ['required', 'string', 'max:20', 'unique:vehicles,plate,' . $vehicle->id],
-            'color'         => ['nullable', 'string', 'max:50'],
-            'vin'           => ['nullable', 'string', 'max:50', 'unique:vehicles,vin,' . $vehicle->id],
-            'mileage'       => ['nullable', 'integer', 'min:0'],
-            'engine_type'   => ['nullable', 'string', 'in:' . implode(',', array_column(EngineType::cases(), 'value'))],
-            'transmission'  => ['nullable', 'string', 'in:' . implode(',', array_column(TransmissionType::cases(), 'value'))],
-            'notes'         => ['nullable', 'string', 'max:1000'],
-            'status'        => ['nullable', 'string', 'in:active,in_service,sold,inactive'],
+            'brand' => 'required|string|max:100',
+            'model' => 'required|string|max:100',
+            'year' => 'required|integer',
+            'plate' => 'required|string|max:20|unique:vehicles,plate,' . $vehicle->id,
+            'color' => 'nullable|string',
+            'vin' => 'nullable|string|max:50',
+            'mileage' => 'nullable|integer|min:0',
+            'engine_type' => 'nullable|string',
+            'transmission' => 'nullable|string',
+            'notes' => 'nullable|string',
         ]);
-
         $vehicle->update($validated);
-
-        return redirect()
-            ->route('admin.vehiculos.show', $vehicle)
-            ->with('success', 'Vehículo actualizado exitosamente.');
+        return back()->with('success', 'Vehículo actualizado.');
     }
 
-    /**
-     * Remove the specified vehicle from storage.
-     *
-     * Only admins can delete vehicles. Clients cannot.
-     */
-    public function destroy(Vehicle $vehicle)
+    public function addVehicleForClient(Request $request, User $client)
     {
-        Gate::authorize('manage-vehicles');
-
-        // Prevent deletion if vehicle has active service orders
-        if ($vehicle->serviceOrders()->active()->exists()) {
-            return back()->with('error', 'No se puede eliminar el vehículo porque tiene órdenes de servicio activas.');
-        }
-
-        $vehicle->delete();
-
-        return redirect()
-            ->route('admin.vehiculos.index')
-            ->with('success', 'Vehículo eliminado exitosamente.');
-    }
-
-    /**
-     * Add a vehicle for a specific client (admin only).
-     *
-     * Allows an admin to register a vehicle on behalf of any client.
-     * Validates input, creates the vehicle, and returns the vehicle data.
-     */
-    public function addVehicleForClient(Request $request)
-    {
-        Gate::authorize('manage-vehicles');
-
         $validated = $request->validate([
-            'client_id'     => ['required', 'exists:users,id'],
-            'brand'         => ['required', 'string', 'max:100'],
-            'model'         => ['required', 'string', 'max:100'],
-            'year'          => ['required', 'integer', 'min:1900', 'max:' . (date('Y') + 1)],
-            'plate'         => ['required', 'string', 'max:20', 'unique:vehicles,plate'],
-            'color'         => ['nullable', 'string', 'max:50'],
-            'vin'           => ['nullable', 'string', 'max:50', 'unique:vehicles,vin'],
-            'mileage'       => ['nullable', 'integer', 'min:0'],
-            'engine_type'   => ['nullable', 'string', 'in:' . implode(',', array_column(EngineType::cases(), 'value'))],
-            'transmission'  => ['nullable', 'string', 'in:' . implode(',', array_column(TransmissionType::cases(), 'value'))],
-            'notes'         => ['nullable', 'string', 'max:1000'],
+            'brand' => 'required|string', 'model' => 'required|string',
+            'year' => 'required|integer', 'plate' => 'required|string|unique:vehicles',
         ]);
-
-        $validated['status'] = 'active';
-
-        $vehicle = Vehicle::create($validated);
-
-        if ($request->wantsJson()) {
-            return response()->json([
-                'message' => 'Vehículo registrado exitosamente.',
-                'vehicle' => $vehicle->load('client'),
-            ], 201);
-        }
-
-        return redirect()
-            ->route('admin.vehiculos.show', $vehicle)
-            ->with('success', 'Vehículo registrado exitosamente para el cliente.');
+        $validated['client_id'] = $client->id;
+        Vehicle::create($validated);
+        return back()->with('success', 'Vehículo agregado.');
     }
 }
