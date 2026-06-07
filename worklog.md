@@ -64,3 +64,20 @@ Stage Summary:
 - Redirect loop FIXED: dashboards now render Inertia pages instead of redirecting
 - Login flow VERIFIED: POST /login → 302 → dashboard renders HTTP 200
 - Role-based redirect FIXED: seeders now set role column directly
+---
+Task ID: 3
+Agent: main
+Task: Fix AdminDashboard TypeError - Cannot read properties of undefined (reading 'total_orders')
+
+Work Log:
+- DashboardController was only rendering Inertia pages without passing any data
+- AdminDashboard.tsx expects: stats (DashboardStats), recent_orders, low_stock_products, recent_quotations
+- TechnicianDashboard.tsx expects: stats, active_orders, recent_reports
+- ClientDashboard.tsx expects: vehicles, active_orders, notifications
+- Rewrote DashboardController with proper DB queries for each role's dashboard
+- Each method now maps model data to the exact structure expected by frontend components
+
+Stage Summary:
+- All 3 dashboards now receive correct props from backend
+- Admin dashboard verified: HTTP 200, stats object present with all fields
+- No more "Cannot read properties of undefined" errors
