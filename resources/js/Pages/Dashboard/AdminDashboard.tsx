@@ -81,7 +81,7 @@ export default function AdminDashboard({
                                 Órdenes Recientes
                             </h2>
                             <Link
-                                href="/orders"
+                                href="/admin/ordenes"
                                 className="text-sm font-medium text-primary-600 hover:text-primary-700"
                             >
                                 Ver todas
@@ -205,7 +205,7 @@ export default function AdminDashboard({
                                     Cotizaciones Recientes
                                 </h2>
                                 <Link
-                                    href="/quotations"
+                                    href="/admin/cotizaciones"
                                     className="text-sm font-medium text-primary-600 hover:text-primary-700"
                                 >
                                     Ver todas
@@ -253,7 +253,7 @@ export default function AdminDashboard({
                     </h2>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                         <Link
-                            href="/orders/create"
+                            href="/admin/ordenes/crear"
                             className="flex items-center gap-3 p-4 rounded-xl border-2 border-dashed border-primary-300 hover:border-primary-500 hover:bg-primary-50 transition-all group"
                         >
                             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100 group-hover:bg-primary-200 transition-colors">
@@ -264,7 +264,7 @@ export default function AdminDashboard({
                             </span>
                         </Link>
                         <Link
-                            href="/products/create"
+                            href="/admin/productos/crear"
                             className="flex items-center gap-3 p-4 rounded-xl border-2 border-dashed border-secondary-300 hover:border-secondary-500 hover:bg-secondary-50 transition-all group"
                         >
                             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary-100 group-hover:bg-secondary-200 transition-colors">
@@ -275,7 +275,7 @@ export default function AdminDashboard({
                             </span>
                         </Link>
                         <Link
-                            href="/quotations/create"
+                            href="/admin/cotizaciones/crear"
                             className="flex items-center gap-3 p-4 rounded-xl border-2 border-dashed border-green-300 hover:border-green-500 hover:bg-green-50 transition-all group"
                         >
                             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 group-hover:bg-green-200 transition-colors">
@@ -286,7 +286,7 @@ export default function AdminDashboard({
                             </span>
                         </Link>
                         <Link
-                            href="/sales/create"
+                            href="/admin/ventas/crear"
                             className="flex items-center gap-3 p-4 rounded-xl border-2 border-dashed border-purple-300 hover:border-purple-500 hover:bg-purple-50 transition-all group"
                         >
                             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 group-hover:bg-purple-200 transition-colors">

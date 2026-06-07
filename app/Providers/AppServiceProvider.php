@@ -21,5 +21,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
+
+        // Force HTTPS for all generated URLs in production (Render SSL termination)
+        if (app()->environment('production')) {
+            \URL::forceScheme('https');
+        }
     }
 }
