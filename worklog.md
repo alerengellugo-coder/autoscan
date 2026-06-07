@@ -45,3 +45,22 @@ Stage Summary:
 - App returns HTTP 200 at https://autoscan-ntjr.onrender.com/
 - Asset URLs confirmed: https://autoscan-ntjr.onrender.com/build/assets/*.css|js
 - Key fix: URL::forceScheme('https') in AppServiceProvider for production env
+---
+Task ID: 2
+Agent: main
+Task: Fix ERR_TOO_MANY_REDIRECTS and AxiosError on login
+
+Work Log:
+- Diagnosed: DashboardController was an invokable controller that ALWAYS redirected based on role
+- All 4 dashboard routes (/dashboard, /admin/dashboard, /tecnico/dashboard, /mi-cuenta/dashboard) used same controller
+- Client accessing /mi-cuenta/dashboard → redirect to client.dashboard → /mi-cuenta/dashboard → INFINITE LOOP
+- Split DashboardController: redirectByRole() for /dashboard, separate methods for role dashboards that render Inertia pages
+- Removed min:8 password validation (was blocking logins with short passwords)
+- Fixed seeders: role column has default 'client' but seeders only called Spatie assignRole() without setting the column
+- Added 'role' field to all firstOrCreate calls in AdminUserSeeder and TechnicianUserSeeder
+- Updated routes/web.php to use [DashboardController::class, 'methodName'] format
+
+Stage Summary:
+- Redirect loop FIXED: dashboards now render Inertia pages instead of redirecting
+- Login flow VERIFIED: POST /login → 302 → dashboard renders HTTP 200
+- Role-based redirect FIXED: seeders now set role column directly
