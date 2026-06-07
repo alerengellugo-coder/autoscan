@@ -10,14 +10,8 @@ use App\Http\Controllers\SaleController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Http\Middleware\TrimStrings;
-use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
-use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Cookie\Middleware\EncryptCookies;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 // Public pages
-Route::middleware([\EncryptCookies::class, StartSession::class, ShareErrorsFromSession::class, TrimStrings::class, ConvertEmptyStringsToNull::class])->group(function () {
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/servicios', [PageController::class, 'services'])->name('services');
 Route::get('/nosotros', [PageController::class, 'about'])->name('about');
@@ -104,4 +98,3 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/reportes-servicio/{report}', [ServiceReportController::class, 'show'])->name('reports.show');
         Route::delete('/reportes-servicio/{report}', [ServiceReportController::class, 'destroy'])->name('reports.destroy');
     });
-});
