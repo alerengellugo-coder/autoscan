@@ -93,7 +93,7 @@ export default function ClientDashboard({
                             </p>
                         </div>
                         <Link
-                            href="/vehicles/create"
+                            href="/mi-cuenta/vehiculos/crear"
                             className="hidden sm:inline-flex items-center gap-2 bg-white text-primary-700 font-semibold py-2.5 px-5 rounded-xl hover:bg-primary-50 transition-colors"
                         >
                             <PlusCircleIcon className="h-5 w-5" />
@@ -101,7 +101,7 @@ export default function ClientDashboard({
                         </Link>
                     </div>
                     <Link
-                        href="/vehicles/create"
+                        href="/mi-cuenta/vehiculos/crear"
                         className="sm:hidden mt-4 inline-flex items-center gap-2 bg-white text-primary-700 font-semibold py-2.5 px-5 rounded-xl hover:bg-primary-50 transition-colors w-full justify-center"
                     >
                         <PlusCircleIcon className="h-5 w-5" />
@@ -117,7 +117,7 @@ export default function ClientDashboard({
                                 Mis Vehículos
                             </h2>
                             <Link
-                                href="/vehicles"
+                                href="/mi-cuenta/vehiculos"
                                 className="text-sm font-medium text-primary-600 hover:text-primary-700"
                             >
                                 Ver todos
@@ -133,7 +133,7 @@ export default function ClientDashboard({
                                     Registra tu primer vehículo para comenzar a usar el servicio.
                                 </p>
                                 <Link
-                                    href="/vehicles/create"
+                                    href="/mi-cuenta/vehiculos/crear"
                                     className="btn-primary mt-4 inline-flex items-center gap-2"
                                 >
                                     <PlusCircleIcon className="h-4 w-4" />
@@ -189,7 +189,7 @@ export default function ClientDashboard({
                                 Notificaciones
                             </h2>
                             <Link
-                                href="/notifications"
+                                href="/notificaciones"
                                 className="text-sm font-medium text-primary-600 hover:text-primary-700"
                             >
                                 Ver todas
@@ -245,7 +245,7 @@ export default function ClientDashboard({
                             Órdenes de Servicio Activas
                         </h2>
                         <Link
-                            href="/orders"
+                            href="/mi-cuenta/ordenes"
                             className="text-sm font-medium text-primary-600 hover:text-primary-700"
                         >
                             Ver todas

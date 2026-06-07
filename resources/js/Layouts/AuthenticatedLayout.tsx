@@ -43,39 +43,93 @@ const navigation: NavItem[] = [
     },
     {
         label: 'Vehículos',
-        href: '/vehicles',
+        href: '/admin/vehiculos',
         icon: TruckIcon,
-        roles: ['admin', 'client'],
+        roles: ['admin'],
     },
     {
-        label: 'Órdenes de Servicio',
-        href: '/orders',
+        label: 'Mis Vehículos',
+        href: '/mi-cuenta/vehiculos',
+        icon: TruckIcon,
+        roles: ['client'],
+    },
+    {
+        label: 'Órdenes',
+        href: '/admin/ordenes',
         icon: ClipboardDocumentListIcon,
-        roles: ['admin', 'technician', 'client'],
+        roles: ['admin'],
+    },
+    {
+        label: 'Mis Órdenes',
+        href: '/tecnico/ordenes',
+        icon: ClipboardDocumentListIcon,
+        roles: ['technician'],
+    },
+    {
+        label: 'Mis Órdenes',
+        href: '/mi-cuenta/ordenes',
+        icon: ClipboardDocumentListIcon,
+        roles: ['client'],
     },
     {
         label: 'Productos',
-        href: '/products',
+        href: '/admin/productos',
         icon: CubeIcon,
         roles: ['admin'],
     },
     {
+        label: 'Catálogo',
+        href: '/tecnico/catalogo',
+        icon: CubeIcon,
+        roles: ['technician'],
+    },
+    {
         label: 'Cotizaciones',
-        href: '/quotations',
+        href: '/admin/cotizaciones',
         icon: DocumentTextIcon,
-        roles: ['admin', 'client'],
+        roles: ['admin'],
+    },
+    {
+        label: 'Mis Cotizaciones',
+        href: '/mi-cuenta/cotizaciones',
+        icon: DocumentTextIcon,
+        roles: ['client'],
     },
     {
         label: 'Ventas',
-        href: '/sales',
+        href: '/admin/ventas',
         icon: ShoppingBagIcon,
         roles: ['admin'],
     },
     {
-        label: 'Mantenimiento',
-        href: '/maintenance',
+        label: 'Mis Compras',
+        href: '/mi-cuenta/ventas',
+        icon: ShoppingBagIcon,
+        roles: ['client'],
+    },
+    {
+        label: 'Reportes',
+        href: '/admin/reportes-servicio',
         icon: WrenchScrewdriverIcon,
         roles: ['admin'],
+    },
+    {
+        label: 'Reportes',
+        href: '/tecnico/reportes',
+        icon: WrenchScrewdriverIcon,
+        roles: ['technician'],
+    },
+    {
+        label: 'Usuarios',
+        href: '/admin/usuarios',
+        icon: UserCircleIcon,
+        roles: ['admin'],
+    },
+    {
+        label: 'Notificaciones',
+        href: '/notificaciones',
+        icon: BellIcon,
+        roles: ['admin', 'technician', 'client'],
     },
 ];
 
@@ -347,7 +401,7 @@ export default function AuthenticatedLayout({
                                             <Menu.Item>
                                                 {({ active }) => (
                                                     <Link
-                                                        href="/settings"
+                                                        href="/notificaciones"
                                                         className={`block px-4 py-2 text-sm ${
                                                             active
                                                                 ? 'bg-gray-50 text-gray-900'
