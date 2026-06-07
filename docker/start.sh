@@ -18,23 +18,13 @@ sed -i "s/listen 10000 default_server/listen $PORT default_server/" /etc/nginx/n
 
 nginx -t 2>&1
 
+echo "Session driver: $SESSION_DRIVER"
+echo "Cache driver: $CACHE_DRIVER"
+
 if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "SomeRandomStringSomeRandomString" ] || [ "$APP_KEY" = "null" ]; then
     echo "Generating application key..."
     php artisan key:generate --force 2>&1 || echo "WARNING: key:generate failed"
 fi
-
-# Switch session and cache drivers to database to avoid file system issues
-echo "Setting session/cache drivers to database..."
-sed -i 's/^SESSION_DRIVER=.*/SESSION_DRIVER=database/' /var/www/html/.env 2>/dev/null || true
-sed -i 's/^CACHE_DRIVER=.*/CACHE_DRIVER=database/' /var/www/html/.env 2>/dev/null || true
-# Also add these if they don't exist
-grep -q "^SESSION_DRIVER=" /var/www/html/.env 2>/dev/null || echo "SESSION_DRIVER=database" >> /var/www/html/.env
-grep -q "^CACHE_DRIVER=" /var/www/html/.env 2>/dev/null || echo "CACHE_DRIVER=database" >> /var/www/html/.env
-# Clear config so the new .env values take effect
-php artisan config:clear 2>&1 || true
-
-echo "Session driver: $(php artisan tinker --execute='echo config(\"session.driver\");' 2>/dev/null)"
-echo "Cache driver: $(php artisan tinker --execute='echo config(\"cache.default\");' 2>/dev/null)"
 
 if [ -n "$DB_HOST" ]; then
     echo "Waiting for PostgreSQL at ${DB_HOST}:${DB_PORT:-5432}..."
@@ -65,6 +55,7 @@ php artisan event:clear 2>&1 || true
 php artisan view:clear 2>&1 || true
 php artisan cache:clear 2>&1 || true
 
+# Recreate views dir after view:clear deletes it
 mkdir -p /var/www/html/storage/framework/{views,cache,sessions}
 chown -R www-data:www-data /var/www/html/storage
 chown -R www-data:www-data /var/www/html/bootstrap/cache

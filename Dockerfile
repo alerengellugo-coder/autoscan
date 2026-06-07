@@ -42,6 +42,11 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
+# Override session and cache drivers at the Docker level
+# ENV vars take priority over .env file values in Laravel
+ENV SESSION_DRIVER=database
+ENV CACHE_DRIVER=database
+
 # Copy application files
 COPY . .
 
