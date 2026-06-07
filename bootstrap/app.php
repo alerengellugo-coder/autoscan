@@ -26,5 +26,15 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        // TEMPORARY: Log all exceptions to a file we can read via API
+        $exceptions->report(function (\Throwable $e) {
+            try {
+                $errorLog = storage_path('logs/error-debug.log');
+                $data = date('Y-m-d H:i:s') . ' | ' . get_class($e) . ' | ' . $e->getMessage() . ' | ' . $e->getFile() . ':' . $e->getLine() . "\n";
+                $data .= $e->getTraceAsString() . "\n\n";
+                @file_put_contents($errorLog, $data, FILE_APPEND | LOCK_EX);
+            } catch (\Throwable $t) {
+                // Can't log
+            }
+        });
     })->create();

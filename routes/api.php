@@ -10,37 +10,42 @@ Route::get('/diag', function () {
     try {
         $result = [];
         
-        // Read log file - look for errors
+        // Read custom error debug log
+        try {
+            $debugLog = storage_path('logs/error-debug.log');
+            if (file_exists($debugLog)) {
+                $content = file_get_contents($debugLog);
+                $result['error_debug_log'] = $content;
+            } else {
+                $result['error_debug_log'] = 'FILE NOT FOUND';
+            }
+        } catch (\Throwable $e) {
+            $result['error_debug_log_error'] = $e->getMessage();
+        }
+        
+        // Also read main log
         try {
             $logPath = storage_path('logs/laravel.log');
             if (file_exists($logPath)) {
-                $logContent = file_get_contents($logPath);
-                $lines = explode("\n", $logContent);
-                
-                // Find the LAST error entry
-                $errorStart = -1;
+                $content = file_get_contents($logPath);
+                // Find last error
+                $lines = explode("\n", $content);
+                $lastError = -1;
                 for ($i = count($lines) - 1; $i >= 0; $i--) {
-                    if (strpos($lines[$i], '[') === 0 && strpos($lines[$i], 'local.ERROR') !== false) {
-                        $errorStart = $i;
+                    if (strpos($lines[$i], '.ERROR') !== false) {
+                        $lastError = $i;
                         break;
                     }
                 }
-                
-                if ($errorStart >= 0) {
-                    // Get 30 lines from the error
-                    $errorLines = array_slice($lines, $errorStart, min(40, count($lines) - $errorStart));
-                    $result['error_log'] = $errorLines;
+                if ($lastError >= 0) {
+                    $result['laravel_log_error'] = implode("\n", array_slice($lines, $lastError, 20));
                 } else {
-                    $result['log_note'] = 'No error entries found in log';
-                    $result['last_lines'] = array_slice($lines, -20);
+                    $result['laravel_log_note'] = 'No ERROR entries';
+                    $result['laravel_log_size'] = strlen($content);
                 }
-            } else {
-                $result['log_path'] = $logPath;
-                $result['log_exists'] = false;
-                $result['log_dir'] = is_dir(dirname($logPath)) ? scandir(dirname($logPath)) : [];
             }
         } catch (\Throwable $e) {
-            $result['log_error'] = $e->getMessage();
+            $result['laravel_log_error'] = $e->getMessage();
         }
         
         return response()->json($result);
