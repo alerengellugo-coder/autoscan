@@ -12,49 +12,6 @@ use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-// Temporary diagnostic route - REMOVE AFTER DEBUGGING
-Route::get('/diag-web', function () {
-    try {
-        $result = ['step' => 'start'];
-        try {
-            $result['session'] = session()->getId() ?: 'no-session';
-        } catch (\Throwable $e) {
-            $result['session_error'] = $e->getMessage();
-        }
-        try {
-            $result['csrf'] = csrf_token();
-        } catch (\Throwable $e) {
-            $result['csrf_error'] = $e->getMessage();
-        }
-        try {
-            $result['user'] = auth()->user() ? auth()->user()->email : 'not-authenticated';
-        } catch (\Throwable $e) {
-            $result['user_error'] = $e->getMessage();
-        }
-        try {
-            $page = Inertia::render('Home');
-            $response = $page->toResponse(request());
-            $result['inertia_render'] = 'OK';
-            $result['inertia_status'] = $response->getStatusCode();
-            return $response;
-        } catch (\Throwable $e) {
-            $result['inertia_error'] = get_class($e) . ': ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine();
-            return response()->json($result, 500);
-        }
-    } catch (\Throwable $e) {
-        return response()->json([
-            'fatal' => get_class($e) . ': ' . $e->getMessage(),
-            'file' => $e->getFile() . ':' . $e->getLine(),
-            'trace' => collect($e->getTrace())->take(5)->map(fn ($t) => ($t['class'] ?? '') . ($t['type'] ?? '') . $t['function'] . ' at ' . ($t['file'] ?? 'n/a') . ':' . ($t['line'] ?? 0)),
-        ], 500);
-    }
-});
-
-// Health check endpoint for Render
-Route::get('/up', function () {
-    return response('OK', 200)->header('Content-Type', 'text/plain');
-});
-
 // Public pages
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/servicios', [PageController::class, 'services'])->name('services');
