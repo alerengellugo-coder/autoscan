@@ -21,6 +21,8 @@ nginx -t 2>&1
 echo "Session driver: $SESSION_DRIVER"
 echo "Cache driver: $CACHE_DRIVER"
 
+export APP_DEBUG=true
+
 if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "SomeRandomStringSomeRandomString" ] || [ "$APP_KEY" = "null" ]; then
     echo "Generating application key..."
     php artisan key:generate --force 2>&1 || echo "WARNING: key:generate failed"
