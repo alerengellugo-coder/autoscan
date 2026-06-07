@@ -112,7 +112,7 @@ class ServiceOrderController extends Controller
             'vehicles'     => $vehicles,
             'technicians'  => $technicians,
             'clients'      => $clients,
-            'serviceTypes' => collect(ServiceType::cases())->map(fn ($s) => ['value' => $s->value, 'label' => $s->label()])->values()->all(),
+            'service_types' => collect(ServiceType::cases())->map(fn ($s) => ['value' => $s->value, 'label' => $s->label()])->values()->all(),
             'priorities'   => $this->priorityOptions(),
         ]);
     }
@@ -154,11 +154,58 @@ class ServiceOrderController extends Controller
             default => 'Client/Orders/Show',
         };
 
-        return Inertia::render($page, [
-            'serviceOrder' => $serviceOrder,
-            'statuses'     => $this->statusOptions(),
-            'priorities'   => $this->priorityOptions(),
-        ]);
+        $reports = $serviceOrder->reports ?? collect();
+
+        if ($user->isAdmin()) {
+            $statusTimeline = [];
+            $statusTimeline[] = [
+                'status' => $serviceOrder->status->value,
+                'label' => $serviceOrder->status->label(),
+                'date' => $serviceOrder->created_at->toIso8601String(),
+                'user_name' => $serviceOrder->client?->name ?? 'Sistema',
+            ];
+            if ($serviceOrder->started_at) {
+                $statusTimeline[] = [
+                    'status' => OrderStatus::InProgress->value,
+                    'label' => OrderStatus::InProgress->label(),
+                    'date' => $serviceOrder->started_at->toIso8601String(),
+                    'user_name' => $serviceOrder->technician?->name ?? 'Sistema',
+                ];
+            }
+            if ($serviceOrder->completed_at) {
+                $statusTimeline[] = [
+                    'status' => OrderStatus::Completed->value,
+                    'label' => OrderStatus::Completed->label(),
+                    'date' => $serviceOrder->completed_at->toIso8601String(),
+                    'user_name' => $serviceOrder->technician?->name ?? 'Sistema',
+                ];
+            }
+            if ($serviceOrder->delivered_at) {
+                $statusTimeline[] = [
+                    'status' => OrderStatus::Delivered->value,
+                    'label' => OrderStatus::Delivered->label(),
+                    'date' => $serviceOrder->delivered_at->toIso8601String(),
+                    'user_name' => $serviceOrder->technician?->name ?? 'Sistema',
+                ];
+            }
+            return Inertia::render($page, [
+                'order' => $serviceOrder,
+                'status_timeline' => $statusTimeline,
+                'reports' => $reports,
+                'status_options' => $this->statusOptions(),
+            ]);
+        } elseif ($user->isTechnician()) {
+            return Inertia::render($page, [
+                'order' => $serviceOrder,
+                'reports' => $reports,
+                'available_transitions' => [],
+            ]);
+        } else {
+            return Inertia::render($page, [
+                'order' => $serviceOrder,
+                'reports' => $reports,
+            ]);
+        }
     }
 
     public function updateStatus(Request $request, ServiceOrder $serviceOrder)
