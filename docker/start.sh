@@ -63,11 +63,13 @@ php artisan migrate --force --no-interaction 2>&1 || {
 echo "Running seeders..."
 php artisan db:seed --force --no-interaction 2>&1 || echo "  Seeder failed, continuing..."
 
-# Optimize
-echo "Caching config..."
-php artisan config:cache 2>&1 || true
-php artisan route:cache 2>&1 || true
-php artisan event:cache 2>&1 || true
+# Clear any cached files (don't cache - let Laravel handle in runtime)
+echo "Clearing cached files..."
+php artisan config:clear 2>&1 || true
+php artisan route:clear 2>&1 || true
+php artisan event:clear 2>&1 || true
+php artisan view:clear 2>&1 || true
+php artisan cache:clear 2>&1 || true
 
 # Storage link
 php artisan storage:link --force 2>/dev/null || true
