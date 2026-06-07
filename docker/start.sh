@@ -26,7 +26,6 @@ if [ $? -ne 0 ]; then
     echo "=== nginx.conf contents ==="
     cat /etc/nginx/nginx.conf
     echo "=== end nginx.conf ==="
-    # Don't exit - try to continue for debugging
 fi
 
 # Generate application key if needed
@@ -74,9 +73,23 @@ php artisan cache:clear 2>&1 || true
 # Storage link
 php artisan storage:link --force 2>/dev/null || true
 
-# Fix permissions - php-fpm runs as www-data but start.sh creates files as root
+# CRITICAL: Recreate storage directories and fix permissions for php-fpm (www-data)
+echo "Setting storage permissions..."
+mkdir -p /var/www/html/storage/framework/{views,cache,sessions}
+mkdir -p /var/www/html/storage/logs
+mkdir -p /var/www/html/bootstrap/cache
 chown -R www-data:www-data /var/www/html/storage
+chown -R www-data:www-data /var/www/html/bootstrap/cache
 chmod -R 775 /var/www/html/storage
+chmod -R 775 /var/www/html/bootstrap/cache
+
+# Verify the views cache directory is writable
+if [ -w /var/www/html/storage/framework/views ]; then
+    echo "Views cache directory OK"
+else
+    echo "WARNING: Views cache directory not writable!"
+    ls -la /var/www/html/storage/framework/
+fi
 
 echo "=== Starting nginx + php-fpm ==="
 

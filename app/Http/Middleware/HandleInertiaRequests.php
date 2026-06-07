@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
-use Tightenco\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -21,10 +20,20 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
-            'ziggy' => fn () => [
-                'location' => $request->url(),
-                'aside' => Ziggy::json()->toArray()['aside'] ?? [],
-            ],
+            'ziggy' => function () use ($request) {
+                try {
+                    $ziggy = \Tightenco\Ziggy\Ziggy::json()->toArray();
+                    return [
+                        'location' => $request->url(),
+                        'aside' => $ziggy['aside'] ?? [],
+                    ];
+                } catch (\Throwable $e) {
+                    return [
+                        'location' => $request->url(),
+                        'aside' => [],
+                    ];
+                }
+            },
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),
