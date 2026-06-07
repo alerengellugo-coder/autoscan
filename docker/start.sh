@@ -86,6 +86,16 @@ chmod -R 775 /var/www/html/bootstrap/cache
 
 php artisan storage:link --force 2>/dev/null || true
 
+echo "=== Fixing storage permissions ==="
+mkdir -p /var/www/html/storage/framework/{views,cache,sessions}
+mkdir -p /var/www/html/storage/logs
+chmod -R 777 /var/www/html/storage/framework/sessions
+chmod -R 777 /var/www/html/storage/framework/cache
+chmod -R 777 /var/www/html/storage/framework/views
+chmod -R 777 /var/www/html/storage/logs
+chown -R www-data:www-data /var/www/html/storage
+chown -R www-data:www-data /var/www/html/bootstrap/cache
+
 echo "=== Starting nginx + php-fpm ==="
 
 php-fpm -F 2>&1 &
