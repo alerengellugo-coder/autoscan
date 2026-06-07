@@ -3,7 +3,7 @@
 echo "=== AutoScan Deployment Starting ==="
 
 # Create required runtime directories
-mkdir -p /var/log/supervisor /var/run /var/log/nginx
+mkdir -p /var/run /var/log/nginx
 chmod 777 /var/run
 
 # Remove old Alpine nginx configs to avoid conflicts with our custom nginx.conf
@@ -17,6 +17,17 @@ echo "Using PORT=$PORT"
 # Replace port in nginx.conf using sed (safe - only replaces the listen directive)
 sed -i "s/listen 10000 default_server/listen $PORT default_server/" /etc/nginx/nginx.conf
 echo "Nginx configured to listen on port $PORT"
+
+# Test nginx config
+echo "Testing nginx config..."
+nginx -t 2>&1
+if [ $? -ne 0 ]; then
+    echo "FATAL: nginx config test failed!"
+    echo "=== nginx.conf contents ==="
+    cat /etc/nginx/nginx.conf
+    echo "=== end nginx.conf ==="
+    # Don't exit - try to continue for debugging
+fi
 
 # Generate application key if needed
 if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "SomeRandomStringSomeRandomString" ] || [ "$APP_KEY" = "null" ]; then
@@ -46,7 +57,6 @@ sleep 1
 echo "Running migrations..."
 php artisan migrate --force --no-interaction 2>&1 || {
     echo "ERROR: Migrations failed!"
-    # Continue anyway - don't block startup
 }
 
 # Run seeders
@@ -63,9 +73,22 @@ php artisan event:cache 2>&1 || true
 php artisan storage:link --force 2>/dev/null || true
 
 echo "=== Starting nginx + php-fpm ==="
-echo "Nginx will listen on port $PORT"
 
-# Test nginx config before starting
-nginx -t 2>&1 || echo "WARNING: nginx config test failed"
+# Start PHP-FPM in background
+php-fpm -F 2>&1 &
+echo "PHP-FPM started (pid $!)"
 
-exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+# Give php-fpm a moment to create the socket
+sleep 2
+
+# Verify socket exists
+if [ -S /var/run/php-fpm.sock ]; then
+    echo "PHP-FPM socket created successfully"
+else
+    echo "WARNING: PHP-FPM socket not found at /var/run/php-fpm.sock"
+    ls -la /var/run/ 2>&1
+fi
+
+# Start nginx in foreground (this keeps the container running)
+echo "Starting nginx on port $PORT..."
+exec nginx -g 'daemon off;'
