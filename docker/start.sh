@@ -6,6 +6,10 @@ echo "=== AutoScan Deployment Starting ==="
 mkdir -p /var/log/supervisor /var/run /var/log/nginx
 chmod 777 /var/run
 
+# Remove old Alpine nginx configs to avoid conflicts with our custom nginx.conf
+rm -f /etc/nginx/conf.d/default.conf
+rm -f /etc/nginx/http.d/default.conf 2>/dev/null || true
+
 # Generate application key if needed
 if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "SomeRandomStringSomeRandomString" ] || [ "$APP_KEY" = "null" ]; then
     echo "Generating application key..."

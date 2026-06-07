@@ -64,9 +64,8 @@ RUN chown -R www-data:www-data /var/www/html \
     && chown -R www-data:www-data /var/www/html/storage \
     && chown -R www-data:www-data /var/www/html/bootstrap/cache
 
-# Configure nginx - use http.d (Alpine nginx includes http.d inside http{} block)
-RUN mkdir -p /etc/nginx/http.d
-COPY docker/nginx.conf /etc/nginx/http.d/default.conf
+# Configure nginx - replace main config entirely to avoid Alpine include path issues
+COPY docker/nginx.conf /etc/nginx/nginx.conf
 
 # Configure supervisord
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
