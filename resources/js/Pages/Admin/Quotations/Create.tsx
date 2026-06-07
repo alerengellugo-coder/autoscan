@@ -34,10 +34,10 @@ const initialItem: QuotationItemRow = {
 };
 
 export default function QuotationsCreate({
-    clients,
-    vehicles,
-    service_orders,
-    products,
+    clients = [],
+    vehicles = [],
+    service_orders = [],
+    products = [],
 }: QuotationsCreateProps) {
     const [items, setItems] = useState<QuotationItemRow[]>([{ ...initialItem }]);
     const [filteredVehicles, setFilteredVehicles] = useState<Vehicle[]>([]);

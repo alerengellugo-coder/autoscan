@@ -24,7 +24,7 @@ interface QuotationsIndexProps extends PageProps {
 
 export default function QuotationsIndex({
     quotations,
-    status_options,
+    status_options = [],
     filters,
 }: QuotationsIndexProps) {
     const [statusFilter, setStatusFilter] = useState(filters.status || '');

@@ -9,7 +9,7 @@ interface ProductsEditProps extends PageProps {
     categories: SelectOption[];
 }
 
-export default function ProductsEdit({ product, categories }: ProductsEditProps) {
+export default function ProductsEdit({ product, categories = [] }: ProductsEditProps) {
     const { data, setData, put, processing, errors } = useForm({
         name: product.name,
         sku: product.sku || '',

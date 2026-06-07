@@ -63,7 +63,7 @@ class QuotationController extends Controller
             'clients'  => User::clients()->active()->orderBy('name')->get(['id', 'name']),
             'vehicles' => Vehicle::active()->orderBy('brand')->get(['id', 'brand', 'model', 'plate', 'client_id']),
             'products' => Product::active()->orderBy('name')->get(['id', 'name', 'price', 'stock_quantity', 'min_stock_alert']),
-            'serviceOrders' => ServiceOrder::where('client_id', $request->input('client_id'))->get(),
+            'service_orders' => ServiceOrder::where('client_id', $request->input('client_id'))->get(),
         ]);
     }
 

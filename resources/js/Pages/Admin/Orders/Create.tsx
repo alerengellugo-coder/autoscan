@@ -12,10 +12,10 @@ interface OrdersCreateProps extends PageProps {
 }
 
 export default function OrdersCreate({
-    vehicles,
-    technicians,
-    service_types,
-    priorities,
+    vehicles = [],
+    technicians = [],
+    service_types = [],
+    priorities = [],
 }: OrdersCreateProps) {
     const { data, setData, post, processing, errors } = useForm({
         vehicle_id: '',

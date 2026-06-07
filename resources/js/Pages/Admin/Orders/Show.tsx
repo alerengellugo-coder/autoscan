@@ -33,7 +33,7 @@ export default function OrdersShow({
     order,
     status_timeline,
     reports,
-    status_options,
+    status_options = [],
 }: OrdersShowProps) {
     const [showStatusModal, setShowStatusModal] = useState(false);
     const { data, setData, put, processing, reset } = useForm({

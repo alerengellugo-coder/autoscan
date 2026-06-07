@@ -94,6 +94,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('ventas', SaleController::class);
         Route::post('/ventas/{sale}/pago', [SaleController::class, 'registerPayment'])->name('ventas.register-payment');
         Route::post('/ventas/{sale}/cancelar', [SaleController::class, 'cancel'])->name('ventas.cancel');
+        Route::get('/reportes-servicio/crear', [ServiceReportController::class, 'create'])->name('reports.create');
         Route::get('/reportes-servicio', [ServiceReportController::class, 'index'])->name('reports.index');
         Route::get('/reportes-servicio/{report}', [ServiceReportController::class, 'show'])->name('reports.show');
         Route::delete('/reportes-servicio/{report}', [ServiceReportController::class, 'destroy'])->name('reports.destroy');

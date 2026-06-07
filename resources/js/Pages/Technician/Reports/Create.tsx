@@ -40,7 +40,7 @@ const defaultTransitions: Record<string, string[]> = {
 
 export default function TechnicianReportCreate() {
     const { props } = usePage<TechnicianReportCreateProps>();
-    const { orders, status_transitions } = props;
+    const { orders = [], status_transitions } = props;
 
     const transitions = status_transitions || defaultTransitions;
 

@@ -37,7 +37,7 @@ function getStockBadge(stock: number, minStock: number) {
 
 export default function ProductsIndex({
     products,
-    categories,
+    categories = [],
     total_products,
     low_stock_count,
     total_inventory_value,

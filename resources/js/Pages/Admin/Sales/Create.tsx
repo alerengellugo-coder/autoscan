@@ -33,9 +33,9 @@ const initialItem: SaleItemRow = {
 };
 
 export default function SalesCreate({
-    clients,
-    quotations,
-    products,
+    clients = [],
+    quotations = [],
+    products = [],
 }: SalesCreateProps) {
     const [activeTab, setActiveTab] = useState<'quotation' | 'manual'>('quotation');
     const [items, setItems] = useState<SaleItemRow[]>([{ ...initialItem }]);

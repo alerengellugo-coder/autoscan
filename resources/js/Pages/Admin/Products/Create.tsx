@@ -8,7 +8,7 @@ interface ProductsCreateProps extends PageProps {
     categories: SelectOption[];
 }
 
-export default function ProductsCreate({ categories }: ProductsCreateProps) {
+export default function ProductsCreate({ categories = [] }: ProductsCreateProps) {
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         sku: '',

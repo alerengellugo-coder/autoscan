@@ -8,7 +8,7 @@ interface VehiclesCreateProps extends PageProps {
     clients: SelectOption[];
 }
 
-export default function VehiclesCreate({ clients }: VehiclesCreateProps) {
+export default function VehiclesCreate({ clients = [] }: VehiclesCreateProps) {
     const { data, setData, post, processing, errors } = useForm({
         client_id: '',
         brand: '',

@@ -9,7 +9,7 @@ interface VehiclesEditProps extends PageProps {
     clients: SelectOption[];
 }
 
-export default function VehiclesEdit({ vehicle, clients }: VehiclesEditProps) {
+export default function VehiclesEdit({ vehicle, clients = [] }: VehiclesEditProps) {
     const { data, setData, put, processing, errors } = useForm({
         client_id: vehicle.client_id.toString(),
         brand: vehicle.brand,

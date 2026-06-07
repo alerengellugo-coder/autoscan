@@ -33,9 +33,9 @@ interface OrdersIndexProps extends PageProps {
 
 export default function OrdersIndex({
     orders,
-    status_options,
-    priority_options,
-    technician_options,
+    status_options = [],
+    priority_options = [],
+    technician_options = [],
     status_counts,
     filters,
 }: OrdersIndexProps) {

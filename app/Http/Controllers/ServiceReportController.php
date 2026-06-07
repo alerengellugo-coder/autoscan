@@ -39,6 +39,25 @@ class ServiceReportController extends Controller
         ]);
     }
 
+    public function create(): Response
+    {
+        $user = Auth::user();
+        $orders = $user->isTechnician()
+            ? ServiceOrder::where('technician_id', $user->id)
+                ->with('vehicle')
+                ->whereIn('status', ['pending', 'diagnosing', 'in_progress', 'waiting_parts', 'quality_check'])
+                ->orderByDesc('created_at')
+                ->get()
+            : ServiceOrder::with('vehicle')
+                ->whereIn('status', ['pending', 'diagnosing', 'in_progress', 'waiting_parts', 'quality_check'])
+                ->orderByDesc('created_at')
+                ->get();
+
+        return Inertia::render('Technician/Reports/Create', [
+            'orders' => $orders,
+        ]);
+    }
+
     public function store(Request $request)
     {
         Gate::authorize('manage-orders');
