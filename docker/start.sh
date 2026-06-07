@@ -40,6 +40,9 @@ fi
 
 echo "Wiping database..."
 php artisan db:wipe --force --no-interaction 2>&1 || echo "  db:wipe skipped or failed"
+
+# Show errors in production for debugging
+php artisan config:set APP_DEBUG=true --no-interaction 2>&1 || true
 sleep 1
 
 echo "Running migrations..."
