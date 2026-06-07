@@ -1,46 +1,10 @@
 <?php
 
 return [
-    /*
-    |--------------------------------------------------------------------------
-    | View Storage Paths
-    |--------------------------------------------------------------------------
-    |
-    | Most templating systems load templates from disk. Here you may specify
-    | an array of paths that should be checked for your views. Of course,
-    | the default Laravel view path is already registered for you.
-    |
-    */
-
     'paths' => [
         resource_path('views'),
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Compiled View Path
-    |--------------------------------------------------------------------------
-    |
-    | This option determines where all the compiled Blade templates will be
-    | stored for your application. Typically, this is within the storage
-    | directory. However, as usual, you are free to change this value.
-    |
-    */
-
-    'compiled' => env('VIEW_COMPILED_PATH', realpath(storage_path('framework/views'))),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Blade Engine Options
-    |--------------------------------------------------------------------------
-    |
-    | Here you may specify any additional options for the Blade engine when
-    | compiling your Blade templates. The "echo" option controls how the
-    | echoed data is rendered to the browser. The "unsafe_echo" option can
-    | be used to echo raw, unescaped data allowing you to use raw HTML.
-    |
-    */
-
+    'compiled' => storage_path('framework/views'),
     'echo' => false,
     'unsafe_echo' => false,
 ];
