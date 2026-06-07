@@ -5,7 +5,6 @@ echo "=== AutoScan Deployment Starting ==="
 mkdir -p /var/run /var/log/nginx
 chmod 777 /var/run
 
-# Ensure all required directories exist
 mkdir -p /var/www/html/storage/framework/{views,cache,sessions}
 mkdir -p /var/www/html/storage/logs
 mkdir -p /var/www/html/bootstrap/cache
@@ -24,18 +23,18 @@ if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "SomeRandomStringSomeRandomString" ] || [
     php artisan key:generate --force 2>&1 || echo "WARNING: key:generate failed"
 fi
 
-# Force session and cache to use database (avoids file permission issues)
-php artisan config:set session.driver database --no-interaction 2>/dev/null || \
-    sed -i "s/SESSION_DRIVER=.*/SESSION_DRIVER=database/" /var/www/html/.env
-php artisan config:set cache.default database --no-interaction 2>/dev/null || \
-    sed -i "s/CACHE_DRIVER=.*/CACHE_DRIVER=database/" /var/www/html/.env
+# Switch session and cache drivers to database to avoid file system issues
+echo "Setting session/cache drivers to database..."
+sed -i 's/^SESSION_DRIVER=.*/SESSION_DRIVER=database/' /var/www/html/.env 2>/dev/null || true
+sed -i 's/^CACHE_DRIVER=.*/CACHE_DRIVER=database/' /var/www/html/.env 2>/dev/null || true
+# Also add these if they don't exist
+grep -q "^SESSION_DRIVER=" /var/www/html/.env 2>/dev/null || echo "SESSION_DRIVER=database" >> /var/www/html/.env
+grep -q "^CACHE_DRIVER=" /var/www/html/.env 2>/dev/null || echo "CACHE_DRIVER=database" >> /var/www/html/.env
+# Clear config so the new .env values take effect
+php artisan config:clear 2>&1 || true
 
-# Also set APP_DEBUG=false for production
-php artisan config:set app.debug false --no-interaction 2>/dev/null || \
-    sed -i "s/APP_DEBUG=.*/APP_DEBUG=false/" /var/www/html/.env
-
-echo "Session driver: $(php artisan tinker --execute=\"echo config('session.driver');\" 2>/dev/null)"
-echo "Cache driver: $(php artisan tinker --execute=\"echo config('cache.default');\" 2>/dev/null)"
+echo "Session driver: $(php artisan tinker --execute='echo config(\"session.driver\");' 2>/dev/null)"
+echo "Cache driver: $(php artisan tinker --execute='echo config(\"cache.default\");' 2>/dev/null)"
 
 if [ -n "$DB_HOST" ]; then
     echo "Waiting for PostgreSQL at ${DB_HOST}:${DB_PORT:-5432}..."
@@ -66,7 +65,6 @@ php artisan event:clear 2>&1 || true
 php artisan view:clear 2>&1 || true
 php artisan cache:clear 2>&1 || true
 
-# Recreate directories after clear (view:clear deletes views dir)
 mkdir -p /var/www/html/storage/framework/{views,cache,sessions}
 chown -R www-data:www-data /var/www/html/storage
 chown -R www-data:www-data /var/www/html/bootstrap/cache
