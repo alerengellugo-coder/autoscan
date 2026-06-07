@@ -12,10 +12,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Force HTTPS URL generation on Render (SSL terminated at proxy level)
-        if (request()->isSecure() || request()->header('X-Forwarded-Proto') === 'https') {
-            \URL::forceScheme('https');
-        }
+        //
     }
 
     /**
@@ -25,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
-        // Force HTTPS for all generated URLs on Render
+        // Force HTTPS for all generated URLs in production (Render SSL termination)
         if (app()->environment('production')) {
             \URL::forceScheme('https');
         }
