@@ -1,32 +1,19 @@
 import React from 'react';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import AuthenticatedLayout from '../../../Layouts/AuthenticatedLayout';
 import StatusBadge from '../../../Components/StatusBadge';
 import {
     ArrowLeftIcon,
     PencilSquareIcon,
-    CubeIcon,
-    ArrowUpIcon,
-    ArrowDownIcon,
     PhotoIcon,
 } from '@heroicons/react/24/outline';
-import { PageProps, Product, SaleItem } from '../../../types';
+import { PageProps, Product } from '../../../types';
 
 interface ProductsShowProps extends PageProps {
     product: Product;
-    recent_sales: SaleItem[];
 }
 
-export default function ProductsShow({ product, recent_sales }: ProductsShowProps) {
-    const handleStockAdjustment = (adjustment: number) => {
-        const newStock = product.stock + adjustment;
-        if (newStock < 0) {
-            alert('No se puede tener stock negativo.');
-            return;
-        }
-        router.put(`/admin/productos/${product.id}/stock`, { stock: newStock });
-    };
-
+export default function ProductsShow({ product }: ProductsShowProps) {
     const profitMargin = product.profit_margin !== undefined
         ? product.profit_margin
         : product.cost && product.cost > 0
@@ -80,10 +67,6 @@ export default function ProductsShow({ product, recent_sales }: ProductsShowProp
                                     <span className="text-sm font-semibold text-gray-900">
                                         {product.category_label || product.category}
                                     </span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                    <span className="text-sm text-gray-500">Marca</span>
-                                    <span className="text-sm font-semibold text-gray-900">—</span>
                                 </div>
                                 <hr className="border-gray-200" />
                                 <div className="flex justify-between items-center">
@@ -140,52 +123,6 @@ export default function ProductsShow({ product, recent_sales }: ProductsShowProp
 
                     {/* Right Column */}
                     <div className="lg:col-span-2 space-y-6">
-                        {/* Stock Adjustment */}
-                        <div className="card">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                                Ajuste de Stock
-                            </h3>
-                            <div className="flex items-center gap-4">
-                                <div className="flex-1 p-4 rounded-xl bg-gray-50 text-center">
-                                    <p className="text-xs text-gray-500 mb-1">Stock Actual</p>
-                                    <p className="text-3xl font-bold text-gray-900">{product.stock}</p>
-                                    <p className="text-xs text-gray-500 mt-1">{product.unit || 'piezas'}</p>
-                                </div>
-                                <div className="flex flex-col gap-2">
-                                    <button
-                                        onClick={() => handleStockAdjustment(1)}
-                                        className="inline-flex items-center justify-center gap-1 px-4 py-2 text-sm font-medium text-green-700 bg-green-100 rounded-lg hover:bg-green-200 transition-colors"
-                                    >
-                                        <ArrowUpIcon className="h-4 w-4" />
-                                        +1
-                                    </button>
-                                    <button
-                                        onClick={() => handleStockAdjustment(-1)}
-                                        className="inline-flex items-center justify-center gap-1 px-4 py-2 text-sm font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200 transition-colors"
-                                        disabled={product.stock <= 0}
-                                    >
-                                        <ArrowDownIcon className="h-4 w-4" />
-                                        -1
-                                    </button>
-                                    <button
-                                        onClick={() => handleStockAdjustment(10)}
-                                        className="inline-flex items-center justify-center gap-1 px-4 py-2 text-sm font-medium text-blue-700 bg-blue-100 rounded-lg hover:bg-blue-200 transition-colors"
-                                    >
-                                        <ArrowUpIcon className="h-4 w-4" />
-                                        +10
-                                    </button>
-                                    <button
-                                        onClick={() => handleStockAdjustment(-10)}
-                                        className="inline-flex items-center justify-center gap-1 px-4 py-2 text-sm font-medium text-orange-700 bg-orange-100 rounded-lg hover:bg-orange-200 transition-colors"
-                                        disabled={product.stock <= 0}
-                                    >
-                                        <ArrowDownIcon className="h-4 w-4" />
-                                        -10
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
                         {/* Description */}
                         {product.description && (
                             <div className="card">
@@ -198,56 +135,28 @@ export default function ProductsShow({ product, recent_sales }: ProductsShowProp
                             </div>
                         )}
 
-                        {/* Sales History */}
-                        <div className="card p-0 overflow-hidden">
-                            <div className="px-6 py-4 border-b border-gray-200">
-                                <h3 className="text-lg font-semibold text-gray-900">
-                                    Ventas Recientes
-                                </h3>
-                            </div>
-                            <div className="overflow-x-auto">
-                                <table className="min-w-full divide-y divide-gray-200">
-                                    <thead>
-                                        <tr>
-                                            <th className="table-header px-6 py-3">Venta</th>
-                                            <th className="table-header px-6 py-3">Cantidad</th>
-                                            <th className="table-header px-6 py-3">Precio Unit.</th>
-                                            <th className="table-header px-6 py-3">Descuento</th>
-                                            <th className="table-header px-6 py-3">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="bg-white divide-y divide-gray-200">
-                                        {recent_sales.length === 0 ? (
-                                            <tr>
-                                                <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                                                    No hay ventas registradas para este producto.
-                                                </td>
-                                            </tr>
-                                        ) : (
-                                            recent_sales.map((item) => (
-                                                <tr key={item.id} className="hover:bg-gray-50 transition-colors">
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                        <Link href={`/admin/ventas/${item.sale_id}`} className="hover:text-primary-600">
-                                                            Venta #{item.sale_id}
-                                                        </Link>
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                                        {item.quantity}
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                                        {item.formatted_unit_price || `$${item.unit_price.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`}
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                                        {item.discount ? item.discount : '—'}
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                                        {item.formatted_total || `$${item.total.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`}
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        )}
-                                    </tbody>
-                                </table>
+                        {/* Stock Info Card */}
+                        <div className="card">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                                Información de Stock
+                            </h3>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div className="p-4 rounded-xl bg-gray-50 text-center">
+                                    <p className="text-xs text-gray-500 mb-1">Stock Actual</p>
+                                    <p className="text-3xl font-bold text-gray-900">{product.stock}</p>
+                                    <p className="text-xs text-gray-500 mt-1">{product.unit || 'piezas'}</p>
+                                </div>
+                                <div className="p-4 rounded-xl bg-gray-50 text-center">
+                                    <p className="text-xs text-gray-500 mb-1">Stock Mínimo</p>
+                                    <p className="text-3xl font-bold text-gray-900">{product.min_stock}</p>
+                                    <p className="text-xs text-gray-500 mt-1">nivel de alerta</p>
+                                </div>
+                                <div className="p-4 rounded-xl bg-gray-50 text-center">
+                                    <p className="text-xs text-gray-500 mb-1">Estado</p>
+                                    <p className={`text-lg font-bold ${product.stock_status_color === 'success' ? 'text-green-600' : product.stock_status_color === 'warning' ? 'text-yellow-600' : 'text-red-600'}`}>
+                                        {product.stock_status || 'N/A'}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>

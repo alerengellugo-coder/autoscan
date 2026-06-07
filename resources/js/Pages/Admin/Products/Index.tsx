@@ -197,14 +197,14 @@ export default function ProductsIndex({
                                             <td className="px-6 py-4 whitespace-nowrap text-right">
                                                 <div className="flex items-center justify-end gap-2">
                                                     <Link
-                                                        href={`/products/${product.id}`}
+                                                        href={`/admin/productos/${product.id}`}
                                                         className="text-primary-600 hover:text-primary-700 p-1 rounded-lg hover:bg-primary-50 transition-colors"
                                                         title="Ver"
                                                     >
                                                         <EyeIcon className="h-4 w-4" />
                                                     </Link>
                                                     <Link
-                                                        href={`/products/${product.id}/edit`}
+                                                        href={`/admin/productos/${product.id}/edit`}
                                                         className="text-yellow-600 hover:text-yellow-700 p-1 rounded-lg hover:bg-yellow-50 transition-colors"
                                                         title="Editar"
                                                     >
@@ -213,7 +213,7 @@ export default function ProductsIndex({
                                                     <button
                                                         onClick={() => {
                                                             if (confirm('¿Estás seguro de eliminar este producto?')) {
-                                                                router.delete(`/products/${product.id}`);
+                                                                router.delete(`/admin/productos/${product.id}`);
                                                             }
                                                         }}
                                                         className="text-red-600 hover:text-red-700 p-1 rounded-lg hover:bg-red-50 transition-colors"

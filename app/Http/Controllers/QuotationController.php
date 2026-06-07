@@ -155,6 +155,39 @@ class QuotationController extends Controller
 
     public function convertToSale(Request $request, Quotation $quotation)
     {
-        return response()->json(['message' => 'Convert to sale not implemented yet']);
+        if ($quotation->status !== QuotationStatus::Approved->value) {
+            return back()->withErrors(['error' => 'Solo se pueden convertir cotizaciones aprobadas.']);
+        }
+
+        $sale = DB::transaction(function () use ($quotation) {
+            $sale = \App\Models\Sale::create([
+                'client_id'      => $quotation->client_id,
+                'quotation_id'   => $quotation->id,
+                'description'    => $quotation->description,
+                'subtotal'       => $quotation->subtotal,
+                'tax_rate'       => $quotation->tax_rate,
+                'tax'            => $quotation->tax,
+                'discount'       => $quotation->discount,
+                'discount_type'  => $quotation->discount_type,
+                'total'          => $quotation->total,
+                'status'         => \App\Models\Enums\SaleStatus::Pending->value,
+                'paid_amount'    => 0,
+            ]);
+
+            foreach ($quotation->items as $item) {
+                $sale->items()->create([
+                    'product_id' => $item->product_id,
+                    'description' => $item->description,
+                    'quantity'   => $item->quantity,
+                    'unit_price' => $item->unit_price,
+                    'discount'   => $item->discount,
+                    'total'      => $item->total,
+                ]);
+            }
+
+            return $sale;
+        });
+
+        return redirect()->route('admin.ventas.show', $sale)->with('success', "Venta {$sale->sale_number} creada desde cotización.");
     }
 }

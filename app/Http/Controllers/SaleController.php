@@ -66,7 +66,10 @@ class SaleController extends Controller
         return Inertia::render('Admin/Sales/Create', [
             'clients' => User::clients()->active()->orderBy('name')->get(['id', 'name']),
             'products' => Product::active()->orderBy('name')->get(['id', 'name', 'price', 'stock_quantity']),
-            'quotations' => Quotation::where('status', 'approved')->orderByDesc('created_at')->get(['id', 'quotation_number', 'client_id', 'total']),
+            'quotations' => Quotation::where('status', 'approved')
+                ->with(['client', 'items.product'])
+                ->orderByDesc('created_at')
+                ->get(),
         ]);
     }
 

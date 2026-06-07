@@ -1,40 +1,29 @@
 import React from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '../../../Layouts/AuthenticatedLayout';
-import { ArrowLeftIcon, PhotoIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { PageProps, SelectOption } from '../../../types';
 
 interface ProductsCreateProps extends PageProps {
     categories: SelectOption[];
-    units: SelectOption[];
 }
 
-export default function ProductsCreate({ categories, units }: ProductsCreateProps) {
+export default function ProductsCreate({ categories }: ProductsCreateProps) {
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         sku: '',
         category: '',
-        brand: '',
         description: '',
         price: '',
         cost: '',
-        stock: '0',
-        min_stock: '5',
-        unit: 'pieza',
-        is_service: false,
-        is_active: true,
-        image: null as File | null,
+        stock_quantity: '0',
+        min_stock_alert: '5',
+        unit: '',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         post('/admin/productos');
-    };
-
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setData('image', e.target.files[0]);
-        }
     };
 
     const inputClass = (field: string) =>
@@ -60,34 +49,6 @@ export default function ProductsCreate({ categories, units }: ProductsCreateProp
             >
                 <div className="max-w-3xl mx-auto">
                     <form onSubmit={handleSubmit} className="card space-y-6">
-                        {/* Image Upload */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                                Imagen del Producto
-                            </label>
-                            <div className="flex items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
-                                <label htmlFor="image-upload" className="flex flex-col items-center gap-2 cursor-pointer">
-                                    <PhotoIcon className="h-10 w-10 text-gray-400" />
-                                    <span className="text-sm text-gray-500">
-                                        Haz clic para subir una imagen
-                                    </span>
-                                    <span className="text-xs text-gray-400">
-                                        PNG, JPG hasta 2MB
-                                    </span>
-                                </label>
-                                <input
-                                    id="image-upload"
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleImageChange}
-                                    className="hidden"
-                                />
-                            </div>
-                            {errors.image && (
-                                <p className="mt-1 text-sm text-red-600">{errors.image}</p>
-                            )}
-                        </div>
-
                         {/* Name and SKU */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
@@ -122,7 +83,7 @@ export default function ProductsCreate({ categories, units }: ProductsCreateProp
                             </div>
                         </div>
 
-                        {/* Category and Brand */}
+                        {/* Category and Unit */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1.5">
@@ -146,17 +107,17 @@ export default function ProductsCreate({ categories, units }: ProductsCreateProp
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                                    Marca
+                                    Unidad
                                 </label>
                                 <input
                                     type="text"
-                                    value={data.brand}
-                                    onChange={(e) => setData('brand', e.target.value)}
-                                    className={inputClass('brand')}
-                                    placeholder="Marca del producto"
+                                    value={data.unit}
+                                    onChange={(e) => setData('unit', e.target.value)}
+                                    className={inputClass('unit')}
+                                    placeholder="pieza, litro, metro, etc."
                                 />
-                                {errors.brand && (
-                                    <p className="mt-1 text-sm text-red-600">{errors.brand}</p>
+                                {errors.unit && (
+                                    <p className="mt-1 text-sm text-red-600">{errors.unit}</p>
                                 )}
                             </div>
                         </div>
@@ -230,73 +191,30 @@ export default function ProductsCreate({ categories, units }: ProductsCreateProp
                                 </label>
                                 <input
                                     type="number"
-                                    value={data.stock}
-                                    onChange={(e) => setData('stock', e.target.value)}
-                                    className={inputClass('stock')}
+                                    value={data.stock_quantity}
+                                    onChange={(e) => setData('stock_quantity', e.target.value)}
+                                    className={inputClass('stock_quantity')}
                                     min="0"
                                 />
-                                {errors.stock && (
-                                    <p className="mt-1 text-sm text-red-600">{errors.stock}</p>
+                                {errors.stock_quantity && (
+                                    <p className="mt-1 text-sm text-red-600">{errors.stock_quantity}</p>
                                 )}
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                                    Stock Mínimo de Alerta
+                                    Stock Mínimo de Alerta *
                                 </label>
                                 <input
                                     type="number"
-                                    value={data.min_stock}
-                                    onChange={(e) => setData('min_stock', e.target.value)}
-                                    className={inputClass('min_stock')}
+                                    value={data.min_stock_alert}
+                                    onChange={(e) => setData('min_stock_alert', e.target.value)}
+                                    className={inputClass('min_stock_alert')}
                                     min="0"
                                 />
-                                {errors.min_stock && (
-                                    <p className="mt-1 text-sm text-red-600">{errors.min_stock}</p>
+                                {errors.min_stock_alert && (
+                                    <p className="mt-1 text-sm text-red-600">{errors.min_stock_alert}</p>
                                 )}
                             </div>
-                        </div>
-
-                        {/* Unit */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                                Unidad
-                            </label>
-                            <select
-                                value={data.unit}
-                                onChange={(e) => setData('unit', e.target.value)}
-                                className={inputClass('unit')}
-                            >
-                                {units.map((u) => (
-                                    <option key={u.value} value={u.value}>
-                                        {u.label}
-                                    </option>
-                                ))}
-                            </select>
-                            {errors.unit && (
-                                <p className="mt-1 text-sm text-red-600">{errors.unit}</p>
-                            )}
-                        </div>
-
-                        {/* Checkboxes */}
-                        <div className="flex items-center gap-6">
-                            <label className="flex items-center gap-2 cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    checked={data.is_service}
-                                    onChange={(e) => setData('is_service', e.target.checked)}
-                                    className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-                                />
-                                <span className="text-sm text-gray-700">Es un servicio</span>
-                            </label>
-                            <label className="flex items-center gap-2 cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    checked={data.is_active}
-                                    onChange={(e) => setData('is_active', e.target.checked)}
-                                    className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-                                />
-                                <span className="text-sm text-gray-700">Producto activo</span>
-                            </label>
                         </div>
 
                         {/* Actions */}

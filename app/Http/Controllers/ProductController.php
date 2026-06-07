@@ -36,7 +36,7 @@ class ProductController extends Controller
 
         $totalProducts = Product::count();
         $lowStockCount = Product::whereRaw('stock_quantity <= min_stock_alert')->count();
-        $totalValue = Product::sum('price') * Product::sum('stock_quantity');
+        $totalValue = Product::selectRaw('SUM(price * stock_quantity) as value')->value('value') ?? 0;
 
         return Inertia::render('Admin/Products/Index', [
             'products'             => $products,

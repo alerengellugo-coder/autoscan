@@ -125,22 +125,23 @@ export default function Home() {
                     </div>
 
                     {/* Animated grid overlay */}
-                    <div className="absolute inset-0 opacity-[0.03]" style={{
-                        backgroundImage: 'linear-gradient(rgba(59,130,246,1) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,1) 1px, transparent 1px)',
+                    <div className="absolute inset-0 opacity-[0.06]" style={{
+                        backgroundImage: 'linear-gradient(rgba(51,144,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(51,144,255,1) 1px, transparent 1px)',
                         backgroundSize: '60px 60px'
                     }} />
 
-                    {/* Glowing orbs */}
-                    <div className="absolute top-1/4 left-1/6 w-[500px] h-[500px] rounded-full bg-primary-600/8 blur-[120px] animate-pulse-slow" />
-                    <div className="absolute bottom-1/4 right-1/6 w-[400px] h-[400px] rounded-full bg-accent-500/6 blur-[100px] animate-pulse-slow" style={{ animationDelay: '1.5s' }} />
+                    {/* Glowing orbs - more vibrant */}
+                    <div className="absolute top-1/4 left-1/6 w-[600px] h-[600px] rounded-full bg-primary-500/15 blur-[140px] animate-float" />
+                    <div className="absolute bottom-1/4 right-1/6 w-[500px] h-[500px] rounded-full bg-accent-400/12 blur-[120px] animate-float" style={{ animationDelay: '1.5s' }} />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-primary-600/10 blur-[100px] animate-pulse-slow" />
 
                     <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
                         <div className="max-w-3xl">
                             {/* Pill badge */}
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-600/15 border border-primary-500/25 mb-8 animate-slide-up">
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/20 border border-primary-400/30 mb-8 animate-slide-up">
                                 <span className="relative flex h-2 w-2">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75" />
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-400" />
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-300" />
                                 </span>
                                 <span className="text-sm font-medium text-primary-300">
                                     Especialistas en Electronica Automotriz
@@ -149,7 +150,7 @@ export default function Home() {
 
                             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white leading-[1.08] animate-slide-up">
                                 Escaneamos tu{' '}
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-primary-300 to-accent-400">
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-300 via-accent-300 to-primary-400 glow-text">
                                     Computadora
                                 </span>
                                 <br />
@@ -165,11 +166,11 @@ export default function Home() {
                             </p>
 
                             <div className="mt-10 flex flex-col sm:flex-row gap-4 animate-slide-up" style={{ animationDelay: '200ms' }}>
-                                <Link href="/register" className="btn-primary btn-lg">
+                                <Link href="/register" className="btn-primary btn-lg bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 shadow-glow hover:shadow-glow-accent">
                                     Registrar mi Vehiculo
                                     <ArrowRightIcon className="h-5 w-5" />
                                 </Link>
-                                <Link href="/servicios" className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white font-semibold py-3.5 px-8 rounded-xl border border-white/20 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5">
+                                <Link href="/servicios" className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold py-3.5 px-8 rounded-xl border border-white/25 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
                                     Ver Servicios
                                 </Link>
                             </div>
@@ -177,13 +178,13 @@ export default function Home() {
                             {/* Quick stats */}
                             <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 animate-slide-up" style={{ animationDelay: '300ms' }}>
                                 {[
-                                    { value: '15+', label: 'Anos de Experiencia' },
-                                    { value: '1,500+', label: 'Vehiculos Atendidos' },
-                                    { value: '8,000+', label: 'Diagnosticos Realizados' },
-                                    { value: '98%', label: 'Satisfaccion' },
+                                    { value: '15+', label: 'Anos de Experiencia', color: 'primary' },
+                                    { value: '1,500+', label: 'Vehiculos Atendidos', color: 'accent' },
+                                    { value: '8,000+', label: 'Diagnosticos Realizados', color: 'primary' },
+                                    { value: '98%', label: 'Satisfaccion', color: 'accent' },
                                 ].map((stat) => (
                                     <div key={stat.label} className="text-center sm:text-left">
-                                        <div className="text-2xl sm:text-3xl font-extrabold text-white">{stat.value}</div>
+                                        <div className={`text-2xl sm:text-3xl font-extrabold ${stat.color === 'primary' ? 'text-primary-300 glow-text' : 'text-accent-300'}`}>{stat.value}</div>
                                         <div className="text-sm text-dark-400 mt-0.5">{stat.label}</div>
                                     </div>
                                 ))}
@@ -210,7 +211,9 @@ export default function Home() {
 
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {services.map((service, i) => (
-                                <div key={service.title} className="group card-hover cursor-pointer" style={{ animationDelay: `${i * 80}ms` }}>
+                                <div key={service.title} className="group card-hover cursor-pointer relative overflow-hidden" style={{ animationDelay: `${i * 80}ms` }}>
+                                    {/* Colored top border on hover */}
+                                    <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${service.color === 'primary' ? 'from-primary-500 to-accent-500' : 'from-accent-500 to-primary-500'} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                                     <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-5 transition-all duration-300 ${
                                         service.color === 'primary'
                                             ? 'bg-primary-50 group-hover:bg-primary-100 group-hover:shadow-glow'
@@ -244,7 +247,7 @@ export default function Home() {
 
                         <div className="relative">
                             {/* Connection line (desktop) */}
-                            <div className="hidden lg:block absolute top-16 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-primary-200 via-primary-400 to-accent-300" />
+                            <div className="hidden lg:block absolute top-16 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-primary-300 via-primary-500 to-accent-400" />
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
                                 {processSteps.map((item, i) => (
@@ -266,9 +269,12 @@ export default function Home() {
 
                 {/* ═══ STATS ═══ */}
                 <section className="py-24 bg-dark-900 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-radial from-primary-600/10 via-transparent to-transparent" />
-                    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary-500/50 to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary-500/50 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-radial from-primary-500/15 via-transparent to-transparent" />
+                    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary-400/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-400/40 to-transparent" />
+                    {/* Floating glow orbs */}
+                    <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-primary-500/8 rounded-full blur-[100px]" />
+                    <div className="absolute bottom-1/4 right-1/4 w-[250px] h-[250px] bg-accent-500/8 rounded-full blur-[80px]" />
 
                     <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
@@ -279,7 +285,7 @@ export default function Home() {
                                 { ref: stat4.ref, count: stat4.count, end: '98%', label: 'Clientes Satisfechos', color: 'accent' },
                             ].map((stat, i) => (
                                 <div ref={stat.ref} key={i} className="text-center py-6">
-                                    <div className={`text-4xl sm:text-5xl font-extrabold ${stat.color === 'primary' ? 'text-primary-400' : 'text-accent-400'}`}>
+                                    <div className={`text-4xl sm:text-5xl font-extrabold glow-text ${stat.color === 'primary' ? 'text-primary-300' : 'text-accent-300'}`}>
                                         {stat.count.toLocaleString()}
                                         <span className="text-2xl">{stat.end.replace(/[\d,]+/, '')}</span>
                                     </div>
@@ -330,9 +336,9 @@ export default function Home() {
                 <section className="py-24 bg-white">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900 px-8 py-20 sm:px-16">
-                            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-600/10 rounded-full blur-[100px]" />
-                            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent-500/8 rounded-full blur-[80px]" />
-                            <div className="absolute inset-0 opacity-[0.03]" style={{
+                            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-500/15 rounded-full blur-[100px]" />
+                            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent-400/12 rounded-full blur-[80px]" />
+                            <div className="absolute inset-0 opacity-[0.04]" style={{
                                 backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.8) 1px, transparent 0)',
                                 backgroundSize: '30px 30px'
                             }} />
@@ -345,11 +351,11 @@ export default function Home() {
                                     Unete a miles de clientes que confian en nosotros. Check-in digital, notificaciones por email y seguimiento en tiempo real.
                                 </p>
                                 <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-                                    <Link href="/register" className="btn-primary btn-lg bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700">
+                                    <Link href="/register" className="btn-primary btn-lg bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 shadow-glow hover:shadow-glow-accent">
                                         Crear Cuenta Gratis
                                         <ArrowRightIcon className="h-5 w-5" />
                                     </Link>
-                                    <Link href="/contacto" className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white font-semibold py-3.5 px-8 rounded-xl border border-white/20 transition-all duration-300">
+                                    <Link href="/contacto" className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold py-3.5 px-8 rounded-xl border border-white/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
                                         Contactar
                                     </Link>
                                 </div>
