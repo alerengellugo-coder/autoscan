@@ -66,9 +66,9 @@
                 <select name="technician"
                         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                     <option value="">Todos los técnicos</option>
-                    @foreach($technician_options as $techId => $techName)
-                        <option value="{{ $techId }}" {{ ($filters['technician'] ?? '') == $techId ? 'selected' : '' }}>
-                            {{ $techName }}
+                    @foreach($technician_options as $tech)
+                        <option value="{{ $tech['value'] }}" {{ ($filters['technician'] ?? '') == $tech['value'] ? 'selected' : '' }}>
+                            {{ $tech['label'] }}
                         </option>
                     @endforeach
                 </select>
@@ -141,7 +141,7 @@
                         </td>
                         <td class="px-5 py-3 text-gray-700">{{ $order->client['name'] ?? '—' }}</td>
                         <td class="px-5 py-3 text-gray-700">{{ $order->technician['name'] ?? '—' }}</td>
-                        <td class="px-5 py-3 text-gray-700">{{ $order->service_type }}</td>
+                        <td class="px-5 py-3 text-gray-700">{{ $order->service_type_label ?? $order->service_type }}</td>
                         <td class="px-5 py-3">
                             @switch($order->status)
                                 @case('pending')

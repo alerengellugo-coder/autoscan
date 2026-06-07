@@ -11,6 +11,15 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
+// Debug route (remove after fixing)
+Route::get('/debug', function () {
+    try {
+        return view('auth.login');
+    } catch (\Throwable $e) {
+        return response('<pre>' . $e->getMessage() . "\n\n" . $e->getTraceAsString() . '</pre>', 500);
+    }
+});
+
 // Public pages
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/servicios', [PageController::class, 'services'])->name('services');

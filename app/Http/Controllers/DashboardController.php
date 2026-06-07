@@ -11,7 +11,6 @@ use App\Models\ServiceReport;
 use App\Models\Product;
 use App\Models\Quotation;
 use App\Models\Vehicle;
-use App\Models\Notification;
 
 class DashboardController extends Controller
 {
