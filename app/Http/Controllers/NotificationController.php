@@ -35,7 +35,7 @@ class NotificationController extends Controller
 
         return Inertia::render('Notifications/Index', [
             'notifications' => $notifications,
-            'unreadCount'   => $unreadCount,
+            'unread_count'  => $unreadCount,
         ]);
     }
 

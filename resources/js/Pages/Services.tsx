@@ -18,7 +18,7 @@ const services = [
         description: 'Detección precisa de fallas electrónicas con equipos de última generación. Analizamos todos los módulos de control de tu vehículo.',
         features: ['Escaneo de módulos', 'Análisis de sensores', 'Detección de fallas', 'Reporte detallado'],
         icon: CpuChipIcon,
-        gradient: 'from-blue-500 to-cyan-500',
+        gradient: 'from-blue-500 to-blue-600',
         price: 'Desde $500',
     },
     {

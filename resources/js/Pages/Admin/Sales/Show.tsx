@@ -49,7 +49,7 @@ export default function SalesShow({ sale }: SalesShowProps) {
 
     const handlePaymentSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(`/admin/ventas/${sale.id}/payments`, {
+        post(`/admin/ventas/${sale.id}/pago`, {
             onSuccess: () => {
                 setShowPaymentModal(false);
                 reset();
@@ -59,7 +59,7 @@ export default function SalesShow({ sale }: SalesShowProps) {
 
     const handleCancelSale = () => {
         setShowCancelConfirm(false);
-        router.put(`/admin/ventas/${sale.id}/cancel`);
+        router.post(`/admin/ventas/${sale.id}/cancelar`);
     };
 
     const formatMoney = (amount: number) => {

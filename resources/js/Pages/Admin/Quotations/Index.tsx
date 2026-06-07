@@ -10,7 +10,6 @@ import {
     CheckCircleIcon,
     XMarkIcon,
     ShoppingBagIcon,
-    TrashIcon,
     DocumentArrowDownIcon,
 } from '@heroicons/react/24/outline';
 import { PageProps, Quotation, PaginationData, SelectOption } from '../../../types';
@@ -36,12 +35,14 @@ export default function QuotationsIndex({
     };
 
     const handleAction = (id: number, action: string) => {
-        if (action === 'delete') {
-            if (confirm('¿Estás seguro de eliminar esta cotización?')) {
-                router.delete(`/admin/cotizaciones/${id}`);
-            }
-        } else {
-            router.put(`/admin/cotizaciones/${id}/${action}`);
+        if (action === 'approve') {
+            router.patch(`/admin/cotizaciones/${id}/status`, { status: 'approved' });
+        } else if (action === 'reject') {
+            router.patch(`/admin/cotizaciones/${id}/status`, { status: 'rejected' });
+        } else if (action === 'convert-to-sale') {
+            router.post(`/admin/cotizaciones/${id}/convertir-venta`);
+        } else if (action === 'generate-pdf') {
+            window.open(`/admin/cotizaciones/${id}/pdf`, '_blank');
         }
     };
 
@@ -154,22 +155,13 @@ export default function QuotationsIndex({
                                                         <EyeIcon className="h-4 w-4" />
                                                     </Link>
                                                     {quotation.status === 'draft' && (
-                                                        <>
-                                                            <Link
-                                                                href={`/admin/cotizaciones/${quotation.id}/edit`}
-                                                                className="text-yellow-600 hover:text-yellow-700 p-1 rounded-lg hover:bg-yellow-50 transition-colors"
-                                                                title="Editar"
-                                                            >
-                                                                <PencilSquareIcon className="h-4 w-4" />
-                                                            </Link>
-                                                            <button
-                                                                onClick={() => handleAction(quotation.id, 'delete')}
-                                                                className="text-red-600 hover:text-red-700 p-1 rounded-lg hover:bg-red-50 transition-colors"
-                                                                title="Eliminar"
-                                                            >
-                                                                <TrashIcon className="h-4 w-4" />
-                                                            </button>
-                                                        </>
+                                                        <Link
+                                                            href={`/admin/cotizaciones/${quotation.id}/edit`}
+                                                            className="text-yellow-600 hover:text-yellow-700 p-1 rounded-lg hover:bg-yellow-50 transition-colors"
+                                                            title="Editar"
+                                                        >
+                                                            <PencilSquareIcon className="h-4 w-4" />
+                                                        </Link>
                                                     )}
                                                     {(quotation.status === 'pending_client' || quotation.status === 'draft') && (
                                                         <>

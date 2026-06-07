@@ -13,17 +13,17 @@ export default {
         extend: {
             colors: {
                 primary: {
-                    50: '#ecfeff',
-                    100: '#cffafe',
-                    200: '#a5f3fc',
-                    300: '#67e8f9',
-                    400: '#22d3ee',
-                    500: '#06b6d4',
-                    600: '#0891b2',
-                    700: '#0e7490',
-                    800: '#155e75',
-                    900: '#164e63',
-                    950: '#083344',
+                    50: '#eff6ff',
+                    100: '#dbeafe',
+                    200: '#bfdbfe',
+                    300: '#93c5fd',
+                    400: '#60a5fa',
+                    500: '#3b82f6',
+                    600: '#2563eb',
+                    700: '#1d4ed8',
+                    800: '#1e40af',
+                    900: '#1e3a8a',
+                    950: '#172554',
                 },
                 accent: {
                     50: '#fffbeb',
@@ -75,7 +75,7 @@ export default {
                 'card': '0 1px 3px 0 rgba(16, 42, 67, 0.06), 0 1px 2px -1px rgba(16, 42, 67, 0.06)',
                 'card-hover': '0 10px 25px -5px rgba(16, 42, 67, 0.1), 0 8px 10px -6px rgba(16, 42, 67, 0.08)',
                 'sidebar': '2px 0 20px rgba(16, 42, 67, 0.08)',
-                'glow': '0 0 30px rgba(6, 182, 212, 0.15)',
+                'glow': '0 0 30px rgba(59, 130, 246, 0.15)',
                 'glow-accent': '0 0 30px rgba(245, 158, 11, 0.15)',
             },
             borderRadius: {
@@ -116,8 +116,8 @@ export default {
                     '100%': { transform: 'translateX(0)', opacity: '1' },
                 },
                 glow: {
-                    '0%': { boxShadow: '0 0 5px rgba(6, 182, 212, 0.2)' },
-                    '100%': { boxShadow: '0 0 20px rgba(6, 182, 212, 0.6)' },
+                    '0%': { boxShadow: '0 0 5px rgba(59, 130, 246, 0.2)' },
+                    '100%': { boxShadow: '0 0 20px rgba(59, 130, 246, 0.6)' },
                 },
                 scanLine: {
                     '0%, 100%': { transform: 'translateY(0)' },
@@ -130,7 +130,7 @@ export default {
             },
             backgroundImage: {
                 'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-                'grid-pattern': 'linear-gradient(rgba(6, 182, 212, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.05) 1px, transparent 1px)',
+                'grid-pattern': 'linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px)',
             },
             backgroundSize: {
                 'grid': '40px 40px',

@@ -74,14 +74,14 @@ export default function NotificationsIndex({
     const [activeFilter, setActiveFilter] = useState<'all' | 'unread'>('all');
 
     const handleMarkAllRead = () => {
-        router.post('/notificaciones/mark-all-read', {}, {
+        router.post('/notificaciones/read-all', {}, {
             preserveState: true,
             preserveScroll: true,
         });
     };
 
     const handleMarkRead = (id: string) => {
-        router.post(`/notificaciones/${id}/mark-read`, {}, {
+        router.post(`/notificaciones/${id}/read`, {}, {
             preserveState: true,
             preserveScroll: true,
         });
