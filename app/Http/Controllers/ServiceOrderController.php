@@ -10,6 +10,9 @@ use App\Models\Enums\ServiceType;
 use App\Models\ServiceOrder;
 use App\Models\User;
 use App\Models\Vehicle;
+use App\Notifications\OrderCheckedIn;
+use App\Notifications\OrderDelivered;
+use App\Notifications\OrderStatusUpdated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -138,6 +141,11 @@ class ServiceOrderController extends Controller
 
         $order = ServiceOrder::create($validated);
 
+        // Notify client of check-in
+        if ($order->client && $order->client->email) {
+            $order->client->notify(new OrderCheckedIn($order));
+        }
+
         $route = Auth::user()->isAdmin() ? 'admin.ordenes.show' : 'technician.orders.show';
         return redirect()->route($route, $order)->with('success', "Orden {$order->order_number} creada exitosamente.");
     }
@@ -219,6 +227,8 @@ class ServiceOrderController extends Controller
         if (! $serviceOrder->canTransitionTo($newStatus)) {
             return back()->withErrors(['status' => "No se puede cambiar el estado de '{$serviceOrder->status->label()}' a '{$newStatus->label()}'."]);
         }
+        $oldStatus = $serviceOrder->status;
+
         DB::transaction(function () use ($serviceOrder, $newStatus, $validated) {
             $data = ['status' => $newStatus->value];
             if ($newStatus === OrderStatus::InProgress && ! $serviceOrder->started_at) $data['started_at'] = now();
@@ -230,6 +240,16 @@ class ServiceOrderController extends Controller
                 $serviceOrder->update(['notes' => trim($current . "\n\n[" . now()->format('d/m/Y H:i') . '] ' . $validated['notes'])]);
             }
         });
+
+        // Notify client of status change
+        if ($serviceOrder->client && $serviceOrder->client->email) {
+            if ($newStatus === OrderStatus::Delivered) {
+                $serviceOrder->client->notify(new OrderDelivered($serviceOrder));
+            } else {
+                $serviceOrder->client->notify(new OrderStatusUpdated($serviceOrder, $oldStatus, $newStatus));
+            }
+        }
+
         return back()->with('success', "Estado actualizado a '{$newStatus->label()}'.");
     }
 

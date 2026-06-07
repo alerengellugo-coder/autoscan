@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\Quotation;
 
@@ -11,28 +12,32 @@ class QuotationApproved extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * Create a new notification instance.
-     */
     public function __construct(
         public Quotation $quotation,
     ) {}
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
-     */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['mail', 'database'];
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
+    public function toMail(object $notifiable): MailMessage
+    {
+        $order = $this->quotation->serviceOrder;
+        $vehicle = $order ? $order->vehicle : null;
+
+        return (new MailMessage)
+            ->subject("Cotización #{$this->quotation->quotation_number} aprobada")
+            ->greeting("Hola {$notifiable->name},")
+            ->line("Le informamos que el cliente ha aprobado la cotización.")
+            ->line("**Cotización:** #{$this->quotation->quotation_number}")
+            ->line("**Total:** $" . number_format($this->quotation->total, 2))
+            ->when($vehicle, fn ($mail) => $mail->line("**Vehículo:** {$vehicle->brand} {$vehicle->model} ({$vehicle->plate})"))
+            ->line('Puede proceder con el servicio correspondiente.')
+            ->action('Ver Cotización', url("/admin/cotizaciones/{$this->quotation->id}"))
+            ->line('Gracias por confiar en AutoScan.');
+    }
+
     public function toDatabase(object $notifiable): array
     {
         $client = $this->quotation->client;

@@ -12,6 +12,7 @@ use App\Models\QuotationItem;
 use App\Models\ServiceOrder;
 use App\Models\User;
 use App\Models\Vehicle;
+use App\Notifications\QuotationApproved;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -135,7 +136,18 @@ class QuotationController extends Controller
     {
         $validated = $request->validate(['status' => 'required|string']);
         $newStatus = QuotationStatus::from($validated['status']);
+        $oldStatus = $quotation->status;
         $quotation->update(['status' => $newStatus->value]);
+
+        // Notify admin when client approves a quotation
+        if ($newStatus === QuotationStatus::Approved && $oldStatus !== QuotationStatus::Approved) {
+            // Notify all admins
+            $admins = User::admins()->active()->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new QuotationApproved($quotation));
+            }
+        }
+
         return back()->with('success', 'Estado actualizado.');
     }
 
