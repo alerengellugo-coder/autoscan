@@ -2,34 +2,31 @@
 
 echo "=== AutoScan Deployment Starting ==="
 
-# Create required runtime directories FIRST
 mkdir -p /var/run /var/log/nginx
 chmod 777 /var/run
 
-# CRITICAL: Ensure storage directories exist BEFORE any artisan commands
 mkdir -p /var/www/html/storage/framework/{views,cache,sessions}
 mkdir -p /var/www/html/storage/logs
 mkdir -p /var/www/html/bootstrap/cache
 
-# Remove old Alpine nginx configs
 rm -f /etc/nginx/conf.d/default.conf
 rm -f /etc/nginx/http.d/default.conf 2>/dev/null || true
 
 export PORT=${PORT:-10000}
 echo "Using PORT=$PORT"
 sed -i "s/listen 10000 default_server/listen $PORT default_server/" /etc/nginx/nginx.conf
-echo "Nginx configured to listen on port $PORT"
 
 nginx -t 2>&1
-if [ $? -ne 0 ]; then
-    echo "FATAL: nginx config test failed!"
-    cat /etc/nginx/nginx.conf
-fi
 
 if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "SomeRandomStringSomeRandomString" ] || [ "$APP_KEY" = "null" ]; then
     echo "Generating application key..."
     php artisan key:generate --force 2>&1 || echo "WARNING: key:generate failed"
 fi
+
+# TEMPORARY: Force debug mode on to see the actual 500 error
+# This allows us to see detailed error messages in the browser
+php artisan config:set app.debug true --no-interaction 2>/dev/null || \
+    sed -i "s/APP_DEBUG=.*/APP_DEBUG=true/" /var/www/html/.env
 
 if [ -n "$DB_HOST" ]; then
     echo "Waiting for PostgreSQL at ${DB_HOST}:${DB_PORT:-5432}..."
@@ -53,7 +50,6 @@ php artisan migrate --force --no-interaction 2>&1 || echo "ERROR: Migrations fai
 echo "Running seeders..."
 php artisan db:seed --force --no-interaction 2>&1 || echo "  Seeder failed, continuing..."
 
-# Recreate views dir AFTER view:clear deletes it
 echo "Clearing cached files..."
 php artisan config:clear 2>&1 || true
 php artisan route:clear 2>&1 || true
@@ -61,7 +57,6 @@ php artisan event:clear 2>&1 || true
 php artisan view:clear 2>&1 || true
 php artisan cache:clear 2>&1 || true
 
-# view:clear DELETES the compiled views directory, so recreate it
 mkdir -p /var/www/html/storage/framework/{views,cache,sessions}
 chown -R www-data:www-data /var/www/html/storage
 chown -R www-data:www-data /var/www/html/bootstrap/cache
@@ -74,11 +69,10 @@ echo "=== Starting nginx + php-fpm ==="
 
 php-fpm -F 2>&1 &
 echo "PHP-FPM started (pid $!)"
-
 sleep 2
 
 if [ -S /var/run/php-fpm.sock ]; then
-    echo "PHP-FPM socket created successfully"
+    echo "PHP-FPM socket OK"
 else
     echo "WARNING: PHP-FPM socket not found"
     ls -la /var/run/ 2>&1
