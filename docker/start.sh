@@ -5,6 +5,7 @@ echo "=== AutoScan Deployment Starting ==="
 mkdir -p /var/run /var/log/nginx
 chmod 777 /var/run
 
+# Ensure all required directories exist
 mkdir -p /var/www/html/storage/framework/{views,cache,sessions}
 mkdir -p /var/www/html/storage/logs
 mkdir -p /var/www/html/bootstrap/cache
@@ -23,10 +24,18 @@ if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "SomeRandomStringSomeRandomString" ] || [
     php artisan key:generate --force 2>&1 || echo "WARNING: key:generate failed"
 fi
 
-# TEMPORARY: Force debug mode on to see the actual 500 error
-# This allows us to see detailed error messages in the browser
-php artisan config:set app.debug true --no-interaction 2>/dev/null || \
-    sed -i "s/APP_DEBUG=.*/APP_DEBUG=true/" /var/www/html/.env
+# Force session and cache to use database (avoids file permission issues)
+php artisan config:set session.driver database --no-interaction 2>/dev/null || \
+    sed -i "s/SESSION_DRIVER=.*/SESSION_DRIVER=database/" /var/www/html/.env
+php artisan config:set cache.default database --no-interaction 2>/dev/null || \
+    sed -i "s/CACHE_DRIVER=.*/CACHE_DRIVER=database/" /var/www/html/.env
+
+# Also set APP_DEBUG=false for production
+php artisan config:set app.debug false --no-interaction 2>/dev/null || \
+    sed -i "s/APP_DEBUG=.*/APP_DEBUG=false/" /var/www/html/.env
+
+echo "Session driver: $(php artisan tinker --execute=\"echo config('session.driver');\" 2>/dev/null)"
+echo "Cache driver: $(php artisan tinker --execute=\"echo config('cache.default');\" 2>/dev/null)"
 
 if [ -n "$DB_HOST" ]; then
     echo "Waiting for PostgreSQL at ${DB_HOST}:${DB_PORT:-5432}..."
@@ -57,6 +66,7 @@ php artisan event:clear 2>&1 || true
 php artisan view:clear 2>&1 || true
 php artisan cache:clear 2>&1 || true
 
+# Recreate directories after clear (view:clear deletes views dir)
 mkdir -p /var/www/html/storage/framework/{views,cache,sessions}
 chown -R www-data:www-data /var/www/html/storage
 chown -R www-data:www-data /var/www/html/bootstrap/cache
