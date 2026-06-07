@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 use Illuminate\Validation\ValidationException;
-use Inertia\Inertia;
-use Inertia\Response;
 
 /**
  * Controller: NewPasswordController
@@ -24,12 +22,12 @@ class NewPasswordController extends Controller
     /**
      * Display the password reset form.
      *
-     * Renders the Inertia reset password page with the token and email
+     * Renders the reset password page with the token and email
      * pre-filled from the reset link URL.
      */
-    public function create(Request $request): Response
+    public function create(Request $request)
     {
-        return Inertia::render('Auth/ResetPassword', [
+        return view('auth.reset-password', [
             'token' => $request->route('token'),
             'email' => $request->email,
         ]);

@@ -8,12 +8,10 @@ use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class VehicleController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request)
     {
         $query = Vehicle::query()->with('client');
         if ($request->filled('search')) {
@@ -27,7 +25,7 @@ class VehicleController extends Controller
         $totalVehicles = Vehicle::count();
         $inServiceCount = Vehicle::where('status', 'in_service')->count();
 
-        $page = Auth::user()->isAdmin() ? 'Admin/Vehicles/Index' : 'Client/Vehicles/Index';
+        $page = Auth::user()->isAdmin() ? 'vehicles.index' : 'client.vehicles.index';
         $data = [
             'vehicles' => $vehicles,
             'filters' => $request->only('search', 'brand', 'status', 'per_page'),
@@ -36,13 +34,13 @@ class VehicleController extends Controller
             $data['total_vehicles'] = $totalVehicles;
             $data['in_service_count'] = $inServiceCount;
         }
-        return Inertia::render($page, $data);
+        return view($page, $data);
     }
 
-    public function create(Request $request): Response
+    public function create(Request $request)
     {
         $clients = Auth::user()->isAdmin() ? User::clients()->active()->orderBy('name')->get(['id', 'name']) : [];
-        return Inertia::render('Admin/Vehicles/Create', [
+        return view('vehicles.create', [
             'clients' => $clients,
             'brands' => Vehicle::select('brand')->distinct()->orderBy('brand')->pluck('brand'),
         ]);
@@ -69,16 +67,16 @@ class VehicleController extends Controller
         return redirect()->route($route)->with('success', 'Vehículo registrado.');
     }
 
-    public function show(Vehicle $vehicle): Response
+    public function show(Vehicle $vehicle)
     {
         $vehicle->load(['client', 'serviceOrders' => fn ($q) => $q->latest()]);
-        return Inertia::render('Admin/Vehicles/Show', ['vehicle' => $vehicle]);
+        return view('vehicles.show', ['vehicle' => $vehicle]);
     }
 
-    public function edit(Vehicle $vehicle): Response
+    public function edit(Vehicle $vehicle)
     {
         $vehicle->load('client');
-        return Inertia::render('Admin/Vehicles/Edit', ['vehicle' => $vehicle]);
+        return view('vehicles.edit', ['vehicle' => $vehicle]);
     }
 
     public function update(Request $request, Vehicle $vehicle)

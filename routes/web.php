@@ -10,7 +10,6 @@ use App\Http\Controllers\SaleController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 // Public pages
 Route::get('/', [PageController::class, 'home'])->name('home');

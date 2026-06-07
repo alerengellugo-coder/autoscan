@@ -7,8 +7,6 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
-use Inertia\Inertia;
-use Inertia\Response;
 
 /**
  * Controller: PasswordResetLinkController
@@ -22,11 +20,11 @@ class PasswordResetLinkController extends Controller
     /**
      * Display the password reset link request form.
      *
-     * Returns the Inertia page for requesting a password reset link.
+     * Returns the page for requesting a password reset link.
      */
-    public function create(): Response
+    public function create()
     {
-        return Inertia::render('Auth/ForgotPassword');
+        return view('auth.forgot-password');
     }
 
     /**

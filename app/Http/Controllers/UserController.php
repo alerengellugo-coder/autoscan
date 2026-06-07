@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
-use Inertia\Inertia;
 
 class UserController extends Controller
 {
@@ -28,7 +27,7 @@ class UserController extends Controller
 
         $users = $query->orderBy('created_at', 'desc')->paginate(15);
 
-        return Inertia::render('Admin/Users/Index', [
+        return view('users.index', [
             'users' => $users,
             'filters' => $request->only('search', 'role'),
         ]);

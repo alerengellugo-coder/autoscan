@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
-use Inertia\Response;
-
 /**
  * Controller: PageController
  *
@@ -25,9 +22,9 @@ class PageController extends Controller
      *
      * Public page that showcases the AutoScan service offering.
      */
-    public function home(): Response
+    public function home()
     {
-        return Inertia::render('Home');
+        return view('pages.home');
     }
 
     /**
@@ -35,9 +32,9 @@ class PageController extends Controller
      *
      * Public informational page about the company.
      */
-    public function about(): Response
+    public function about()
     {
-        return Inertia::render('About');
+        return view('pages.about');
     }
 
     /**
@@ -46,9 +43,9 @@ class PageController extends Controller
      * Public page listing all available services offered
      * by the AutoScan workshop.
      */
-    public function services(): Response
+    public function services()
     {
-        return Inertia::render('Services');
+        return view('pages.services');
     }
 
     /**
@@ -57,8 +54,8 @@ class PageController extends Controller
      * Public page with contact information and a
      * contact form (handled via frontend/API).
      */
-    public function contact(): Response
+    public function contact()
     {
-        return Inertia::render('Contact');
+        return view('pages.contact');
     }
 }

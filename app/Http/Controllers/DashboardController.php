@@ -6,8 +6,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
-use Inertia\Response;
 use App\Models\ServiceOrder;
 use App\Models\ServiceReport;
 use App\Models\Product;
@@ -38,7 +36,7 @@ class DashboardController extends Controller
      * Admin dashboard.
      * Expects: stats, recent_orders, low_stock_products, recent_quotations
      */
-    public function adminDashboard(): Response
+    public function adminDashboard()
     {
         $now = now();
         $startOfMonth = $now->copy()->startOfMonth();
@@ -56,49 +54,20 @@ class DashboardController extends Controller
         $recent_orders = ServiceOrder::with(['vehicle', 'client', 'technician'])
             ->latest()
             ->take(10)
-            ->get()
-            ->map(fn ($o) => [
-                'id'             => $o->id,
-                'order_number'   => $o->order_number,
-                'status'         => $o->status,
-                'status_label'   => $o->status_label ?? $o->status,
-                'priority'       => $o->priority,
-                'priority_label' => $o->priority_label ?? $o->priority,
-                'created_at'     => $o->created_at->toISOString(),
-                'vehicle'        => $o->vehicle ? [
-                    'plate' => $o->vehicle->plate,
-                    'brand' => $o->vehicle->brand,
-                    'model' => $o->vehicle->model,
-                ] : null,
-                'client' => $o->client ? ['name' => $o->client->name] : null,
-            ]);
+            ->get();
 
         $low_stock_products = Product::whereRaw('stock_quantity <= min_stock_alert')
             ->orWhere('stock_quantity', 0)
             ->orderBy('stock_quantity', 'asc')
             ->take(10)
-            ->get()
-            ->map(fn ($p) => [
-                'id'        => $p->id,
-                'name'      => $p->name,
-                'stock'     => $p->stock,
-                'min_stock' => $p->min_stock,
-            ]);
+            ->get();
 
         $recent_quotations = Quotation::with(['client'])
             ->latest()
             ->take(5)
-            ->get()
-            ->map(fn ($q) => [
-                'id'               => $q->id,
-                'quotation_number' => $q->quotation_number,
-                'status'           => $q->status,
-                'status_label'     => $q->status_label ?? $q->status,
-                'total'            => (float) $q->total,
-                'client'           => $q->client ? ['name' => $q->client->name] : null,
-            ]);
+            ->get();
 
-        return Inertia::render('Dashboard/AdminDashboard', [
+        return view('dashboard.admin', [
             'stats'              => $stats,
             'recent_orders'      => $recent_orders,
             'low_stock_products' => $low_stock_products,
@@ -110,7 +79,7 @@ class DashboardController extends Controller
      * Technician dashboard.
      * Expects: stats, active_orders, recent_reports
      */
-    public function technicianDashboard(): Response
+    public function technicianDashboard()
     {
         $user = Auth::user();
 
@@ -130,46 +99,15 @@ class DashboardController extends Controller
             ->whereIn('status', ['pending', 'in_progress', 'diagnosing'])
             ->latest()
             ->take(10)
-            ->get()
-            ->map(fn ($o) => [
-                'id'             => $o->id,
-                'order_number'   => $o->order_number,
-                'status'         => $o->status,
-                'status_label'   => $o->status_label ?? $o->status,
-                'priority'       => $o->priority,
-                'priority_label' => $o->priority_label ?? $o->priority,
-                'created_at'     => $o->created_at->toISOString(),
-                'vehicle'        => $o->vehicle ? [
-                    'id'    => $o->vehicle->id,
-                    'plate' => $o->vehicle->plate,
-                    'brand' => $o->vehicle->brand,
-                    'model' => $o->vehicle->model,
-                ] : null,
-                'client' => $o->client ? ['name' => $o->client->name] : null,
-            ]);
+            ->get();
 
         $recent_reports = ServiceReport::with(['serviceOrder.vehicle', 'technician'])
             ->where('technician_id', $user->id)
             ->latest('report_date')
             ->take(5)
-            ->get()
-            ->map(fn ($r) => [
-                'id'               => $r->id,
-                'report_date'      => $r->report_date?->toISOString(),
-                'description'      => $r->description,
-                'work_performed'   => $r->work_performed,
-                'labor_hours'      => $r->labor_hours,
-                'service_order'    => $r->serviceOrder ? [
-                    'id'           => $r->serviceOrder->id,
-                    'order_number' => $r->serviceOrder->order_number,
-                    'vehicle'      => $r->serviceOrder->vehicle ? [
-                        'plate' => $r->serviceOrder->vehicle->plate,
-                    ] : null,
-                ] : null,
-                'technician'       => $r->technician ? ['name' => $r->technician->name] : null,
-            ]);
+            ->get();
 
-        return Inertia::render('Dashboard/TechnicianDashboard', [
+        return view('dashboard.technician', [
             'stats'          => $stats,
             'active_orders'  => $active_orders,
             'recent_reports' => $recent_reports,
@@ -180,62 +118,27 @@ class DashboardController extends Controller
      * Client dashboard.
      * Expects: vehicles, active_orders, notifications
      */
-    public function clientDashboard(): Response
+    public function clientDashboard()
     {
         $user = Auth::user();
 
         $vehicles = Vehicle::where('client_id', $user->id)
             ->latest()
-            ->get()
-            ->map(fn ($v) => [
-                'id'       => $v->id,
-                'brand'    => $v->brand,
-                'model'    => $v->model,
-                'year'     => $v->year,
-                'plate'    => $v->plate,
-                'color'    => $v->color,
-                'status'   => $v->status,
-                'status_label' => $v->status_label ?? $v->status,
-                'full_name' => $v->brand . ' ' . $v->model . ' ' . $v->year,
-            ]);
+            ->get();
 
         $active_orders = ServiceOrder::with(['vehicle', 'technician'])
             ->where('client_id', $user->id)
             ->whereIn('status', ['pending', 'in_progress', 'diagnosing'])
             ->latest()
             ->take(10)
-            ->get()
-            ->map(fn ($o) => [
-                'id'             => $o->id,
-                'order_number'   => $o->order_number,
-                'status'         => $o->status,
-                'status_label'   => $o->status_label ?? $o->status,
-                'priority'       => $o->priority,
-                'priority_label' => $o->priority_label ?? $o->priority,
-                'service_type'   => $o->service_type,
-                'created_at'     => $o->created_at->toISOString(),
-                'vehicle'        => $o->vehicle ? [
-                    'id'    => $o->vehicle->id,
-                    'plate' => $o->vehicle->plate,
-                    'brand' => $o->vehicle->brand,
-                    'model' => $o->vehicle->model,
-                ] : null,
-                'technician'     => $o->technician ? ['name' => $o->technician->name] : null,
-            ]);
+            ->get();
 
         $notifications = $user->notifications()
             ->latest()
             ->take(10)
-            ->get()
-            ->map(fn ($n) => [
-                'id'         => $n->id,
-                'type'       => $n->type,
-                'data'       => $n->data,
-                'read_at'    => $n->read_at?->toISOString(),
-                'created_at' => $n->created_at->toISOString(),
-            ]);
+            ->get();
 
-        return Inertia::render('Dashboard/ClientDashboard', [
+        return view('dashboard.client', [
             'vehicles'      => $vehicles,
             'active_orders' => $active_orders,
             'notifications' => $notifications,

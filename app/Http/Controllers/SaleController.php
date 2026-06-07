@@ -16,8 +16,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class SaleController extends Controller
 {
@@ -26,7 +24,7 @@ class SaleController extends Controller
         return collect(SaleStatus::cases())->map(fn ($s) => ['value' => $s->value, 'label' => $s->label()])->values()->all();
     }
 
-    public function index(Request $request): Response
+    public function index(Request $request)
     {
         $query = Sale::query()->with(['client', 'quotation']);
         if ($request->filled('status')) $query->where('status', $request->input('status'));
@@ -42,7 +40,7 @@ class SaleController extends Controller
             'pending_payment' => Sale::where('status', '!=', SaleStatus::Cancelled->value)->sumRaw('COALESCE(total - COALESCE(paid_amount, 0), 0)'),
         ];
 
-        return Inertia::render('Admin/Sales/Index', [
+        return view('sales.index', [
             'sales'         => $sales,
             'stats'         => $stats,
             'status_options' => $this->statusOptions(),
@@ -50,20 +48,20 @@ class SaleController extends Controller
         ]);
     }
 
-    public function clientSales(Request $request): Response
+    public function clientSales(Request $request)
     {
         $query = Sale::query()->with(['client', 'quotation'])->where('client_id', Auth::id());
         $sales = $query->orderByDesc('created_at')->paginate($request->input('per_page', 10))->withQueryString();
-        return Inertia::render('Client/Sales/Index', [
+        return view('client.sales.index', [
             'sales'         => $sales,
             'status_options' => $this->statusOptions(),
             'filters'       => $request->only('per_page'),
         ]);
     }
 
-    public function create(Request $request): Response
+    public function create(Request $request)
     {
-        return Inertia::render('Admin/Sales/Create', [
+        return view('sales.create', [
             'clients' => User::clients()->active()->orderBy('name')->get(['id', 'name']),
             'products' => Product::active()->orderBy('name')->get(['id', 'name', 'price', 'stock_quantity']),
             'quotations' => Quotation::where('status', 'approved')
@@ -110,10 +108,10 @@ class SaleController extends Controller
         return redirect()->route('admin.ventas.show', $sale)->with('success', "Venta {$sale->sale_number} creada.");
     }
 
-    public function show(Sale $sale): Response
+    public function show(Sale $sale)
     {
         $sale->load(['client', 'quotation', 'items']);
-        return Inertia::render('Admin/Sales/Show', ['sale' => $sale, 'status_options' => $this->statusOptions()]);
+        return view('sales.show', ['sale' => $sale, 'status_options' => $this->statusOptions()]);
     }
 
     public function registerPayment(Request $request, Sale $sale)

@@ -8,8 +8,6 @@ use App\Models\Enums\ProductCategory;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class ProductController extends Controller
 {
@@ -18,7 +16,7 @@ class ProductController extends Controller
         return collect(ProductCategory::cases())->map(fn ($c) => ['value' => $c->value, 'label' => $c->label()])->values()->all();
     }
 
-    public function index(Request $request): Response
+    public function index(Request $request)
     {
         $query = Product::query();
         if ($request->filled('search')) $query->where('name', 'like', "%{$request->input('search')}%");
@@ -38,7 +36,7 @@ class ProductController extends Controller
         $lowStockCount = Product::whereRaw('stock_quantity <= min_stock_alert')->count();
         $totalValue = Product::selectRaw('SUM(price * stock_quantity) as value')->value('value') ?? 0;
 
-        return Inertia::render('Admin/Products/Index', [
+        return view('products.index', [
             'products'             => $products,
             'categories'           => $this->categoryOptions(),
             'total_products'       => $totalProducts,
@@ -48,13 +46,13 @@ class ProductController extends Controller
         ]);
     }
 
-    public function catalog(Request $request): Response
+    public function catalog(Request $request)
     {
         $query = Product::active();
         if ($request->filled('search')) $query->where('name', 'like', "%{$request->input('search')}%");
         if ($request->filled('category')) $query->where('category', $request->input('category'));
         $products = $query->orderBy('name')->paginate($request->input('per_page', 20))->withQueryString();
-        return Inertia::render('Admin/Products/Index', [
+        return view('products.index', [
             'products' => $products,
             'categories' => $this->categoryOptions(),
             'total_products' => Product::count(),
@@ -64,9 +62,9 @@ class ProductController extends Controller
         ]);
     }
 
-    public function create(): Response
+    public function create()
     {
-        return Inertia::render('Admin/Products/Create', ['categories' => $this->categoryOptions()]);
+        return view('products.create', ['categories' => $this->categoryOptions()]);
     }
 
     public function store(Request $request)
@@ -88,14 +86,14 @@ class ProductController extends Controller
         return redirect()->route('admin.productos.index')->with('success', 'Producto creado.');
     }
 
-    public function show(Product $product): Response
+    public function show(Product $product)
     {
-        return Inertia::render('Admin/Products/Show', ['product' => $product]);
+        return view('products.show', ['product' => $product]);
     }
 
-    public function edit(Product $product): Response
+    public function edit(Product $product)
     {
-        return Inertia::render('Admin/Products/Edit', ['product' => $product, 'categories' => $this->categoryOptions()]);
+        return view('products.edit', ['product' => $product, 'categories' => $this->categoryOptions()]);
     }
 
     public function update(Request $request, Product $product)

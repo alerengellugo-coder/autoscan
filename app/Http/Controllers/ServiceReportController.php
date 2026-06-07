@@ -9,12 +9,10 @@ use App\Models\ServiceReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class ServiceReportController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request)
     {
         $user = Auth::user();
         $query = ServiceReport::query()->with(['serviceOrder.vehicle', 'technician']);
@@ -33,13 +31,13 @@ class ServiceReportController extends Controller
 
         $reports = $query->orderByDesc('report_date')->paginate($request->input('per_page', 15))->withQueryString();
 
-        return Inertia::render('Admin/ServiceReports/Index', [
+        return view('reports.index', [
             'reports' => $reports,
             'filters' => $request->only('search', 'service_order_id', 'per_page'),
         ]);
     }
 
-    public function create(): Response
+    public function create()
     {
         $user = Auth::user();
         $orders = $user->isTechnician()
@@ -53,7 +51,7 @@ class ServiceReportController extends Controller
                 ->orderByDesc('created_at')
                 ->get();
 
-        return Inertia::render('Technician/Reports/Create', [
+        return view('technician.reports.create', [
             'orders' => $orders,
         ]);
     }
@@ -79,11 +77,11 @@ class ServiceReportController extends Controller
         return back()->with('success', 'Informe creado.');
     }
 
-    public function show(ServiceReport $serviceReport): Response
+    public function show(ServiceReport $serviceReport)
     {
         Gate::authorize('view-reports');
         $serviceReport->load(['serviceOrder.vehicle.client', 'technician']);
-        return Inertia::render('Admin/ServiceReports/Show', ['report' => $serviceReport]);
+        return view('reports.show', ['report' => $serviceReport]);
     }
 
     public function update(Request $request, ServiceReport $serviceReport)

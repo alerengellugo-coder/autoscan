@@ -17,8 +17,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class QuotationController extends Controller
 {
@@ -27,7 +25,7 @@ class QuotationController extends Controller
         return collect(QuotationStatus::cases())->map(fn ($s) => ['value' => $s->value, 'label' => $s->label()])->values()->all();
     }
 
-    public function index(Request $request): Response
+    public function index(Request $request)
     {
         $query = Quotation::query()->with(['client', 'vehicle']);
         if ($request->filled('status')) $query->where('status', $request->input('status'));
@@ -37,29 +35,29 @@ class QuotationController extends Controller
         }
         $quotations = $query->orderByDesc('created_at')->paginate($request->input('per_page', 15))->withQueryString();
 
-        return Inertia::render('Admin/Quotations/Index', [
+        return view('quotations.index', [
             'quotations'    => $quotations,
             'status_options' => $this->statusOptions(),
             'filters'       => $request->only('search', 'status', 'per_page'),
         ]);
     }
 
-    public function clientQuotations(Request $request): Response
+    public function clientQuotations(Request $request)
     {
         $query = Quotation::query()->with(['client', 'vehicle'])->where('client_id', Auth::id());
         if ($request->filled('status')) $query->where('status', $request->input('status'));
         $quotations = $query->orderByDesc('created_at')->paginate($request->input('per_page', 10))->withQueryString();
 
-        return Inertia::render('Client/Quotations/Index', [
+        return view('client.quotations.index', [
             'quotations'    => $quotations,
             'status_options' => $this->statusOptions(),
             'filters'       => $request->only('status', 'per_page'),
         ]);
     }
 
-    public function create(Request $request): Response
+    public function create(Request $request)
     {
-        return Inertia::render('Admin/Quotations/Create', [
+        return view('quotations.create', [
             'clients'  => User::clients()->active()->orderBy('name')->get(['id', 'name']),
             'vehicles' => Vehicle::active()->orderBy('brand')->get(['id', 'brand', 'model', 'plate', 'client_id']),
             'products' => Product::active()->orderBy('name')->get(['id', 'name', 'price', 'stock_quantity', 'min_stock_alert']),
@@ -120,13 +118,13 @@ class QuotationController extends Controller
         return redirect()->route('admin.cotizaciones.show', $quotation)->with('success', "Cotización {$quotation->quotation_number} creada.");
     }
 
-    public function show(Quotation $quotation): Response
+    public function show(Quotation $quotation)
     {
         $quotation->load(['client', 'vehicle', 'items', 'serviceOrder']);
         $user = Auth::user();
-        $page = $user->isAdmin() ? 'Admin/Quotations/Show' : 'Client/Quotations/Show';
+        $page = $user->isAdmin() ? 'quotations.show' : 'client.quotations.show';
 
-        return Inertia::render($page, [
+        return view($page, [
             'quotation'     => $quotation,
             'status_options' => $this->statusOptions(),
         ]);

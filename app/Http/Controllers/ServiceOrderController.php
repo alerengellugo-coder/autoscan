@@ -17,8 +17,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class ServiceOrderController extends Controller
 {
@@ -44,7 +42,7 @@ class ServiceOrderController extends Controller
             ->groupBy('status')->pluck('count', 'status')->toArray();
     }
 
-    public function index(Request $request): Response
+    public function index(Request $request)
     {
         $user = Auth::user();
         $query = ServiceOrder::query()->with(['vehicle', 'client', 'technician']);
@@ -76,9 +74,9 @@ class ServiceOrderController extends Controller
 
         $orders = $query->paginate($request->input('per_page', 15))->withQueryString();
 
-        $page = $user->isTechnician() ? 'Technician/Orders/Index' : 'Admin/Orders/Index';
+        $page = $user->isTechnician() ? 'technician.orders.index' : 'orders.index';
 
-        return Inertia::render($page, [
+        return view($page, [
             'orders'               => $orders,
             'status_options'       => $this->statusOptions(),
             'priority_options'     => $this->priorityOptions(),
@@ -88,21 +86,21 @@ class ServiceOrderController extends Controller
         ]);
     }
 
-    public function clientOrders(Request $request): Response
+    public function clientOrders(Request $request)
     {
         $user = Auth::user();
         $query = ServiceOrder::query()->with(['vehicle', 'client', 'technician'])->forClient($user->id);
         if ($request->filled('status')) $query->byStatus($request->input('status'));
         $orders = $query->orderByDesc('created_at')->paginate($request->input('per_page', 10))->withQueryString();
 
-        return Inertia::render('Client/Orders/Index', [
+        return view('client.orders.index', [
             'orders'       => $orders,
             'status_options' => $this->statusOptions(),
             'filters'      => $request->only('status', 'per_page'),
         ]);
     }
 
-    public function create(Request $request): Response
+    public function create(Request $request)
     {
         $user = Auth::user();
         $vehicles = $user->isClient()
@@ -111,7 +109,7 @@ class ServiceOrderController extends Controller
         $technicians = $user->isClient() ? [] : User::technicians()->active()->orderBy('name')->get(['id', 'name']);
         $clients = $user->isAdmin() ? User::clients()->active()->orderBy('name')->get(['id', 'name']) : [];
 
-        return Inertia::render('Admin/Orders/Create', [
+        return view('orders.create', [
             'vehicles'     => $vehicles,
             'technicians'  => $technicians,
             'clients'      => $clients,
@@ -150,16 +148,16 @@ class ServiceOrderController extends Controller
         return redirect()->route($route, $order)->with('success', "Orden {$order->order_number} creada exitosamente.");
     }
 
-    public function show(ServiceOrder $serviceOrder): Response
+    public function show(ServiceOrder $serviceOrder)
     {
         Gate::authorize('manage-orders');
         $serviceOrder->load(['vehicle.client', 'client', 'technician', 'reports' => fn ($q) => $q->orderByDesc('report_date'), 'reports.technician', 'quotation']);
 
         $user = Auth::user();
         $page = match (true) {
-            $user->isAdmin() => 'Admin/Orders/Show',
-            $user->isTechnician() => 'Technician/Orders/Show',
-            default => 'Client/Orders/Show',
+            $user->isAdmin() => 'orders.show',
+            $user->isTechnician() => 'technician.orders.show',
+            default => 'client.orders.show',
         };
 
         $reports = $serviceOrder->reports ?? collect();
@@ -196,20 +194,20 @@ class ServiceOrderController extends Controller
                     'user_name' => $serviceOrder->technician?->name ?? 'Sistema',
                 ];
             }
-            return Inertia::render($page, [
+            return view($page, [
                 'order' => $serviceOrder,
                 'status_timeline' => $statusTimeline,
                 'reports' => $reports,
                 'status_options' => $this->statusOptions(),
             ]);
         } elseif ($user->isTechnician()) {
-            return Inertia::render($page, [
+            return view($page, [
                 'order' => $serviceOrder,
                 'reports' => $reports,
                 'available_transitions' => [],
             ]);
         } else {
-            return Inertia::render($page, [
+            return view($page, [
                 'order' => $serviceOrder,
                 'reports' => $reports,
             ]);

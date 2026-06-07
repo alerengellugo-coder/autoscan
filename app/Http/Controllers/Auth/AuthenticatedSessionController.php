@@ -8,18 +8,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class AuthenticatedSessionController extends Controller
 {
-    public function create(): Response
+    public function create()
     {
         if (Auth::check()) {
             return $this->redirectByRole(Auth::user());
         }
 
-        return Inertia::render('Auth/Login');
+        return view('auth.login');
     }
 
     public function store(Request $request)

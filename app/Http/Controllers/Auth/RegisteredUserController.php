@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\Rules\Unique;
-use Inertia\Inertia;
-use Inertia\Response;
 
 /**
  * Controller: RegisteredUserController
@@ -26,16 +24,16 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration form.
      *
-     * Returns the Inertia registration page. If already authenticated,
+     * Returns the registration page. If already authenticated,
      * redirects to the appropriate dashboard.
      */
-    public function create(): Response
+    public function create()
     {
         if (Auth::check()) {
             return redirect()->route('client.dashboard');
         }
 
-        return Inertia::render('Auth/Register');
+        return view('auth.register');
     }
 
     /**

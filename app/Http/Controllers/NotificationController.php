@@ -6,13 +6,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
-use Inertia\Response;
 
 /**
  * Controller: NotificationController
  *
- * Manages user notifications via Inertia.
+ * Manages user notifications.
  * Provides listing, marking as read (single/all), and deletion.
  */
 class NotificationController extends Controller
@@ -22,7 +20,7 @@ class NotificationController extends Controller
      *
      * Returns paginated notifications sorted by most recent first.
      */
-    public function index(Request $request): Response
+    public function index(Request $request)
     {
         $user = Auth::user();
 
@@ -33,7 +31,7 @@ class NotificationController extends Controller
         // Mark unread count for the frontend
         $unreadCount = $user->unreadNotifications()->count();
 
-        return Inertia::render('Notifications/Index', [
+        return view('notifications.index', [
             'notifications' => $notifications,
             'unread_count'  => $unreadCount,
         ]);
@@ -43,7 +41,7 @@ class NotificationController extends Controller
      * Mark a specific notification as read.
      *
      * Accepts the notification ID in the request body.
-     * Returns the updated unread count for Inertia reactivity.
+     * Returns the updated unread count.
      */
     public function markAsRead(string $id)
     {
