@@ -73,7 +73,7 @@ COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Configure PHP-FPM
 COPY docker/php-fpm.conf /usr/local/etc/php-fpm.d/zz-custom.conf
 
-EXPOSE 8080
+EXPOSE 10000
 
 # Startup script
 COPY docker/start.sh /start.sh

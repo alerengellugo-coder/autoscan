@@ -10,6 +10,7 @@ public/build
 .env.*
 !.env.example
 render.yaml
+docker/
 .idea
 .vscode
 *.swp

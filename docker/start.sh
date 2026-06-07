@@ -10,6 +10,14 @@ chmod 777 /var/run
 rm -f /etc/nginx/conf.d/default.conf
 rm -f /etc/nginx/http.d/default.conf 2>/dev/null || true
 
+# Set PORT env var (Render sets this automatically)
+export PORT=${PORT:-10000}
+echo "Using PORT=$PORT"
+
+# Replace port in nginx.conf using sed (safe - only replaces the listen directive)
+sed -i "s/listen 10000 default_server/listen $PORT default_server/" /etc/nginx/nginx.conf
+echo "Nginx configured to listen on port $PORT"
+
 # Generate application key if needed
 if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "SomeRandomStringSomeRandomString" ] || [ "$APP_KEY" = "null" ]; then
     echo "Generating application key..."
@@ -55,4 +63,9 @@ php artisan event:cache 2>&1 || true
 php artisan storage:link --force 2>/dev/null || true
 
 echo "=== Starting nginx + php-fpm ==="
+echo "Nginx will listen on port $PORT"
+
+# Test nginx config before starting
+nginx -t 2>&1 || echo "WARNING: nginx config test failed"
+
 exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
