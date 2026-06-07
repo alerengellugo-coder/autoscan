@@ -35,10 +35,13 @@ Route::middleware('guest')->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/logout', 'App\Http\Controllers\Auth\AuthenticatedSessionController@destroy')->name('logout');
 
-    Route::get('/dashboard', DashboardController::class)->name('dashboard');
-    Route::get('/admin/dashboard', DashboardController::class)->name('admin.dashboard');
-    Route::get('/tecnico/dashboard', DashboardController::class)->name('technician.dashboard');
-    Route::get('/mi-cuenta/dashboard', DashboardController::class)->name('client.dashboard');
+    // Root dashboard: redirect by role
+    Route::get('/dashboard', [DashboardController::class, 'redirectByRole'])->name('dashboard');
+
+    // Role-specific dashboards (render actual page)
+    Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])->name('admin.dashboard');
+    Route::get('/tecnico/dashboard', [DashboardController::class, 'technicianDashboard'])->name('technician.dashboard');
+    Route::get('/mi-cuenta/dashboard', [DashboardController::class, 'clientDashboard'])->name('client.dashboard');
 
     Route::get('/notificaciones', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notificaciones/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
