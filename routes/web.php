@@ -13,11 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 // Debug route (remove after fixing)
 Route::get('/debug', function () {
-    try {
-        return view('auth.login');
-    } catch (\Throwable $e) {
-        return response('<pre>' . $e->getMessage() . "\n\n" . $e->getTraceAsString() . '</pre>', 500);
-    }
+    return response('OK - App is running: ' . date('Y-m-d H:i:s'));
 });
 
 // Public pages
