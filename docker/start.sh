@@ -45,6 +45,29 @@ sleep 1
 echo "Running migrations..."
 php artisan migrate --force --no-interaction 2>&1 || echo "ERROR: Migrations failed!"
 
+# Failsafe: manually create cache and sessions tables if migrations missed them
+echo "Checking cache/sessions tables..."
+php artisan tinker --execute="
+try {
+    \Illuminate\Support\Facades\DB::select('SELECT 1 FROM cache LIMIT 1');
+    echo 'cache table OK';
+} catch(\Exception \$e) {
+    echo 'Creating cache table...';
+    \Illuminate\Support\Facades\DB::statement('CREATE TABLE IF NOT EXISTS cache (key VARCHAR(255) PRIMARY KEY, value TEXT, expiration INTEGER)');
+    echo 'cache table created';
+}
+try {
+    \Illuminate\Support\Facades\DB::select('SELECT 1 FROM sessions LIMIT 1');
+    echo 'sessions table OK';
+} catch(\Exception \$e) {
+    echo 'Creating sessions table...';
+    \Illuminate\Support\Facades\DB::statement('CREATE TABLE IF NOT EXISTS sessions (id VARCHAR(255) PRIMARY KEY, user_id BIGINT, ip_address VARCHAR(45), user_agent TEXT, payload TEXT, last_activity INTEGER)');
+    \Illuminate\Support\Facades\DB::statement('CREATE INDEX IF NOT EXISTS sessions_user_id_index ON sessions (user_id)');
+    \Illuminate\Support\Facades\DB::statement('CREATE INDEX IF NOT EXISTS sessions_last_activity_index ON sessions (last_activity)');
+    echo 'sessions table created';
+}
+" 2>&1
+
 echo "Running seeders..."
 php artisan db:seed --force --no-interaction 2>&1 || echo "  Seeder failed, continuing..."
 
@@ -55,7 +78,6 @@ php artisan event:clear 2>&1 || true
 php artisan view:clear 2>&1 || true
 php artisan cache:clear 2>&1 || true
 
-# Recreate views dir after view:clear deletes it
 mkdir -p /var/www/html/storage/framework/{views,cache,sessions}
 chown -R www-data:www-data /var/www/html/storage
 chown -R www-data:www-data /var/www/html/bootstrap/cache
