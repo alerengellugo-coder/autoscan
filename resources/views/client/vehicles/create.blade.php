@@ -4,6 +4,7 @@
 @section('page-title', 'Agregar Vehículo')
 
 @section('content')
+@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 <div class="max-w-2xl mx-auto space-y-6">
 
     {{-- Back button --}}

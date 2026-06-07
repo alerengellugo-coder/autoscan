@@ -4,6 +4,7 @@
 @section('auth-subtitle', 'Regístrate para acceder a nuestros servicios')
 
 @section('content')
+@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 <form method="POST" action="{{ route('register') }}" class="space-y-5">
     @csrf
 

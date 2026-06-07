@@ -3,6 +3,7 @@
 @section('title', 'Contacto - AutoScan')
 
 @section('content')
+@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 
 {{-- Hero --}}
 <section class="bg-gradient-to-br from-slate-900 via-blue-900 to-blue-800 py-16 lg:py-24">

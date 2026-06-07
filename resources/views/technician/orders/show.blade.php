@@ -4,6 +4,7 @@
 @section('page-title', 'Detalle de Orden')
 
 @section('content')
+@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 <div class="space-y-6">
 
     {{-- Back button --}}

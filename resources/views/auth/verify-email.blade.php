@@ -4,6 +4,7 @@
 @section('auth-subtitle', 'Confirma tu dirección de correo electrónico')
 
 @section('content')
+@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 <div class="text-center">
     @if(session('status'))
         <div class="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">

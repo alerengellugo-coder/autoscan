@@ -4,6 +4,7 @@
 @section('page-title', 'Crear Cotización')
 
 @section('content')
+@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 <div class="max-w-5xl mx-auto space-y-6">
 
     <div class="mb-2">

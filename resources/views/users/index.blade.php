@@ -4,6 +4,7 @@
 @section('page-title', 'Usuarios')
 
 @section('content')
+@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 <div class="space-y-6">
 
     {{-- Users Table --}}

@@ -4,6 +4,7 @@
 @section('auth-subtitle', 'Ingresa tus credenciales para acceder a tu panel')
 
 @section('content')
+@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 <form method="POST" action="{{ route('login') }}" class="space-y-5">
     @csrf
 

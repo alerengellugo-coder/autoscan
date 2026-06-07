@@ -4,6 +4,7 @@
 @section('auth-subtitle', 'Ingresa tu email y te enviaremos un enlace para restablecer tu contraseña')
 
 @section('content')
+@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 <form method="POST" action="{{ route('password.email') }}" class="space-y-5">
     @csrf
 

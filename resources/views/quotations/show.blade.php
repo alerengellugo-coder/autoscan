@@ -4,6 +4,7 @@
 @section('page-title', 'Detalle de Cotización')
 
 @section('content')
+@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 <div class="max-w-4xl mx-auto space-y-6">
 
     {{-- Back Button --}}

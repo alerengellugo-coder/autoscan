@@ -4,6 +4,7 @@
 @section('page-title', 'Crear Producto')
 
 @section('content')
+@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 <div class="max-w-3xl mx-auto">
 
     <div class="mb-6">
