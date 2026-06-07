@@ -12,35 +12,57 @@ use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+// Temporary diagnostic route - REMOVE AFTER DEBUGGING
+Route::get('/diag-web', function () {
+    try {
+        $result = ['step' => 'start'];
+        try {
+            $result['session'] = session()->getId() ?: 'no-session';
+        } catch (\Throwable $e) {
+            $result['session_error'] = $e->getMessage();
+        }
+        try {
+            $result['csrf'] = csrf_token();
+        } catch (\Throwable $e) {
+            $result['csrf_error'] = $e->getMessage();
+        }
+        try {
+            $result['user'] = auth()->user() ? auth()->user()->email : 'not-authenticated';
+        } catch (\Throwable $e) {
+            $result['user_error'] = $e->getMessage();
+        }
+        try {
+            $page = Inertia::render('Home');
+            $response = $page->toResponse(request());
+            $result['inertia_render'] = 'OK';
+            $result['inertia_status'] = $response->getStatusCode();
+            return $response;
+        } catch (\Throwable $e) {
+            $result['inertia_error'] = get_class($e) . ': ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine();
+            return response()->json($result, 500);
+        }
+    } catch (\Throwable $e) {
+        return response()->json([
+            'fatal' => get_class($e) . ': ' . $e->getMessage(),
+            'file' => $e->getFile() . ':' . $e->getLine(),
+            'trace' => collect($e->getTrace())->take(5)->map(fn ($t) => ($t['class'] ?? '') . ($t['type'] ?? '') . $t['function'] . ' at ' . ($t['file'] ?? 'n/a') . ':' . ($t['line'] ?? 0)),
+        ], 500);
+    }
+});
 
 // Health check endpoint for Render
 Route::get('/up', function () {
     return response('OK', 200)->header('Content-Type', 'text/plain');
 });
 
-
-// ---------------------------------------------------------------------------
 // Public pages
-// ---------------------------------------------------------------------------
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/servicios', [PageController::class, 'services'])->name('services');
 Route::get('/nosotros', [PageController::class, 'about'])->name('about');
 Route::get('/contacto', [PageController::class, 'contact'])->name('contact');
 Route::get('/catalogo', [ProductController::class, 'catalog'])->name('products.catalog');
 
-// ---------------------------------------------------------------------------
-// Auth routes (Breeze-style, manual for Inertia)
-// ---------------------------------------------------------------------------
+// Auth routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', 'App\Http\Controllers\Auth\AuthenticatedSessionController@create')->name('login');
     Route::post('/login', 'App\Http\Controllers\Auth\AuthenticatedSessionController@store');
@@ -52,101 +74,66 @@ Route::middleware('guest')->group(function () {
     Route::post('/reset-password', 'App\Http\Controllers\Auth\NewPasswordController@store')->name('password.update');
 });
 
-// ---------------------------------------------------------------------------
 // Authenticated routes
-// ---------------------------------------------------------------------------
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/logout', 'App\Http\Controllers\Auth\AuthenticatedSessionController@destroy')->name('logout');
 
-    // Dashboard routes
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/admin/dashboard', DashboardController::class)->name('admin.dashboard');
     Route::get('/tecnico/dashboard', DashboardController::class)->name('technician.dashboard');
     Route::get('/mi-cuenta/dashboard', DashboardController::class)->name('client.dashboard');
 
-    // Notifications
     Route::get('/notificaciones', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notificaciones/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/notificaciones/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
     Route::delete('/notificaciones/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
 
-    // -----------------------------------------------------------------------
     // Client routes
-    // -----------------------------------------------------------------------
     Route::middleware('role:client')->prefix('mi-cuenta')->name('client.')->group(function () {
-        // Vehicles
         Route::get('/vehiculos', [VehicleController::class, 'index'])->name('vehicles.index');
         Route::get('/vehiculos/crear', [VehicleController::class, 'create'])->name('vehicles.create');
         Route::post('/vehiculos', [VehicleController::class, 'store'])->name('vehicles.store');
         Route::get('/vehiculos/{vehicle}', [VehicleController::class, 'show'])->name('vehicles.show');
         Route::get('/vehiculos/{vehicle}/editar', [VehicleController::class, 'edit'])->name('vehicles.edit');
         Route::put('/vehiculos/{vehicle}', [VehicleController::class, 'update'])->name('vehicles.update');
-
-        // Service orders (client view)
         Route::get('/ordenes', [ServiceOrderController::class, 'clientOrders'])->name('orders.index');
         Route::get('/ordenes/{order}', [ServiceOrderController::class, 'show'])->name('orders.show');
-
-        // Quotations (client view)
         Route::get('/cotizaciones', [QuotationController::class, 'clientQuotations'])->name('quotations.index');
         Route::get('/cotizaciones/{quotation}', [QuotationController::class, 'show'])->name('quotations.show');
-
-        // Sales (client view)
         Route::get('/ventas', [SaleController::class, 'clientSales'])->name('sales.index');
     });
 
-    // -----------------------------------------------------------------------
     // Technician routes
-    // -----------------------------------------------------------------------
     Route::middleware('role:technician')->prefix('tecnico')->name('technician.')->group(function () {
-        // Service orders
         Route::get('/ordenes', [ServiceOrderController::class, 'index'])->name('orders.index');
         Route::get('/ordenes/{order}', [ServiceOrderController::class, 'show'])->name('orders.show');
         Route::patch('/ordenes/{order}/status', [ServiceOrderController::class, 'updateStatus'])->name('orders.update-status');
         Route::post('/ordenes/{order}/reports', [ServiceReportController::class, 'store'])->name('orders.reports.store');
-
-        // Product catalog
         Route::get('/catalogo', [ProductController::class, 'catalog'])->name('products.catalog');
-
-        // Service reports
         Route::get('/reportes', [ServiceReportController::class, 'index'])->name('reports.index');
         Route::get('/reportes/{report}', [ServiceReportController::class, 'show'])->name('reports.show');
     });
 
-    // -----------------------------------------------------------------------
     // Admin routes
-    // -----------------------------------------------------------------------
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
-        // Users management
         Route::get('/usuarios', 'App\Http\Controllers\UserController@index')->name('users.index');
         Route::post('/usuarios', 'App\Http\Controllers\UserController@store');
         Route::put('/usuarios/{user}', 'App\Http\Controllers\UserController@update');
         Route::delete('/usuarios/{user}', 'App\Http\Controllers\UserController@destroy');
-
-        // Vehicles
         Route::resource('vehiculos', VehicleController::class)->except(['show']);
         Route::get('/vehiculos/{vehicle}', [VehicleController::class, 'show'])->name('vehiculos.show');
         Route::post('/vehiculos/cliente/{client}', [VehicleController::class, 'addVehicleForClient'])->name('vehiculos.add-for-client');
-
-        // Service Orders
         Route::resource('ordenes', ServiceOrderController::class);
         Route::patch('/ordenes/{order}/status', [ServiceOrderController::class, 'updateStatus'])->name('ordenes.update-status');
         Route::post('/ordenes/{order}/reports', [ServiceReportController::class, 'store'])->name('ordenes.reports.store');
-
-        // Products
         Route::resource('productos', ProductController::class);
-
-        // Quotations
         Route::resource('cotizaciones', QuotationController::class);
         Route::patch('/cotizaciones/{quotation}/status', [QuotationController::class, 'updateStatus'])->name('cotizaciones.update-status');
         Route::get('/cotizaciones/{quotation}/pdf', [QuotationController::class, 'generatePdf'])->name('cotizaciones.pdf');
         Route::post('/cotizaciones/{quotation}/convertir-venta', [QuotationController::class, 'convertToSale'])->name('cotizaciones.convert-to-sale');
-
-        // Sales
         Route::resource('ventas', SaleController::class);
         Route::post('/ventas/{sale}/pago', [SaleController::class, 'registerPayment'])->name('ventas.register-payment');
         Route::post('/ventas/{sale}/cancelar', [SaleController::class, 'cancel'])->name('ventas.cancel');
-
-        // Reports
         Route::get('/reportes-servicio', [ServiceReportController::class, 'index'])->name('reports.index');
         Route::get('/reportes-servicio/{report}', [ServiceReportController::class, 'show'])->name('reports.show');
         Route::delete('/reportes-servicio/{report}', [ServiceReportController::class, 'destroy'])->name('reports.destroy');
