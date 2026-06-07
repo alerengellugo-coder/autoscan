@@ -81,3 +81,26 @@ Stage Summary:
 - All 3 dashboards now receive correct props from backend
 - Admin dashboard verified: HTTP 200, stats object present with all fields
 - No more "Cannot read properties of undefined" errors
+---
+Task ID: 4
+Agent: main
+Task: Fix 500 on /ventas, .map error on ServiceReports, and all wrong route URLs
+
+Work Log:
+- Found SaleController index() used SaleStatus::Completed which doesn't exist in enum (only Pending/Paid/PartiallyPaid/Cancelled) → changed to Paid
+- Found ServiceReports/Index.tsx treated paginator as plain array (reports.map()) → changed to reports.data.map() with proper paginator interface
+- Fixed Sales/Index.tsx route URLs from /sales/* to /admin/ventas/*
+- Audited all 20+ TSX files for route URL mismatches — found 87 incorrect routes
+- Bulk-fixed all routes across Admin, Client, Technician, Dashboard, and Notifications pages
+- Admin: /orders→/admin/ordenes, /vehicles→/admin/vehiculos, /products→/admin/productos, /quotations→/admin/cotizaciones, /sales→/admin/ventas
+- Client: /orders→/mi-cuenta/ordenes, /vehicles→/mi-cuenta/vehiculos, /quotations→/mi-cuenta/cotizaciones, /sales→/mi-cuenta/ventas
+- Technician: /technician/→/tecnico/, /reports→/reportes, /orders→/ordenes
+- Notifications: /notifications→/notificaciones
+- Cross-resource references fixed (e.g. /vehicles/${id} in Orders pages, /orders/${id} in Vehicles pages)
+- Pushed commit 0e3f06b to GitHub, Render auto-deploying
+
+Stage Summary:
+- SaleController 500 error FIXED (SaleStatus::Completed → SaleStatus::Paid)
+- ServiceReports .map error FIXED (reports.data.map())
+- 87 route URL mismatches FIXED across 34 TSX files
+- All routes now use correct Spanish names with role-based prefixes
