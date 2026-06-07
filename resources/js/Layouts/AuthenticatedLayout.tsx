@@ -101,7 +101,7 @@ export default function AuthenticatedLayout({ children, header }: AuthenticatedL
                                                 const isActive = currentPath === item.href;
                                                 return (
                                                     <li key={item.label}>
-                                                        <Link href={item.href} className={isActive ? 'sidebar-link-active' : 'sidebar-link'} onClick={() => setSidebarOpen(false)}>
+                                                        <Link href={item.href} className={(isActive ? 'sidebar-link-active' : 'sidebar-link') + ' group'} onClick={() => setSidebarOpen(false)}>
                                                             <item.icon className={isActive ? 'sidebar-icon text-primary-400' : 'sidebar-icon group-hover:text-primary-400'} />
                                                             {item.label}
                                                         </Link>
@@ -138,7 +138,7 @@ export default function AuthenticatedLayout({ children, header }: AuthenticatedL
                                 const isActive = currentPath === item.href;
                                 return (
                                     <li key={item.label}>
-                                        <Link href={item.href} className={isActive ? 'sidebar-link-active' : 'sidebar-link'}>
+                                        <Link href={item.href} className={(isActive ? 'sidebar-link-active' : 'sidebar-link') + ' group'}>
                                             <item.icon className={isActive ? 'sidebar-icon text-primary-400' : 'sidebar-icon group-hover:text-primary-400'} />
                                             {item.label}
                                         </Link>
