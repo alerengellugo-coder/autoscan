@@ -74,6 +74,10 @@ php artisan cache:clear 2>&1 || true
 # Storage link
 php artisan storage:link --force 2>/dev/null || true
 
+# Fix permissions - php-fpm runs as www-data but start.sh creates files as root
+chown -R www-data:www-data /var/www/html/storage
+chmod -R 775 /var/www/html/storage
+
 echo "=== Starting nginx + php-fpm ==="
 
 # Start PHP-FPM in background
