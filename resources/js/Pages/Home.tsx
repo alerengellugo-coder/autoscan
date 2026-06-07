@@ -204,19 +204,19 @@ export default function Home() {
                         </div>
                     </div>
 
-                    {/* Bottom fade */}
-                    <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-50 to-transparent" />
+                    {/* Bottom fade to brands section */}
+                    <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
                 </section>
 
                 {/* ════════ TRUSTED BRANDS BAR ════════ */}
-                <section className="py-12 bg-slate-50 border-b border-slate-100">
+                <section className="py-12 bg-white border-b border-slate-100">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <p className="text-center text-sm font-semibold text-slate-400 uppercase tracking-widest mb-8">
+                        <p className="text-center text-sm font-semibold text-slate-500 uppercase tracking-widest mb-8">
                             Trabajamos con todas las marcas
                         </p>
                         <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-4">
                             {brands.map((b) => (
-                                <span key={b} className="text-lg font-bold text-slate-300 hover:text-blue-500 transition-colors duration-200 cursor-default">{b}</span>
+                                <span key={b} className="text-lg font-bold text-slate-400 hover:text-blue-600 transition-colors duration-200 cursor-default">{b}</span>
                             ))}
                         </div>
                     </div>
