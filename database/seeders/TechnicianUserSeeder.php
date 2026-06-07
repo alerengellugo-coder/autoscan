@@ -9,11 +9,6 @@ use Spatie\Permission\Models\Role;
 
 class TechnicianUserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * Creates a sample technician user.
-     */
     public function run(): void
     {
         $technician = User::firstOrCreate(
@@ -22,12 +17,13 @@ class TechnicianUserSeeder extends Seeder
                 'name'     => 'Pedro Martínez',
                 'password' => Hash::make('password'),
                 'phone'    => '+58 416-7778899',
+                'role'     => 'technician',
                 'is_active'   => true,
             ]
         );
         $technician->assignRole('technician');
         $technician->markEmailAsVerified();
 
-        $this->command->info('✅ Technician user created: pedro.martinez@autoscan.com / password');
+        $this->command->info('Technician user seeded successfully');
     }
 }
