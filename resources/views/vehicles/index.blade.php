@@ -40,7 +40,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-gray-500">En Proceso</p>
-                    <p class="text-2xl font-bold text-blue-600 mt-1">{{ number_format($vehicles->filter(fn($v) => $v->status === 'in_progress')->count()) }}</p>
+                    <p class="text-2xl font-bold text-blue-600 mt-1">{{ number_format($vehicles->filter(fn($v) => $v->status === 'in_service')->count()) }}</p>
                 </div>
                 <div class="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
                     <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -80,7 +80,7 @@
                         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                     <option value="">Todos los estados</option>
                     <option value="active" {{ ($filters['status'] ?? '') == 'active' ? 'selected' : '' }}>Activo</option>
-                    <option value="in_progress" {{ ($filters['status'] ?? '') == 'in_progress' ? 'selected' : '' }}>En Proceso</option>
+                    <option value="in_progress" {{ ($filters['status'] ?? '') == 'in_service' ? 'selected' : '' }}>En Proceso</option>
                     <option value="completed" {{ ($filters['status'] ?? '') == 'completed' ? 'selected' : '' }}>Completado</option>
                     <option value="cancelled" {{ ($filters['status'] ?? '') == 'cancelled' ? 'selected' : '' }}>Cancelado</option>
                 </select>
@@ -137,7 +137,7 @@
                                 @case('active')
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Activo</span>
                                     @break
-                                @case('in_progress')
+                                @case('in_service')
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">En Proceso</span>
                                     @break
                                 @case('completed')

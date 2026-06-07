@@ -9,6 +9,7 @@ use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 // Public pages
@@ -98,3 +99,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/reportes-servicio/{report}', [ServiceReportController::class, 'show'])->name('reports.show');
         Route::delete('/reportes-servicio/{report}', [ServiceReportController::class, 'destroy'])->name('reports.destroy');
     });
+    Route::get('/perfil', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/perfil', [ProfileController::class, 'update'])->name('profile.update');
+
+});

@@ -37,6 +37,17 @@
         <nav class="flex-1 overflow-y-auto sidebar-scroll py-4 px-3">
             <ul class="space-y-1">
                 @auth
+                    @php
+                        $user = Auth::user();
+                        $vehicleIndexRoute = $user->isAdmin() ? 'admin.vehiculos.index' : 'client.vehicles.index';
+                        $ordersIndexRoute = $user->isAdmin() ? 'admin.ordenes.index' : ($user->isTechnician() ? 'technician.orders.index' : 'client.orders.index');
+                        $productsIndexRoute = $user->isAdmin() ? 'admin.productos.index' : 'technician.products.catalog';
+                        $quotationsIndexRoute = $user->isAdmin() ? 'admin.cotizaciones.index' : 'client.quotations.index';
+                        $salesIndexRoute = $user->isAdmin() ? 'admin.ventas.index' : 'client.sales.index';
+                        $reportsIndexRoute = $user->isAdmin() ? 'admin.reports.index' : 'technician.reports.index';
+                        $usersIndexRoute = 'admin.users.index';
+                    @endphp
+
                     {{-- All roles: Dashboard --}}
                     <li>
                         <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('dashboard') ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
@@ -47,126 +58,86 @@
                         </a>
                     </li>
 
-                    {{-- Admin items --}}
-                    @if(Auth::user()->role === 'admin')
+                    {{-- Vehículos (admin + client) --}}
+                    @if($user->isAdmin() || $user->isClient())
                         <li>
-                            <a href="{{ route('vehicles.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('vehicles.*') ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                            <a href="{{ route($vehicleIndexRoute) }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ (request()->routeIs('admin.vehiculos.*') || request()->routeIs('client.vehicles.*')) ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                                 <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M5 17h14"/><path d="M5 17a2 2 0 01-2-2V9a2 2 0 012-2h1l2-3h8l2 3h1a2 2 0 012 2v6a2 2 0 01-2 2"/><circle cx="9" cy="13" r="2"/><circle cx="15" cy="13" r="2"/>
                                 </svg>
-                                Vehículos
+                                {{ $user->isClient() ? 'Mis Vehículos' : 'Vehículos' }}
                             </a>
                         </li>
+                    @endif
+
+                    {{-- Órdenes (admin + technician + client) --}}
+                    @if($user->isAdmin() || $user->isTechnician() || $user->isClient())
                         <li>
-                            <a href="{{ route('orders.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('orders.*') ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                            <a href="{{ route($ordersIndexRoute) }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ (request()->routeIs('admin.ordenes.*') || request()->routeIs('technician.orders.*') || request()->routeIs('client.orders.*')) ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                                 <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/>
                                 </svg>
-                                Órdenes
+                                {{ $user->isClient() ? 'Mis Órdenes' : 'Órdenes' }}
                             </a>
                         </li>
+                    @endif
+
+                    {{-- Productos / Catálogo (admin + technician) --}}
+                    @if($user->isAdmin() || $user->isTechnician())
                         <li>
-                            <a href="{{ route('products.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('products.*') ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                            <a href="{{ route($productsIndexRoute) }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ (request()->routeIs('admin.productos.*') || request()->routeIs('technician.products.*')) ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                                 <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27,6.96 12,12.01 20.73,6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
                                 </svg>
-                                Productos
+                                {{ $user->isTechnician() ? 'Catálogo' : 'Productos' }}
                             </a>
                         </li>
+                    @endif
+
+                    {{-- Cotizaciones (admin + client) --}}
+                    @if($user->isAdmin() || $user->isClient())
                         <li>
-                            <a href="{{ route('quotations.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('quotations.*') ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                            <a href="{{ route($quotationsIndexRoute) }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ (request()->routeIs('admin.cotizaciones.*') || request()->routeIs('client.quotations.*')) ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                                 <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
                                 </svg>
                                 Cotizaciones
                             </a>
                         </li>
+                    @endif
+
+                    {{-- Ventas / Mis Compras (admin + client) --}}
+                    @if($user->isAdmin() || $user->isClient())
                         <li>
-                            <a href="{{ route('sales.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('sales.*') ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                            <a href="{{ route($salesIndexRoute) }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ (request()->routeIs('admin.ventas.*') || request()->routeIs('client.sales.*')) ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                                 <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
                                 </svg>
-                                Ventas
+                                {{ $user->isClient() ? 'Mis Compras' : 'Ventas' }}
                             </a>
                         </li>
+                    @endif
+
+                    {{-- Reportes (admin + technician) --}}
+                    @if($user->isAdmin() || $user->isTechnician())
                         <li>
-                            <a href="{{ route('reports.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('reports.*') ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                            <a href="{{ route($reportsIndexRoute) }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ (request()->routeIs('admin.reports.*') || request()->routeIs('technician.reports.*')) ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                                 <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
                                 </svg>
                                 Reportes
                             </a>
                         </li>
+                    @endif
+
+                    {{-- Usuarios (admin only) --}}
+                    @if($user->isAdmin())
                         <li>
-                            <a href="{{ route('users.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('users.*') ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                            <a href="{{ route($usersIndexRoute) }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('admin.users.*') ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                                 <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
                                 </svg>
                                 Usuarios
-                            </a>
-                        </li>
-                    @endif
-
-                    {{-- Technician items --}}
-                    @if(Auth::user()->role === 'technician')
-                        <li>
-                            <a href="{{ route('orders.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('orders.*') ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                                <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/>
-                                </svg>
-                                Órdenes
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('reports.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('reports.*') ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                                <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
-                                </svg>
-                                Reportes
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('products.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('products.*') ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                                <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27,6.96 12,12.01 20.73,6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
-                                </svg>
-                                Catálogo
-                            </a>
-                        </li>
-                    @endif
-
-                    {{-- Client items --}}
-                    @if(Auth::user()->role === 'client')
-                        <li>
-                            <a href="{{ route('vehicles.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('vehicles.*') ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                                <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M5 17h14"/><path d="M5 17a2 2 0 01-2-2V9a2 2 0 012-2h1l2-3h8l2 3h1a2 2 0 012 2v6a2 2 0 01-2 2"/><circle cx="9" cy="13" r="2"/><circle cx="15" cy="13" r="2"/>
-                                </svg>
-                                Mis Vehículos
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('orders.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('orders.*') ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                                <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/>
-                                </svg>
-                                Mis Órdenes
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('quotations.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('quotations.*') ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                                <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
-                                </svg>
-                                Cotizaciones
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('sales.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('sales.*') ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                                <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
-                                </svg>
-                                Mis Compras
                             </a>
                         </li>
                     @endif

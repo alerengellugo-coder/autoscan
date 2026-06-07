@@ -86,7 +86,7 @@
                         <td class="px-5 py-3 text-gray-700">{{ $sale->client['name'] ?? '—' }}</td>
                         <td class="px-5 py-3 font-semibold text-gray-900">${{ number_format($sale->total, 2) }}</td>
                         <td class="px-5 py-3 text-gray-700">
-                            @switch($sale->payment_method)
+                            @switch($sale->payment_method->value ?? $sale->payment_method)
                                 @case('cash')
                                     <span class="inline-flex items-center gap-1 text-xs font-medium text-gray-700">
                                         <svg class="w-3.5 h-3.5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
@@ -111,7 +111,7 @@
                             @endswitch
                         </td>
                         <td class="px-5 py-3">
-                            @switch($sale->status)
+                            @switch($sale->status->value ?? $sale->status)
                                 @case('pending')
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">{{ $sale->status_label ?? 'Pendiente' }}</span>
                                     @break
@@ -127,7 +127,7 @@
                             @endswitch
                         </td>
                         <td class="px-5 py-3">
-                            @switch($sale->payment_status)
+                            @switch($sale->payment_status->value ?? $sale->payment_status)
                                 @case('paid')
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Pagado</span>
                                     @break
