@@ -76,12 +76,6 @@ return [
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => env('DB_SSLMODE', 'prefer'),
-            // Neon PostgreSQL pooler compatibility: emulate prepares to avoid
-            // SQLSTATE[25P02] "current transaction is aborted" errors caused by
-            // pgBouncer transaction pooling reusing connections with failed tx state.
-            'options' => defined('PDO::ATTR_EMULATE_PREPARES') ? [
-                PDO::ATTR_EMULATE_PREPARES => true,
-            ] : [],
         ],
 
         'sqlsrv' => [
