@@ -4,11 +4,10 @@
 @section('page-title', 'Crear Venta')
 
 @section('content')
-@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 <div class="max-w-5xl mx-auto space-y-6">
 
     <div class="mb-2">
-        <a href="{{ route('admin.ventas.in@php $_t1 = route('admin.ventas.index') }}" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors">
+        <a href="{{ route('admin.ventas.index') }}" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="15,18 9,12 15,6"/>
             </svg>
@@ -100,7 +99,10 @@
                                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                             <option value="">Seleccionar cliente</option>
                             @foreach($clients as $clientId => $clientName)
-                                <option value="{{ $clientId }}" {{ old('c@php $_t1 = old('client_id') == $clientId ? 'selected' : ''; @endphp{{ $_t1 }} $_t4 = $clientId }}" @php $_t0 = old('client_id') == $clientId ? "selected" : ""; @endphp{{ $_t4 }}                          @endforeach
+                                <option value="{{ $clientId }}" {{ old('client_id') == $clientId ? 'selected' : '' }}>
+                                    {{ $clientName }}
+                                </option>
+                            @endforeach
                         </select>
                         @error('client_id')
                             <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
@@ -168,7 +170,10 @@
                                     name="payment_method"
                                     required
                                     class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
-                                <option value="" @php $_t0 = old('payment_method') == '' ? 'selected' : ''; @endphp{{ $_t0 }}>Seleccionar método</opt@php $_t3 = old('payment_method') == '' ? "selected" : ""; @endphp{{ $_t3 }}"cash" @php $_t0 = old('payment_method') == 'cash' ? 'selected' : @php $_t2 = old('payment_method') == 'cash' ? 'selected' : ''; @endphp{ $_t0 } <option value="card" @php $_t1 = old('payment_method') @php $_t1 = old('payment_method') == 'card' ? 'selected' : ''; @endphp{ $_t1 }                         <option value="transfer" @php $_t0 = old('payment_method') == 'transfer' ? "selected" : ""; @endphp{{ $_t0 }}>Transferencia</option>
+                                <option value="" {{ old('payment_method') == '' ? 'selected' : '' }}>Seleccionar método</option>
+                                <option value="cash" {{ old('payment_method') == 'cash' ? 'selected' : '' }}>Efectivo</option>
+                                <option value="card" {{ old('payment_method') == 'card' ? 'selected' : '' }}>Tarjeta</option>
+                                <option value="transfer" {{ old('payment_method') == 'transfer' ? 'selected' : '' }}>Transferencia</option>
                             </select>
                             @error('payment_method')
                                 <span class="text-red-500 text-xs mt-1">{{ $message }}</span>

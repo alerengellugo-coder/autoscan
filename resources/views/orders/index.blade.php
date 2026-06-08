@@ -8,18 +8,36 @@
 
     {{-- Status Count Badges Row --}}
     <div class="flex flex-wrap gap-2">
-  @php $_t3 = -- Status Count Badges Row --}}
-    <div class="flex flex-wrap gap-2">
-        <a href="{{ route('admin.ordenes.index') }}" class="inline-flex items-center ga@php $_t2 = empty($filters['status']) ? 'bg-blue-600 text-white shadow-sm' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'; @endphp{{ $_t2 }}order-gray-200 text-gray-700 hover:bg-gray-50'; @endphp{{ $_t3 }}ms-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors @php $_t0 = empty($filters['status']) ? "bg-blue-600 text-w@php $_t2 = empty($filters['status']) ? 'bg-blue-600 text-white shadow-sm' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'; @endphp{ $_t0 }unts as $status => $count)
-            <a href="@php $_t1 = route('admin.ordenes.index', array_merg@php $_t10 = empty($filters['status']) ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600'; @endphp{ $_t1 }5 px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ ($filters['status'] ?? '') == $@php $_t9 = route('admin.ordenes.index', array_merge(request()->query(), ['status' => $status])) }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ ($filters['status'] ?? '') == $status ? "bg-blue-600 text-white shadow-sm" : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50"; @endphp{{ $_t9 }}                       @break
+        <a href="{{ route('admin.ordenes.index') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ empty($filters['status']) ? 'bg-blue-600 text-white shadow-sm' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50' }}">
+            <span class="font-bold">Todas</span>
+            <span class="ml-1 px-1.5 py-0.5 rounded-full text-xs {{ empty($filters['status']) ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600' }}">{{ $orders->total() }}</span>
+        </a>
+        @foreach($status_counts as $status => $count)
+            <a href="{{ route('admin.ordenes.index', array_merge(request()->query(), ['status' => $status])) }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ ($filters['status'] ?? '') == $status ? 'bg-blue-600 text-white shadow-sm' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50' }}">
+                @switch($status)
+                    @case('pending')
+                        <span class="w-2.5 h-2.5 rounded-full {{ ($filters['status'] ?? '') == $status ? 'bg-yellow-200' : 'bg-yellow-400' }}"></span>
+                        @break
                     @case('in_progress')
-                        <span class="w-@php $_t8 = ($filters['status'] ?? '') == $status ? "bg-yellow-200" : "bg-yellow-400"; @endphp{{ $_t8 }} : 'bg-blue-400' }}"></span>
+                        <span class="w-2.5 h-2.5 rounded-full {{ ($filters['status'] ?? '') == $status ? 'bg-blue-200' : 'bg-blue-400' }}"></span>
                         @break
                     @case('completed')
-                    @php $_t7 = ($filters['status'] ?? '') == $status ? "bg-blue-200" : "bg-blue-400"; @endphp{{ $_t7 }}$status ? 'bg-green-200' : 'bg-green-400'; @endphp{{ $_t2 }}           @case('cance@php $_t6 = ($filters['status'] ?? '') == $status ? "bg-green-200" : "bg-green-400"; @endphp{{ $_t6 }}ters['status'] @php $_t1 = $_t6 }}ters['status'] ?? '') == $status ? 'bg-red-200' : 'bg-red-400'; @endphp{{ $_t1 }}         @break
-           @php $_t5 = ($filters['status'] ?? '') =@php $_t1 = ($filters['status'] ?? '') == $status ? 'bg-gray-200' : 'bg-gray-400'; @endphp{{ $_t1 }}tus'] ?? '') == $status ? 'bg-gray-200' : 'bg-gray-400'; @endphp{{ $_t0 }}"></span>
-               @php $_t4 = ($filters['status'] ?? '') == $status ? "bg-gray-200" : "bg-gray-400"; @endphp{{ $_t4 }}s_options[$status] ?? ucfirst(str_replace('_', ' ', $status))) }}</span>
-                <span class="ml-1 px-1.5 py-0.5 rounded-full text-xs @php $_t0 = ($filters['status'] ?? '') == $status ? 'bg-white/20 text-white' : 'bg-g@php $_t3 = ($filters['; @endphp{{ $_t0 }}{{-- Filter Form --}}
+                        <span class="w-2.5 h-2.5 rounded-full {{ ($filters['status'] ?? '') == $status ? 'bg-green-200' : 'bg-green-400' }}"></span>
+                        @break
+                    @case('cancelled')
+                        <span class="w-2.5 h-2.5 rounded-full {{ ($filters['status'] ?? '') == $status ? 'bg-red-200' : 'bg-red-400' }}"></span>
+                        @break
+                    @default
+                        <span class="w-2.5 h-2.5 rounded-full {{ ($filters['status'] ?? '') == $status ? 'bg-gray-200' : 'bg-gray-400' }}"></span>
+                        @break
+                @endswitch
+                <span>{{ ($status_options[$status] ?? ucfirst(str_replace('_', ' ', $status))) }}</span>
+                <span class="ml-1 px-1.5 py-0.5 rounded-full text-xs {{ ($filters['status'] ?? '') == $status ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-600' }}">{{ $count }}</span>
+            </a>
+        @endforeach
+    </div>
+
+    {{-- Filter Form --}}
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-5">
         <form method="GET" action="{{ route('admin.ordenes.index') }}" class="flex flex-col lg:flex-row gap-3 flex-wrap">
             <div class="flex-1 min-w-[180px]">
@@ -27,7 +45,9 @@
                         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                     <option value="">Todos los estados</option>
                     @foreach($status_options as $value => $label)
-                        <option value="{{ $value }}" {{ ($filters['status'] ?? '') == $va@php $_t2 = $value }}" {{ ($filters['status'] ?? '') == $value ? "selected" : ""; @endphp{{ $_t2 }}                 </option>
+                        <option value="{{ $value }}" {{ ($filters['status'] ?? '') == $value ? 'selected' : '' }}>
+                            {{ $label }}
+                        </option>
                     @endforeach
                 </select>
             </div>
@@ -36,7 +56,8 @@
                         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                     <option value="">Todas las prioridades</option>
                     @foreach($priority_options as $value => $label)
-                        <option value="{{ $value }}" {{ ($filter@php $_t1 = $value }}" {{ ($filters['priority'] ?? '') == $value ? "selected" : ""; @endphp{{ $_t1 }}     {{ $label }}
+                        <option value="{{ $value }}" {{ ($filters['priority'] ?? '') == $value ? 'selected' : '' }}>
+                            {{ $label }}
                         </option>
                     @endforeach
                 </select>
@@ -45,9 +66,9 @@
                 <select name="technician"
                         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                     <option value="">Todos los técnicos</option>
-                    @foreach($technician_options as $tech)
-                        <option value="@php $_t0 = $tech['value'] }}" {{ ($filters['technician'] ?? '') == $tech['value'] ? "selected" : ""; @endphp{{ $_t0 }}>
-                            {{ $tech['label'] }}
+                    @foreach($technician_options as $techId => $techName)
+                        <option value="{{ $techId }}" {{ ($filters['technician'] ?? '') == $techId ? 'selected' : '' }}>
+                            {{ $techName }}
                         </option>
                     @endforeach
                 </select>
@@ -120,7 +141,7 @@
                         </td>
                         <td class="px-5 py-3 text-gray-700">{{ $order->client['name'] ?? '—' }}</td>
                         <td class="px-5 py-3 text-gray-700">{{ $order->technician['name'] ?? '—' }}</td>
-                        <td class="px-5 py-3 text-gray-700">{{ $order->service_type_label ?? $order->service_type }}</td>
+                        <td class="px-5 py-3 text-gray-700">{{ $order->service_type }}</td>
                         <td class="px-5 py-3">
                             @switch($order->status)
                                 @case('pending')

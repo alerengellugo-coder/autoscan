@@ -10,7 +10,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200">
         <div class="px-5 py-4 border-b border-gray-200">
             <h2 class="text-lg font-semibold text-gray-900">
-                {{ $orders->count() }} or@php $_t1 = $orders->count() }} orden{{ $orders->count() !== 1 ? "es" : ""; @endphp{{ $_t1 }}rders->count() !== 1 ? "s" : ""; @endphp{{ $_t0 }}
+                {{ $orders->count() }} orden{{ $orders->count() !== 1 ? 'es' : '' }} encontrada{{ $orders->count() !== 1 ? 's' : '' }}
             </h2>
         </div>
         <div class="overflow-x-auto">

@@ -16,18 +16,18 @@
                         <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                     </svg>
                     <input type="text" id="search" name="search" value="{{ request('search') }}" placeholder="Buscar reportes..."
-                        class="w-64 pl-10 pr-4 py-2 rounded-lg border border-gray-300 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors">
+                        class="w-64 pl-10 pr-4 py-2 rounded-lg border border-gray-300 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors">
                 </div>
             </div>
             <div>
                 <label for="date_from" class="sr-only">Desde</label>
                 <input type="date" id="date_from" name="date_from" value="{{ request('date_from') }}"
-                    class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors">
+                    class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors">
             </div>
             <div>
                 <label for="date_to" class="sr-only">Hasta</label>
                 <input type="date" id="date_to" name="date_to" value="{{ request('date_to') }}"
-                    class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors">
+                    class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors">
             </div>
             <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
                 Filtrar

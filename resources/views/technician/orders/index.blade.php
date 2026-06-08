@@ -10,7 +10,9 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
         <div class="flex flex-wrap items-center gap-4">
             <h3 class="text-sm font-semibold text-gray-700 mr-2">Filtrar por estado:</h3>
-            <a href="{{ route('technician.orde@php $_t1 = route('technician.orders.index') }}" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium transition-colors {{ !request('status') ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"; @endphp{{ $_t1 }}            </a>
+            <a href="{{ route('technician.orders.index') }}" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium transition-colors {{ !request('status') ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
+                Todos
+            </a>
             @foreach([
                 'pending' => 'Pendiente',
                 'in_progress' => 'En Progreso',
@@ -18,7 +20,7 @@
                 'completed' => 'Completada',
                 'delivered' => 'Entregada',
             ] as $value => $label)
-            <a href="@php $_t0 = route('technician.orders.index', ['status' => $value]) }}" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium transition-colors {{ request('status') === $value ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"; @endphp{{ $_t0 }}">
+            <a href="{{ route('technician.orders.index', ['status' => $value]) }}" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium transition-colors {{ request('status') === $value ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
                 {{ $label }}
             </a>
             @endforeach

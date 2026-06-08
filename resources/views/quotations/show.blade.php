@@ -4,7 +4,6 @@
 @section('page-title', 'Detalle de Cotización')
 
 @section('content')
-@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 <div class="max-w-4xl mx-auto space-y-6">
 
     {{-- Back Button --}}
@@ -234,7 +233,7 @@
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                         <option value="">Seleccionar estado</option>
                         @foreach($status_options as $value => $label)
-                            <option value="@php $_t0 = $value }}" {{ $quotation->status == $value ? "disabled" : ""; @endphp{{ $_t0 }}>
+                            <option value="{{ $value }}" {{ $quotation->status == $value ? 'disabled' : '' }}>
                                 {{ $label }}
                             </option>
                         @endforeach

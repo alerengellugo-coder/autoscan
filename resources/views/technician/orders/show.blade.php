@@ -4,7 +4,6 @@
 @section('page-title', 'Detalle de Orden')
 
 @section('content')
-@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 <div class="space-y-6">
 
     {{-- Back button --}}
@@ -190,7 +189,7 @@
             <div>
                 <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
                 <textarea id="description" name="description" rows="3"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $errors->has('description') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}"
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $errors->has('description') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : }}"
                     placeholder="Descripción del diagnóstico o trabajo realizado">{{ old('description') }}</textarea>
                 @error('description')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -201,7 +200,7 @@
             <div>
                 <label for="work_performed" class="block text-sm font-medium text-gray-700 mb-1">Trabajo Realizado</label>
                 <textarea id="work_performed" name="work_performed" rows="3"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $errors->has('work_performed') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}"
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $errors->has('work_performed') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : }}"
                     placeholder="Detalle del trabajo ejecutado">{{ old('work_performed') }}</textarea>
                 @error('work_performed')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -214,7 +213,7 @@
                     <label for="labor_hours" class="block text-sm font-medium text-gray-700 mb-1">Horas de Mano de Obra</label>
                     <input type="number" id="labor_hours" name="labor_hours" step="0.5" min="0"
                         value="{{ old('labor_hours') }}"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $errors->has('labor_hours') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $errors->has('labor_hours') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : }}"
                         placeholder="0.0">
                     @error('labor_hours')
                     <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -226,7 +225,7 @@
             <div>
                 <label for="findings" class="block text-sm font-medium text-gray-700 mb-1">Hallazgos</label>
                 <textarea id="findings" name="findings" rows="3"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $errors->has('findings') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}"
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $errors->has('findings') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : }}"
                     placeholder="Hallazgos del diagnóstico">{{ old('findings') }}</textarea>
                 @error('findings')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -237,7 +236,7 @@
             <div>
                 <label for="recommendations" class="block text-sm font-medium text-gray-700 mb-1">Recomendaciones</label>
                 <textarea id="recommendations" name="recommendations" rows="3"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $errors->has('recommendations') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}"
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $errors->has('recommendations') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : }}"
                     placeholder="Recomendaciones para el cliente">{{ old('recommendations') }}</textarea>
                 @error('recommendations')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -251,11 +250,11 @@
                     <div class="parts-row flex flex-col sm:flex-row items-start sm:items-end gap-3">
                         <div class="flex-1 w-full">
                             <input type="text" name="parts_used[0][description]" value="{{ old('parts_used.0.description') }}" placeholder="Descripción del repuesto"
-                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors">
+                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors">
                         </div>
                         <div class="w-full sm:w-24">
                             <input type="number" name="parts_used[0][quantity]" value="{{ old('parts_used.0.quantity', 1) }}" min="1" placeholder="Cant."
-                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors">
+                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors">
                         </div>
                         <button type="button" onclick="removePartsRow(this)" class="p-2.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
                             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -297,11 +296,11 @@
         row.innerHTML = `
             <div class="flex-1 w-full">
                 <input type="text" name="parts_used[${partsIndex}][description]" placeholder="Descripción del repuesto"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors">
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors">
             </div>
             <div class="w-full sm:w-24">
                 <input type="number" name="parts_used[${partsIndex}][quantity]" value="1" min="1" placeholder="Cant."
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors">
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors">
             </div>
             <button type="button" onclick="removePartsRow(this)" class="p-2.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

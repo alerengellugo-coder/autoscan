@@ -4,7 +4,6 @@
 @section('page-title', 'Detalle de Venta')
 
 @section('content')
-@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 <div class="max-w-4xl mx-auto space-y-6">
 
     {{-- Back Button --}}
@@ -26,7 +25,7 @@
             </div>
             <div class="flex items-center gap-2 flex-wrap">
                 {{-- Status Badge --}}
-                @switch($sale->status->value ?? $sale->status)
+                @switch((string)$sale->status)
                     @case('pending')
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">{{ $sale->status_label ?? 'Pendiente' }}</span>
                         @break
@@ -42,7 +41,7 @@
                 @endswitch
 
                 {{-- Payment Status Badge --}}
-                @switch($sale->payment_status->value ?? $sale->payment_status)
+                @switch((string)$sale->payment_status)
                     @case('paid')
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">Pagado</span>
                         @break
@@ -171,7 +170,7 @@
                         <td class="px-5 py-3 text-gray-500 text-xs">{{ $payment->created_at->format('d/m/Y H:i') }}</td>
                         <td class="px-5 py-3 font-semibold text-green-600">${{ number_format($payment->amount, 2) }}</td>
                         <td class="px-5 py-3 text-gray-700">
-                            @switch($payment->method->value ?? $payment->method)
+                            @switch($payment->method)
                                 @case('cash')
                                     <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">Efectivo</span>
                                     @break

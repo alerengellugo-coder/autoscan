@@ -4,7 +4,6 @@
 @section('page-title', 'Crear Producto')
 
 @section('content')
-@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 <div class="max-w-3xl mx-auto">
 
     <div class="mb-6">
@@ -62,7 +61,7 @@
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                         <option value="">Seleccionar categoría</option>
                         @foreach($categories as $category)
-                            <option value="@php $_t0 = $category['value'] }}" {{ old('category') == $category['value'] ? "selected" : ""; @endphp{{ $_t0 }}>
+                            <option value="{{ $category['value'] }}" {{ old('category') == $category['value'] ? 'selected' : '' }}>
                                 {{ $category['label'] }}
                             </option>
                         @endforeach

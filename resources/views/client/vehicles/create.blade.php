@@ -4,12 +4,9 @@
 @section('page-title', 'Agregar Vehículo')
 
 @section('content')
-@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 <div class="max-w-2xl mx-auto space-y-6">
 
     {{-- Back button --}}
-    <div>
-        <a href="{@php $_t2 = -- Back button --}}
     <div>
         <a href="{{ route('client.vehicles.index') }}" class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -33,7 +30,7 @@
                 <label for="brand" class="block text-sm font-medium text-gray-700 mb-1">Marca <span class="text-red-500">*</span></label>
                 <input type="text" id="brand" name="brand" required
                     value="{{ old('brand') }}"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $errors->has('brand') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}"
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $errors->has('brand') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : }}"
                     placeholder="Ej: Toyota">
                 @error('brand')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -45,7 +42,7 @@
                 <label for="model" class="block text-sm font-medium text-gray-700 mb-1">Modelo <span class="text-red-500">*</span></label>
                 <input type="text" id="model" name="model" required
                     value="{{ old('model') }}"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $errors->has('model') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}"
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $errors->has('model') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : }}"
                     placeholder="Ej: Corolla">
                 @error('model')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -58,7 +55,7 @@
                     <label for="year" class="block text-sm font-medium text-gray-700 mb-1">Año <span class="text-red-500">*</span></label>
                     <input type="number" id="year" name="year" required min="1900" max="{{ date('Y') + 1 }}"
                         value="{{ old('year') }}"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $errors->has('year') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $errors->has('year') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : }}"
                         placeholder="Ej: 2023">
                     @error('year')
                     <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -70,7 +67,7 @@
                     <label for="plate" class="block text-sm font-medium text-gray-700 mb-1">Placa <span class="text-red-500">*</span></label>
                     <input type="text" id="plate" name="plate" required
                         value="{{ old('plate') }}"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $errors->has('plate') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $errors->has('plate') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : }}"
                         placeholder="Ej: ABC-123">
                     @error('plate')
                     <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -83,7 +80,7 @@
                 <label for="color" class="block text-sm font-medium text-gray-700 mb-1">Color</label>
                 <input type="text" id="color" name="color"
                     value="{{ old('color') }}"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $errors->has('color') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}"
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $errors->has('color') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : }}"
                     placeholder="Ej: Blanco">
                 @error('color')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -95,7 +92,7 @@
                 <label for="vin" class="block text-sm font-medium text-gray-700 mb-1">VIN (Número de Serie)</label>
                 <input type="text" id="vin" name="vin"
                     value="{{ old('vin') }}"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $errors->has('vin') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}"
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $errors->has('vin') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : }}"
                     placeholder="Ej: 1HGCM82633A004352">
                 @error('vin')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -107,7 +104,7 @@
                 <label for="mileage" class="block text-sm font-medium text-gray-700 mb-1">Kilometraje</label>
                 <input type="number" id="mileage" name="mileage" min="0"
                     value="{{ old('mileage') }}"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $errors->has('mileage') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}"
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $errors->has('mileage') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : }}"
                     placeholder="Ej: 50000">
                 @error('mileage')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -119,9 +116,15 @@
                 <div>
                     <label for="engine_type" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Motor</label>
                     <select id="engine_type" name="engine_type"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors bg-white {{ $errors->has('engine_type') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}">
-                        <option value="" {{ !old('engine_ty@php $_t2 = !old('engine_type') ? 'selected' : ''; @endphp{{ $_t2 }}lina" @php $_t0 = old('e@php $_t1 = old('engine_type') ===@php $_t1 = old('engine_type') === 'gasolina' ? 'selected' : ''; @endphp{ $_t0 }8 = !old('engine_type') ? "selected" : ""; @endphp@php $_t0 = $_t8 }}old('engine_type') === 'diesel' ? 'selected' : ''@php $_t7 = old('engine_type') === 'gasolina' ? "selected" : ""; @endphp{{ $_t7 }}="electrico" @php $_t1 = old('engine_type') === 'e@php $_t6 = old('engine_type') === 'diesel' ? 'selected' : ''; @endphp{ $_t1 }                   <option value="hibrido"@php $_t5 = old('engine_type') === 'electrico' ? "selected" : ""; @endphp{{ $_t5 }}Híbrido</option>
-                    </sele@php $_t4 = old('engine_type') === 'hibrido' ? "selected" : ""; @endphp{{ $_t4 }}          <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors bg-white {{ $errors->has('engine_type') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : }}">
+                        <option value="" {{ !old('engine_type') ? 'selected' : '' }}>Seleccionar...</option>
+                        <option value="gasolina" {{ old('engine_type') === 'gasolina' ? 'selected' : '' }}>Gasolina</option>
+                        <option value="diesel" {{ old('engine_type') === 'diesel' ? 'selected' : '' }}>Diésel</option>
+                        <option value="electrico" {{ old('engine_type') === 'electrico' ? 'selected' : '' }}>Eléctrico</option>
+                        <option value="hibrido" {{ old('engine_type') === 'hibrido' ? 'selected' : '' }}>Híbrido</option>
+                    </select>
+                    @error('engine_type')
+                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -129,9 +132,11 @@
                 <div>
                     <label for="transmission" class="block text-sm font-medium text-gray-700 mb-1">Transmisión</label>
                     <select id="transmission" name="transmission"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors bg-white {{ $errors->has('transmission') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}">
-                        <option value="" @php $_t0 = !old('transmission') ? 'selected' : ''; @endphp{{ $_t0 }}>Seleccionar...</option>
-      @php $_t3 = !old('transmission') ? "selected" : ""; @endphp{{ $_t3 }} @php $_t2 = old('transmission') === 'automatica' ? 'selecte@php $_t2 = old('transmission') === 'automatica' ? 'selected' : ''; @endphp{ $_t2 }on value="manual" @php $_t3 = old('transmission') ==@php $_t1 = old('transmission') === 'manual' ? 'selected' : ''; @endphp{ $_t3 }                <option value="cvt" @php $_t0 = old('transmission') === 'cvt' ? "selected" : ""; @endphp{{ $_t0 }}>CVT</option>
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors bg-white {{ $errors->has('transmission') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : }}">
+                        <option value="" {{ !old('transmission') ? 'selected' : '' }}>Seleccionar...</option>
+                        <option value="automatica" {{ old('transmission') === 'automatica' ? 'selected' : '' }}>Automática</option>
+                        <option value="manual" {{ old('transmission') === 'manual' ? 'selected' : '' }}>Manual</option>
+                        <option value="cvt" {{ old('transmission') === 'cvt' ? 'selected' : '' }}>CVT</option>
                     </select>
                     @error('transmission')
                     <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -143,7 +148,7 @@
             <div>
                 <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Notas</label>
                 <textarea id="notes" name="notes" rows="3"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $errors->has('notes') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}"
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $errors->has('notes') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : }}"
                     placeholder="Notas adicionales sobre el vehículo">{{ old('notes') }}</textarea>
                 @error('notes')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>

@@ -4,11 +4,9 @@
 @section('page-title', 'Usuarios')
 
 @section('content')
-@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 <div class="space-y-6">
 
     {{-- Users Table --}}
-    <div class="bg-white rounded-xl shadow-sm border @php $_t3 = -- Users Table --}}
     <div class="bg-white rounded-xl shadow-sm border border-gray-200">
         <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
             <h2 class="text-lg font-semibold text-gray-900">Lista de Usuarios</h2>
@@ -84,7 +82,8 @@
                                 <form method="POST" action="{{ route('admin.usuarios.toggle-active', $user) }}" class="inline-flex" onsubmit="return confirm('¿Cambiar estado del usuario?')">
                                     @csrf
                                     @method('PUT')
-                                    <button type="submit" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium {{ $user->is_activ@php $_t2 = $user->is_active ? 'text-yellow-600 hover:text-white hover:bg-yellow-600' : 'text-green-600 hover:text-white hover:bg-green-600'; @endphp{{ $_t2 }}low-600" : "text-green-600 hover:text-white hover:bg-green-600"; @endphp{{ $_t6 }} viewBox="0 0@php $_t5 = $user->is_activ@php $_t2 = $_t6 }} viewBox="0 0@php $_t5 = $user->is_active ? "Desactivar" : "Activar"; @endphp{{ $_t5 }}width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <button type="submit" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium {{ $user->is_active ? 'text-yellow-600 hover:text-white hover:bg-yellow-600' : 'text-green-600 hover:text-white hover:bg-green-600' }} rounded-lg transition-colors" title="{{ $user->is_active ? 'Desactivar' : 'Activar' }}">
+                                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             @if($user->is_active)
                                                 <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
                                                 <line x1="1" y1="1" x2="23" y2="23"/>
@@ -93,7 +92,11 @@
                                                 <circle cx="12" cy="12" r="3"/>
                                             @endif
                                         </svg>
-                                        @php $_t0 = $user-@php $_t1 = $user->is_active ? 'Desactivar' : 'Activar'; @endphp{ $_t0 }4 = $user->is_active ? "Desactivar" : "Activar"; @endphp{{ $_t4 }}               @php $_t1 = $_t4 }}                    {{-- Edit --}}
+                                        {{ $user->is_active ? 'Desactivar' : 'Activar' }}
+                                    </button>
+                                </form>
+
+                                {{-- Edit --}}
                                 <a href="{{ route('admin.usuarios.edit', $user) }}" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-blue-600 hover:text-white hover:bg-blue-600 rounded-lg transition-colors" title="Editar">
                                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
@@ -216,8 +219,10 @@
                             name="role"
                             required
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
-                        <option value="" @php $_t0 = old('role') == '' ? 'selected' : ''; @endphp{{ $_t0 }}
-        @php $_t3 = old('role') == '' ? "selected" : ""; @endphp@php $_t0 = $_t3 }}old('role') == 'admin' ? 'selected' : ''; @endphp{{ $_t0 }}>Adm@php $_t2 = old('role') == 'admin' ? "selected" : ""; @endphp{{ $_t2 }}ption value="technician" @php $_t1 = old('role') == 'techni@php $_t1 = old('role') == 'technician' ? 'selected' : ''; @endphp{ $_t1 }                 <option value="client" @php $_t0 = old('role') == 'client' ? "selected" : ""; @endphp{{ $_t0 }}>Cliente</option>
+                        <option value="" {{ old('role') == '' ? 'selected' : '' }}>Seleccionar rol</option>
+                        <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrador</option>
+                        <option value="technician" {{ old('role') == 'technician' ? 'selected' : '' }}>Técnico</option>
+                        <option value="client" {{ old('role') == 'client' ? 'selected' : '' }}>Cliente</option>
                     </select>
                     @error('role')
                         <span class="text-red-500 text-xs mt-1">{{ $message }}</span>

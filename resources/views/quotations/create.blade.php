@@ -4,11 +4,10 @@
 @section('page-title', 'Crear Cotización')
 
 @section('content')
-@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 <div class="max-w-5xl mx-auto space-y-6">
 
     <div class="mb-2">
-        <a href="@php $_t0 = route('admin.cotizaciones.index') }}" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors">
+        <a href="{{ route('admin.cotizaciones.index') }}" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="15,18 9,12 15,6"/>
             </svg>
@@ -38,8 +37,10 @@
                                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                             <option value="">Seleccionar cliente</option>
                             @foreach($clients as $clientId => $clientName)
-                                <option value="{{ $clientId }}" @php $_t0 = old('client_id') == $clientId ? 'selected' : ''; @endphp{{ $_t0 }}>
-                            @php $_t4 = $clientId }}" {{ old('client_id') == $clientId ? "selected" : ""; @endphp{{ $_t4 }}                          @endforeach
+                                <option value="{{ $clientId }}" {{ old('client_id') == $clientId ? 'selected' : '' }}>
+                                    {{ $clientName }}
+                                </option>
+                            @endforeach
                         </select>
                         @error('client_id')
                             <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
@@ -53,7 +54,8 @@
                                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                             <option value="">Seleccionar vehículo</option>
                             @foreach($vehicles as $vehicle)
-                                <option value="{{ $vehicle->id }}" data-client-id="{{ $vehicle->client_id }}" {{ old('vehi@php $_t3 = $vehicle->id }}" data-client-id="{{ $vehicle->client_id }}" {{ old('vehicle_id') == $vehicle->id ? "selected" : ""; @endphp{{ $_t3 }}brand }} {{ $vehicle->model }}
+                                <option value="{{ $vehicle->id }}" data-client-id="{{ $vehicle->client_id }}" {{ old('vehicle_id') == $vehicle->id ? 'selected' : '' }}>
+                                    {{ $vehicle->plate }} — {{ $vehicle->brand }} {{ $vehicle->model }}
                                 </option>
                             @endforeach
                         </select>
@@ -72,7 +74,8 @@
                                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                             <option value="">Seleccionar orden (opcional)</option>
                             @foreach($service_orders as $serviceOrder)
-                                <option value="{{ $serviceOrder->id }}" {{ old('service_order_id'@php $_t2 = $serviceOrder->id }}" {{ old('service_order_id') == $serviceOrder->id ? "selected" : ""; @endphp{{ $_t2 }}rder->order_number }}
+                                <option value="{{ $serviceOrder->id }}" {{ old('service_order_id') == $serviceOrder->id ? 'selected' : '' }}>
+                                    {{ $serviceOrder->order_number }}
                                 </option>
                             @endforeach
                         </select>
@@ -143,7 +146,8 @@
                         <select id="discount_type"
                                 name="discount_type"
                                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
-                            <option value="percentage" @php $_t0 = old('discount_type', '@php $_t1 = old('discount_type', 'percentage') == 'percentage' ? 'selected' : ''; @endphp{ $_t0 }                          <option value="fixed" @php $_t0 = old('discount_type') == 'fixed' ? "selected" : ""; @endphp{{ $_t0 }}>$ Monto Fijo</option>
+                            <option value="percentage" {{ old('discount_type', 'percentage') == 'percentage' ? 'selected' : '' }}>% Porcentaje</option>
+                            <option value="fixed" {{ old('discount_type') == 'fixed' ? 'selected' : '' }}>$ Monto Fijo</option>
                         </select>
                         @error('discount_type')
                             <span class="text-red-500 text-xs mt-1">{{ $message }}</span>

@@ -10,7 +10,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200">
         <div class="px-5 py-4 border-b border-gray-200">
             <h2 class="text-lg font-semibold text-gray-900">
-                @php $_t0 = $sales->count() }} compra{{ $sales->count() !== 1 ? "s" : ""; @endphp{{ $_t0 }}
+                {{ $sales->count() }} compra{{ $sales->count() !== 1 ? 's' : '' }}
             </h2>
         </div>
         <div class="overflow-x-auto">
@@ -41,7 +41,7 @@
                                     'cancelled' => 'bg-red-100 text-red-800',
                                     'refunded' => 'bg-orange-100 text-orange-800',
                                 ];
-                                $sColorClass = $saleStatusColors[$sale['status']] ?? 'bg-gray-100 text-gray-800';
+                                $sColorClass = $saleStatusColors[(string)$sale['status']] ?? 'bg-gray-100 text-gray-800';
                             @endphp
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $sColorClass }}">
                                 {{ $sale['status_label'] ?? ucfirst($sale['status']) }}
@@ -55,7 +55,7 @@
                                     'partial' => 'bg-orange-100 text-orange-800',
                                     'overdue' => 'bg-red-100 text-red-800',
                                 ];
-                                $pColorClass = $payStatusColors[$sale['payment_status']] ?? 'bg-gray-100 text-gray-800';
+                                $pColorClass = $payStatusColors[(string)$sale['payment_status']] ?? 'bg-gray-100 text-gray-800';
                             @endphp
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $pColorClass }}">
                                 {{ $sale['payment_status_label'] ?? ucfirst(str_replace('_', ' ', $sale['payment_status'])) }}

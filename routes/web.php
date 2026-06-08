@@ -17,6 +17,7 @@ Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/servicios', [PageController::class, 'services'])->name('services');
 Route::get('/nosotros', [PageController::class, 'about'])->name('about');
 Route::get('/contacto', [PageController::class, 'contact'])->name('contact');
+Route::post('/contacto', [PageController::class, 'submitContact'])->name('contact.submit');
 Route::get('/catalogo', [ProductController::class, 'catalog'])->name('products.catalog');
 
 // Auth routes

@@ -4,9 +4,8 @@
 @section('auth-subtitle', 'Ingresa tu email y te enviaremos un enlace para restablecer tu contraseña')
 
 @section('content')
-@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
 @php
-    $_email_cls = $errors->has('email') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : '';
+    $_email_cls = $errors->has('email') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : '';
 @endphp
 <form method="POST" action="{{ route('password.email') }}" class="space-y-5">
     @csrf
@@ -20,7 +19,7 @@
             </svg>
             <input type="email" id="email" name="email" required autofocus
                 value="{{ old('email') }}"
-                class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $_email_cls }}"
+                class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $_email_cls }}"
                 placeholder="tu@email.com">
         </div>
         @error('email')

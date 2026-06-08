@@ -161,7 +161,7 @@
         </div>
         <div class="divide-y divide-gray-100">
             @forelse($notifications as $notification)
-            <div class="px-5 py-4 hover:bg-gray-50 transition-colors @php $_t0 = !$notification['read_at'] ? "bg-blue-50/30" : ""; @endphp{{ $_t0 }}">
+            <div class="px-5 py-4 hover:bg-gray-50 transition-colors {{ !$notification['read_at'] ? 'bg-blue-50/30' : '' }}">
                 <div class="flex items-start gap-3">
                     <div class="mt-0.5 flex-shrink-0">
                         @if(!$notification['read_at'])

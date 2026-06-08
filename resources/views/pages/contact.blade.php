@@ -3,15 +3,14 @@
 @section('title', 'Contacto - AutoScan')
 
 @section('content')
-@php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
-@php
-    $_name_cls = $errors->has('name') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : '';
-    $_message_cls = $errors->has('message') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : '';
-    $_phone_cls = $errors->has('phone') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : '';
-    $_email_cls = $errors->has('email') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : '';
-@endphp
 
 {{-- Hero --}}
+@php
+    $_name_cls = $errors->has('name') ? 'border-red-400' : '';
+    $_email_cls = $errors->has('email') ? 'border-red-400' : '';
+    $_phone_cls = $errors->has('phone') ? 'border-red-400' : '';
+    $_message_cls = $errors->has('message') ? 'border-red-400' : '';
+@endphp
 <section class="bg-gradient-to-br from-slate-900 via-blue-900 to-blue-800 py-16 lg:py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white">Contáctanos</h1>
@@ -37,7 +36,7 @@
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nombre <span class="text-red-500">*</span></label>
                         <input type="text" id="name" name="name" required
                             value="{{ old('name') }}"
-                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $_name_cls }}"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $_name_cls }}"
                             placeholder="Tu nombre completo">
                         @error('name')
                         <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -49,7 +48,7 @@
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email <span class="text-red-500">*</span></label>
                         <input type="email" id="email" name="email" required
                             value="{{ old('email') }}"
-                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $_email_cls }}"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $_email_cls }}"
                             placeholder="tu@email.com">
                         @error('email')
                         <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -61,7 +60,7 @@
                         <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
                         <input type="tel" id="phone" name="phone"
                             value="{{ old('phone') }}"
-                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $_phone_cls }}"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $_phone_cls }}"
                             placeholder="+52 55 1234 5678">
                         @error('phone')
                         <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -72,7 +71,7 @@
                     <div>
                         <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Mensaje <span class="text-red-500">*</span></label>
                         <textarea id="message" name="message" rows="5" required
-                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $_message_cls }}"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $_message_cls }}"
                             placeholder="Cuéntanos en qué podemos ayudarte...">{{ old('message') }}</textarea>
                         @error('message')
                         <p class="mt-1 text-xs text-red-600">{{ $message }}</p>

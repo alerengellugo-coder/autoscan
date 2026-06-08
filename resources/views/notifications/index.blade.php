@@ -10,7 +10,9 @@
     <div class="flex items-center justify-between">
         <p class="text-sm text-gray-500">
             @if(isset($notifications) && $notifications->total() > 0)
-                {{ $notifications->total() }} notificaci{{ $notifi@php $_t2 = $notifications->total() }} notificaci{{ $notifications->total() == 1 ? "ón" : "ones"; @endphp{{ $_t2 }}nes
+                {{ $notifications->total() }} notificaci{{ $notifications->total() == 1 ? 'ón' : 'ones' }}
+            @else
+                Sin notificaciones
             @endif
         </p>
         @if(isset($notifications) && $notifications->filter(fn($n) => !$n->read_at)->count() > 0)
@@ -30,7 +32,7 @@
     {{-- Notifications List --}}
     <div class="space-y-3">
         @forelse($notifications as $notification)
-        <div class="bg-white rounded-xl shadow-sm border @php $_t0 = !$notification->read_a@php $_t1 = !$notification->read_at ? 'border-l-4 border-l-blue-500' : 'border-gray-200'; @endphp{ $_t0 }adow-md transition-shadow">
+        <div class="bg-white rounded-xl shadow-sm border {{ !$notification->read_at ? 'border-l-4 border-l-blue-500' : 'border-gray-200' }} overflow-hidden hover:shadow-md transition-shadow">
 
             <div class="px-5 py-4 flex items-start gap-4">
 
@@ -94,7 +96,7 @@
 
                 {{-- Content --}}
                 <div class="flex-1 min-w-0">
-                    <p class="text-sm @php $_t0 = !$notification->read_at ? "font-semibold text-gray-900" : "font-medium text-gray-700"; @endphp{{ $_t0 }}">
+                    <p class="text-sm {{ !$notification->read_at ? 'font-semibold text-gray-900' : 'font-medium text-gray-700' }}">
                         {{ $notification->data['title'] ?? $notification->data['message'] ?? ucfirst(str_replace('_', ' ', $notification->type)) }}
                     </p>
                     @if($notification->data['message'] ?? ($notification->data['body'] ?? null))
