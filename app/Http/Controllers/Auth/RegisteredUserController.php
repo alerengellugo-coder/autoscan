@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
-use Illuminate\Validation\Rules\Unique;
 
 /**
  * Controller: RegisteredUserController
@@ -52,7 +51,7 @@ class RegisteredUserController extends Controller
                 'string',
                 'email',
                 'max:255',
-                new Unique('users', 'email'),
+                'unique:users,email',
             ],
             'phone'    => ['required', 'string', 'max:20'],
             'password' => ['required', 'confirmed', Password::defaults()],
