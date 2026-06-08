@@ -32,6 +32,13 @@ Route::middleware('guest')->group(function () {
     Route::post('/reset-password', 'App\Http\Controllers\Auth\NewPasswordController@store')->name('password.update');
 });
 
+// Email verification routes
+Route::middleware('auth')->group(function () {
+    Route::get('/verify-email', 'App\Http\Controllers\Auth\EmailVerificationPromptController@show')->name('verification.notice');
+    Route::get('/verify-email/{id}/{hash}', 'App\Http\Controllers\Auth\VerifyEmailController@__invoke')->name('verification.verify');
+    Route::post('/email/verification-notification', 'App\Http\Controllers\Auth\EmailVerificationNotificationController@store')->name('verification.send');
+});
+
 // Authenticated routes
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/logout', 'App\Http\Controllers\Auth\AuthenticatedSessionController@destroy')->name('logout');
@@ -45,8 +52,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/mi-cuenta/dashboard', [DashboardController::class, 'clientDashboard'])->name('client.dashboard');
 
     Route::get('/notificaciones', [NotificationController::class, 'index'])->name('notifications.index');
-    Route::post('/notificaciones/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
-    Route::post('/notificaciones/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+    Route::post('/notificaciones/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-read');
+    Route::post('/notificaciones/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
     Route::delete('/notificaciones/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
 
     // Client routes
@@ -61,6 +68,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/ordenes/{order}', [ServiceOrderController::class, 'show'])->name('orders.show');
         Route::get('/cotizaciones', [QuotationController::class, 'clientQuotations'])->name('quotations.index');
         Route::get('/cotizaciones/{quotation}', [QuotationController::class, 'show'])->name('quotations.show');
+        Route::post('/cotizaciones/{quotation}/aprobar', [QuotationController::class, 'clientApprove'])->name('quotations.approve');
+        Route::post('/cotizaciones/{quotation}/rechazar', [QuotationController::class, 'clientReject'])->name('quotations.reject');
         Route::get('/ventas', [SaleController::class, 'clientSales'])->name('sales.index');
     });
 
@@ -77,10 +86,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Admin routes
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/usuarios', 'App\Http\Controllers\UserController@index')->name('users.index');
-        Route::post('/usuarios', 'App\Http\Controllers\UserController@store');
-        Route::put('/usuarios/{user}', 'App\Http\Controllers\UserController@update');
-        Route::delete('/usuarios/{user}', 'App\Http\Controllers\UserController@destroy');
+        Route::get('/usuarios', 'App\Http\Controllers\UserController@index')->name('usuarios.index');
+        Route::post('/usuarios', 'App\Http\Controllers\UserController@store')->name('usuarios.store');
+        Route::get('/usuarios/{user}/editar', 'App\Http\Controllers\UserController@edit')->name('usuarios.edit');
+        Route::put('/usuarios/{user}', 'App\Http\Controllers\UserController@update')->name('usuarios.update');
+        Route::put('/usuarios/{user}/toggle-active', 'App\Http\Controllers\UserController@toggleActive')->name('usuarios.toggle-active');
+        Route::delete('/usuarios/{user}', 'App\Http\Controllers\UserController@destroy')->name('usuarios.destroy');
         Route::resource('vehiculos', VehicleController::class)->except(['show']);
         Route::get('/vehiculos/{vehicle}', [VehicleController::class, 'show'])->name('vehiculos.show');
         Route::post('/vehiculos/cliente/{client}', [VehicleController::class, 'addVehicleForClient'])->name('vehiculos.add-for-client');
@@ -102,5 +113,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::get('/perfil', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/perfil', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/perfil/password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
 
 });

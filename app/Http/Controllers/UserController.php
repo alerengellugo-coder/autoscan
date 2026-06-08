@@ -34,6 +34,30 @@ class UserController extends Controller
     }
 
     /**
+     * Show the form for editing a user.
+     */
+    public function edit(User $user)
+    {
+        return view('users.edit', [
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * Toggle user active status.
+     */
+    public function toggleActive(User $user)
+    {
+        if ($user->id === auth()->id()) {
+            return back()->withErrors('No puedes cambiar tu propio estado.');
+        }
+
+        $user->update(['is_active' => !$user->is_active]);
+
+        return back()->with('success', $user->is_active ? 'Usuario activado.' : 'Usuario desactivado.');
+    }
+
+    /**
      * Store a newly created user.
      */
     public function store(Request $request)

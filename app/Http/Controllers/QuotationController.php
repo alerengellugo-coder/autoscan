@@ -149,6 +149,34 @@ class QuotationController extends Controller
         return back()->with('success', 'Estado actualizado.');
     }
 
+    public function clientApprove(Quotation $quotation)
+    {
+        if ($quotation->client_id !== Auth::id()) {
+            abort(403);
+        }
+        if (!$quotation->status->isEditable()) {
+            return back()->withErrors(['error' => 'Esta cotizacion no se puede aprobar en su estado actual.']);
+        }
+        $quotation->approve();
+
+        // Notify admins
+        $admins = User::admins()->active()->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new QuotationApproved($quotation));
+        }
+
+        return back()->with('success', 'Cotizacion aprobada exitosamente.');
+    }
+
+    public function clientReject(Quotation $quotation)
+    {
+        if ($quotation->client_id !== Auth::id()) {
+            abort(403);
+        }
+        $quotation->reject();
+        return back()->with('success', 'Cotizacion rechazada.');
+    }
+
     public function generatePdf(Quotation $quotation) { return response()->json(['message' => 'PDF generation not implemented yet']); }
 
     public function convertToSale(Request $request, Quotation $quotation)
