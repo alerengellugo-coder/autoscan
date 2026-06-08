@@ -38,7 +38,9 @@ class SaleController extends Controller
         $stats = [
             'total_sales' => Sale::count(),
             'total_revenue' => Sale::where('status', SaleStatus::Paid->value)->sum('total'),
-            'pending_payment' => Sale::where('status', '!=', SaleStatus::Cancelled->value)->sumRaw('COALESCE(total - COALESCE(paid_amount, 0), 0)'),
+            'pending_payment' => (float) Sale::where('status', '!=', SaleStatus::Cancelled->value)
+                ->selectRaw('COALESCE(SUM(total - COALESCE(paid_amount, 0)), 0) as pending')
+                ->value('pending'),
             'pending_count' => $sales->getCollection()->filter(fn($s) => $s->payment_status === 'pending')->count(),
             'completed_count' => $sales->getCollection()->filter(fn($s) => $s->payment_status === 'paid')->count(),
         ];
