@@ -97,6 +97,13 @@ class SaleController extends Controller
             'manual_items.*.unit_price'    => ['required', 'numeric', 'min:0'],
         ]);
 
+        // Neon/pgBouncer compatibility: ensure no stale aborted transaction
+        try {
+            DB::connection()->getPdo()->exec('ROLLBACK');
+        } catch (\Throwable $e) {
+            // No transaction active — ignore
+        }
+
         $sale = DB::transaction(function () use ($validated, $request) {
             // Determine items source: from quotation or manual
             if (!empty($validated['quotation_id'])) {
@@ -135,6 +142,7 @@ class SaleController extends Controller
             $sale = Sale::create($validated);
             foreach ($items as $item) {
                 $sale->items()->create([
+                    'name'        => $item['name'] ?? 'Item',
                     'product_id' => $item['product_id'] ?? null,
                     'description' => $item['description'],
                     'quantity'   => $item['quantity'],

@@ -85,6 +85,14 @@ class QuotationController extends Controller
             'items.*.discount'      => ['nullable', 'numeric', 'min:0'],
         ]);
 
+        // Neon/pgBouncer compatibility: ensure no stale aborted transaction
+        // exists on this connection before starting a new one.
+        try {
+            DB::connection()->getPdo()->exec('ROLLBACK');
+        } catch (\Throwable $e) {
+            // No transaction active — ignore
+        }
+
         $quotation = DB::transaction(function () use ($validated) {
             $items = $validated['items'];
             unset($validated['items']);
@@ -103,12 +111,13 @@ class QuotationController extends Controller
 
             foreach ($items as $item) {
                 $quotation->items()->create([
-                    'product_id' => $item['product_id'] ?? null,
-                    'description' => $item['description'] ?? ($item['name'] ?? 'Sin descripción'),
-                    'quantity'   => $item['quantity'],
-                    'unit_price' => $item['unit_price'],
-                    'discount'   => $item['discount'] ?? null,
-                    'total'      => $item['quantity'] * $item['unit_price'],
+                    'name'        => $item['name'] ?? 'Item',
+                    'product_id'  => $item['product_id'] ?? null,
+                    'description' => $item['description'] ?? 'Sin descripción',
+                    'quantity'    => $item['quantity'],
+                    'unit_price'  => $item['unit_price'],
+                    'discount'    => $item['discount'] ?? 0,
+                    'total'       => $item['quantity'] * $item['unit_price'],
                 ]);
             }
 
@@ -236,6 +245,7 @@ class QuotationController extends Controller
 
             foreach ($quotation->items as $item) {
                 $sale->items()->create([
+                    'name'        => $item->name ?? 'Item',
                     'product_id' => $item->product_id,
                     'description' => $item->description,
                     'quantity'   => $item->quantity,
