@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 
 class QuotationController extends Controller
 {
+    use \App\Traits\NeonSafeTransaction;
     private function statusOptions(): array
     {
         return collect(QuotationStatus::cases())->mapWithKeys(fn ($s) => [$s->value => $s->label()])->toArray();
@@ -85,12 +86,7 @@ class QuotationController extends Controller
             'items.*.discount'      => ['nullable', 'numeric', 'min:0'],
         ]);
 
-        // Neon/pgBouncer compatibility: get a fresh connection from the pool
-        // to avoid SQLSTATE[25P02] from stale aborted transactions.
-        DB::connection()->disconnect();
-        DB::reconnect();
-
-        $quotation = DB::transaction(function () use ($validated) {
+        $quotation = $this->neonSafeTransaction(function () use ($validated) {
             $items = $validated['items'];
             unset($validated['items']);
 
@@ -225,7 +221,7 @@ class QuotationController extends Controller
             return back()->withErrors(['error' => 'Solo se pueden convertir cotizaciones aprobadas.']);
         }
 
-        $sale = DB::transaction(function () use ($quotation) {
+        $sale = $this->neonSafeTransaction(function () use ($quotation) {
             $sale = \App\Models\Sale::create([
                 'client_id'      => $quotation->client_id,
                 'quotation_id'   => $quotation->id,

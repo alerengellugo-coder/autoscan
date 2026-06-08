@@ -12,6 +12,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->append(\App\Http\Middleware\CleanDatabaseConnection::class);
+
         $middleware->alias([
             'role' => \App\Http\Middleware\EnsureUserRole::class,
             'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
