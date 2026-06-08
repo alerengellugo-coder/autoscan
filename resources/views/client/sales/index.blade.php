@@ -28,10 +28,10 @@
                     @forelse($sales as $sale)
                     <tr class="hover:bg-gray-50 transition-colors">
                         <td class="px-5 py-3">
-                            <span class="font-medium text-gray-900">{{ $sale['sale_number'] }}</span>
+                            <span class="font-medium text-gray-900">{{ $sale->sale_number }}</span>
                         </td>
                         <td class="px-5 py-3 font-medium text-gray-900">
-                            ${{ number_format($sale['total'], 2) }}
+                            ${{ number_format($sale->total, 2) }}
                         </td>
                         <td class="px-5 py-3">
                             @php
@@ -41,10 +41,10 @@
                                     'partially_paid' => 'bg-blue-100 text-blue-800',
                                     'cancelled' => 'bg-red-100 text-red-800',
                                 ];
-                                $sColorClass = $saleStatusColors[$sale['status']] ?? 'bg-gray-100 text-gray-800';
+                                $sColorClass = $saleStatusColors[$sale->status->value] ?? 'bg-gray-100 text-gray-800';
                             @endphp
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $sColorClass }}">
-                                {{ $sale['status_label'] ?? ucfirst($sale['status']) }}
+                                {{ $sale->status_label }}
                             </span>
                         </td>
                         <td class="px-5 py-3">
@@ -55,14 +55,14 @@
                                     'partial' => 'bg-orange-100 text-orange-800',
                                     'overdue' => 'bg-red-100 text-red-800',
                                 ];
-                                $pColorClass = $payStatusColors[$sale['payment_status']] ?? 'bg-gray-100 text-gray-800';
+                                $pColorClass = $payStatusColors[$sale->payment_status] ?? 'bg-gray-100 text-gray-800';
                             @endphp
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $pColorClass }}">
-                                {{ $sale['payment_status_label'] ?? ucfirst(str_replace('_', ' ', $sale['payment_status'])) }}
+                                {{ $sale->payment_status_label }}
                             </span>
                         </td>
                         <td class="px-5 py-3 text-gray-500">
-                            {{ \Carbon\Carbon::parse($sale['created_at'])->format('d/m/Y') }}
+                            {{ $sale->created_at->format('d/m/Y') }}
                         </td>
                     </tr>
                     @empty

@@ -58,32 +58,40 @@
                 <tbody class="divide-y divide-gray-100">
                     @forelse($reports as $report)
                     <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-5 py-3 text-gray-500">{{ $report['id'] }}</td>
+                        <td class="px-5 py-3 text-gray-500">{{ $report->id }}</td>
                         <td class="px-5 py-3 text-gray-500">
-                            {{ \Carbon\Carbon::parse($report['report_date'])->format('d/m/Y') }}
+                            {{ $report->report_date ? $report->report_date->format('d/m/Y') : $report->created_at->format('d/m/Y') }}
                         </td>
                         <td class="px-5 py-3 text-gray-900 max-w-xs truncate">
-                            {{ $report['description'] ?? '—' }}
+                            {{ $report->description ?? '—' }}
                         </td>
                         <td class="px-5 py-3 text-gray-700 max-w-xs truncate">
-                            {{ $report['work_performed'] ?? '—' }}
+                            {{ $report->work_performed ?? '—' }}
                         </td>
                         <td class="px-5 py-3 text-gray-700">
-                            {{ $report['labor_hours'] ? number_format($report['labor_hours'], 1) : '—' }}
+                            {{ $report->labor_hours ? number_format($report->labor_hours, 1) : '—' }}
                         </td>
                         <td class="px-5 py-3">
-                            <a href="{{ route('technician.orders.show', $report['service_order']['id'] ?? $report['serviceOrder']['id']) }}" class="font-medium text-blue-600 hover:text-blue-700">
-                                {{ $report['service_order']['order_number'] ?? $report['serviceOrder']['order_number'] ?? '—' }}
+                            @if($report->serviceOrder)
+                            <a href="{{ route('technician.orders.show', $report->serviceOrder) }}" class="font-medium text-blue-600 hover:text-blue-700">
+                                {{ $report->serviceOrder->order_number }}
                             </a>
+                            @else
+                            <span class="text-gray-400">—</span>
+                            @endif
                         </td>
                         <td class="px-5 py-3 text-gray-700">
-                            {{ $report['service_order']['vehicle']['plate'] ?? $report['serviceOrder']['vehicle']['plate'] ?? '—' }}
+                            @if($report->serviceOrder && $report->serviceOrder->vehicle)
+                            {{ $report->serviceOrder->vehicle->plate }}
+                            @else
+                            —
+                            @endif
                         </td>
                         <td class="px-5 py-3 text-gray-700">
-                            {{ $report['technician']['name'] ?? '—' }}
+                            {{ $report->technician->name ?? '—' }}
                         </td>
                         <td class="px-5 py-3">
-                            <a href="{{ route('technician.reports.show', $report['id']) }}" class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 text-xs font-medium">
+                            <a href="{{ route('technician.reports.show', $report) }}" class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 text-xs font-medium">
                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                                     <circle cx="12" cy="12" r="3"/>

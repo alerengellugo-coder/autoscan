@@ -30,14 +30,14 @@
                     @forelse($quotations as $quotation)
                     <tr class="hover:bg-gray-50 transition-colors">
                         <td class="px-5 py-3">
-                            <a href="{{ route('client.quotations.show', $quotation['id']) }}" class="font-medium text-blue-600 hover:text-blue-700">
-                                {{ $quotation['quotation_number'] }}
+                            <a href="{{ route('client.quotations.show', $quotation) }}" class="font-medium text-blue-600 hover:text-blue-700">
+                                {{ $quotation->quotation_number }}
                             </a>
                         </td>
                         <td class="px-5 py-3 text-gray-700">
-                            @if($quotation['vehicle'])
-                                {{ $quotation['vehicle']['brand'] ?? '' }} {{ $quotation['vehicle']['model'] ?? '' }}
-                                <span class="text-gray-400">({{ $quotation['vehicle']['plate'] ?? '' }})</span>
+                            @if($quotation->vehicle)
+                                {{ $quotation->vehicle->brand ?? '' }} {{ $quotation->vehicle->model ?? '' }}
+                                <span class="text-gray-400">({{ $quotation->vehicle->plate ?? '' }})</span>
                             @else
                                 <span class="text-gray-400">—</span>
                             @endif
@@ -51,27 +51,27 @@
                                     'rejected' => 'bg-red-100 text-red-800',
                                     'expired' => 'bg-gray-100 text-gray-800',
                                 ];
-                                $qColorClass = $qStatusColors[$quotation['status']] ?? 'bg-gray-100 text-gray-800';
+                                $qColorClass = $qStatusColors[$quotation->status->value] ?? 'bg-gray-100 text-gray-800';
                             @endphp
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $qColorClass }}">
-                                {{ $quotation['status_label'] ?? ucfirst($quotation['status']) }}
+                                {{ $quotation->status_label }}
                             </span>
                         </td>
                         <td class="px-5 py-3 font-medium text-gray-900">
-                            ${{ number_format($quotation['total'], 2) }}
+                            ${{ number_format($quotation->total, 2) }}
                         </td>
                         <td class="px-5 py-3 text-gray-500">
-                            @if($quotation['valid_until'])
-                                {{ \Carbon\Carbon::parse($quotation['valid_until'])->format('d/m/Y') }}
+                            @if($quotation->valid_until)
+                                {{ $quotation->valid_until->format('d/m/Y') }}
                             @else
                                 —
                             @endif
                         </td>
                         <td class="px-5 py-3 text-gray-500">
-                            {{ \Carbon\Carbon::parse($quotation['created_at'])->format('d/m/Y') }}
+                            {{ $quotation->created_at->format('d/m/Y') }}
                         </td>
                         <td class="px-5 py-3">
-                            <a href="{{ route('client.quotations.show', $quotation['id']) }}" class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 text-xs font-medium">
+                            <a href="{{ route('client.quotations.show', $quotation) }}" class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 text-xs font-medium">
                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
                                 </svg>

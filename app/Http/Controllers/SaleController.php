@@ -39,6 +39,8 @@ class SaleController extends Controller
             'total_sales' => Sale::count(),
             'total_revenue' => Sale::where('status', SaleStatus::Paid->value)->sum('total'),
             'pending_payment' => Sale::where('status', '!=', SaleStatus::Cancelled->value)->sumRaw('COALESCE(total - COALESCE(paid_amount, 0), 0)'),
+            'pending_count' => $sales->getCollection()->filter(fn($s) => $s->payment_status === 'pending')->count(),
+            'completed_count' => $sales->getCollection()->filter(fn($s) => $s->payment_status === 'paid')->count(),
         ];
 
         return view('sales.index', [
@@ -81,27 +83,62 @@ class SaleController extends Controller
             'tax_rate'     => ['nullable', 'numeric', 'min:0', 'max:100'],
             'payment_method' => ['nullable', 'string'],
             'notes'        => ['nullable', 'string', 'max:1000'],
-            'items'        => ['required', 'array', 'min:1'],
-            'items.*.product_id'   => ['nullable', 'exists:products,id'],
-            'items.*.description'  => ['required', 'string'],
-            'items.*.quantity'      => ['required', 'numeric', 'min:0.01'],
-            'items.*.unit_price'   => ['required', 'numeric', 'min:0'],
+            'items'        => ['required_without:quotation_id', 'array', 'min:1'],
+            'manual_items' => ['required_with:client_id', 'nullable', 'array', 'min:1'],
+            'items.*.product_id'       => ['nullable', 'exists:products,id'],
+            'items.*.description'      => ['required', 'string'],
+            'items.*.quantity'         => ['required', 'numeric', 'min:0.01'],
+            'items.*.unit_price'       => ['required', 'numeric', 'min:0'],
+            'manual_items.*.product_id'    => ['nullable', 'exists:products,id'],
+            'manual_items.*.description'   => ['nullable', 'string'],
+            'manual_items.*.quantity'      => ['required', 'numeric', 'min:0.01'],
+            'manual_items.*.unit_price'    => ['required', 'numeric', 'min:0'],
         ]);
 
-        $sale = DB::transaction(function () use ($validated) {
-            $items = $validated['items'];
-            unset($validated['items']);
+        $sale = DB::transaction(function () use ($validated, $request) {
+            // Determine items source: from quotation or manual
+            if (!empty($validated['quotation_id'])) {
+                $quotation = Quotation::with('items')->findOrFail($validated['quotation_id']);
+                $items = $quotation->items->map(fn ($item) => [
+                    'product_id' => $item->product_id,
+                    'description' => $item->description,
+                    'quantity'   => (float) $item->quantity,
+                    'unit_price' => (float) $item->unit_price,
+                ])->toArray();
+                $validated['client_id'] = $quotation->client_id;
+            } else {
+                $items = collect($validated['manual_items'] ?? [])->filter(fn ($item) => !empty($item['description']) || !empty($item['product_id']))->map(fn ($item) => [
+                    'product_id' => $item['product_id'] ?? null,
+                    'description' => $item['description'] ?? '',
+                    'quantity'   => (float) ($item['quantity'] ?? 1),
+                    'unit_price' => (float) ($item['unit_price'] ?? 0),
+                ])->values()->toArray();
+            }
+
+            if (empty($items)) {
+                throw new \Illuminate\Validation\ValidationException(
+                    validator([], []), 
+                    ['items' => 'Debes incluir al menos un item en la venta.']
+                );
+            }
+
+            unset($validated['items'], $validated['manual_items']);
             $validated['status'] = SaleStatus::Pending->value;
-            // number is auto-generated in model boot()
             $subtotal = collect($items)->sum(fn ($i) => $i['quantity'] * $i['unit_price']);
-            $taxRate = $validated['tax_rate'] ?? 0;
+            $taxRate = (float) ($validated['tax_rate'] ?? 0);
             $tax = $subtotal * ($taxRate / 100);
             $validated['subtotal'] = $subtotal;
             $validated['tax'] = $tax;
             $validated['total'] = $subtotal + $tax;
             $sale = Sale::create($validated);
             foreach ($items as $item) {
-                $sale->items()->create(['product_id' => $item['product_id'] ?? null, 'description' => $item['description'], 'quantity' => $item['quantity'], 'unit_price' => $item['unit_price'], 'total' => $item['quantity'] * $item['unit_price']]);
+                $sale->items()->create([
+                    'product_id' => $item['product_id'] ?? null,
+                    'description' => $item['description'],
+                    'quantity'   => $item['quantity'],
+                    'unit_price' => $item['unit_price'],
+                    'total'      => $item['quantity'] * $item['unit_price'],
+                ]);
             }
             return $sale;
         });

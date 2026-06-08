@@ -25,7 +25,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-500">Pendientes</p>
-                    <p class="text-2xl font-bold text-yellow-600 mt-1">{{ $sales->filter(fn($s) => $s->payment_status === 'pending')->count() }}</p>
+                    <p class="text-2xl font-bold text-yellow-600 mt-1">{{ $stats['pending_count'] ?? 0 }}</p>
                 </div>
                 <div class="w-12 h-12 rounded-xl bg-yellow-100 flex items-center justify-center">
                     <svg class="w-6 h-6 text-yellow-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -38,7 +38,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-500">Completadas</p>
-                    <p class="text-2xl font-bold text-green-600 mt-1">{{ $sales->filter(fn($s) => $s->payment_status === 'paid')->count() }}</p>
+                    <p class="text-2xl font-bold text-green-600 mt-1">{{ $stats['completed_count'] ?? 0 }}</p>
                 </div>
                 <div class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
                     <svg class="w-6 h-6 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -83,7 +83,7 @@
                                 {{ $sale->sale_number }}
                             </a>
                         </td>
-                        <td class="px-5 py-3 text-gray-700">{{ $sale->client['name'] ?? '—' }}</td>
+                        <td class="px-5 py-3 text-gray-700">{{ $sale->client->name ?? '—' }}</td>
                         <td class="px-5 py-3 font-semibold text-gray-900">${{ number_format($sale->total, 2) }}</td>
                         <td class="px-5 py-3 text-gray-700">
                             @switch($sale->payment_method?->value)

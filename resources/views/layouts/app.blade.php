@@ -44,7 +44,7 @@
                         $productsRoute = $user->role === 'admin' ? 'admin.productos.index' : 'technician.products.catalog';
                         $quotationsRoute = $user->role === 'admin' ? 'admin.cotizaciones.index' : 'client.quotations.index';
                         $salesRoute = $user->role === 'admin' ? 'admin.ventas.index' : 'client.sales.index';
-                        $reportsRoute = $user->role === 'admin' ? 'admin.reportes.index' : 'technician.reports.index';
+                        $reportsRoute = $user->role === 'admin' ? 'admin.reports.index' : 'technician.reports.index';
                     @endphp
 
                     {{-- All roles: Dashboard --}}
@@ -120,7 +120,7 @@
                     {{-- Reports: admin, technician --}}
                     @if(in_array($user->role, ['admin', 'technician']))
                     <li>
-                        <a href="{{ route($reportsRoute) }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('admin.reportes.*') or request()->routeIs('technician.reports.*') ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <a href="{{ route($reportsRoute) }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 {{ request()->routeIs('admin.reports.*') or request()->routeIs('technician.reports.*') ? 'bg-blue-600/20 text-blue-400 border-l-3 border-blue-400' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                             <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
                             </svg>

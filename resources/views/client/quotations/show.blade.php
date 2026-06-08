@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Cotización #'.$quotation['quotation_number'])
+@section('title', 'Cotización #' . $quotation->quotation_number)
 @section('page-title', 'Detalle de Cotización')
 
 @section('content')
@@ -20,10 +20,10 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <div class="flex flex-wrap items-start justify-between gap-4">
             <div>
-                <h2 class="text-xl font-bold text-gray-900">Cotización {{ $quotation['quotation_number'] }}</h2>
-                <p class="mt-1 text-sm text-gray-500">Fecha: {{ \Carbon\Carbon::parse($quotation['created_at'])->format('d/m/Y') }}</p>
-                @if($quotation['valid_until'])
-                <p class="text-sm text-gray-500">Válida hasta: {{ \Carbon\Carbon::parse($quotation['valid_until'])->format('d/m/Y') }}</p>
+                <h2 class="text-xl font-bold text-gray-900">Cotización {{ $quotation->quotation_number }}</h2>
+                <p class="mt-1 text-sm text-gray-500">Fecha: {{ $quotation->created_at->format('d/m/Y') }}</p>
+                @if($quotation->valid_until)
+                <p class="text-sm text-gray-500">Válida hasta: {{ $quotation->valid_until->format('d/m/Y') }}</p>
                 @endif
             </div>
             @php
@@ -34,10 +34,10 @@
                     'rejected' => 'bg-red-100 text-red-800',
                     'expired' => 'bg-gray-100 text-gray-800',
                 ];
-                $qColorClass = $qStatusColors[$quotation['status']] ?? 'bg-gray-100 text-gray-800';
+                $qColorClass = $qStatusColors[$quotation->status->value] ?? 'bg-gray-100 text-gray-800';
             @endphp
             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium {{ $qColorClass }}">
-                {{ $quotation['status_label'] ?? ucfirst($quotation['status']) }}
+                {{ $quotation->status_label }}
             </span>
         </div>
     </div>
@@ -52,22 +52,22 @@
                 </svg>
                 Cliente
             </h3>
-            @if($quotation['client'])
+            @if($quotation->client)
             <dl class="space-y-3 text-sm">
                 <div class="flex justify-between">
                     <dt class="text-gray-500">Nombre</dt>
-                    <dd class="font-medium text-gray-900">{{ $quotation['client']['name'] }}</dd>
+                    <dd class="font-medium text-gray-900">{{ $quotation->client->name }}</dd>
                 </div>
-                @if($quotation['client']['email'])
+                @if($quotation->client->email)
                 <div class="flex justify-between">
                     <dt class="text-gray-500">Email</dt>
-                    <dd class="font-medium text-gray-900">{{ $quotation['client']['email'] }}</dd>
+                    <dd class="font-medium text-gray-900">{{ $quotation->client->email }}</dd>
                 </div>
                 @endif
-                @if($quotation['client']['phone'])
+                @if($quotation->client->phone)
                 <div class="flex justify-between">
                     <dt class="text-gray-500">Teléfono</dt>
-                    <dd class="font-medium text-gray-900">{{ $quotation['client']['phone'] }}</dd>
+                    <dd class="font-medium text-gray-900">{{ $quotation->client->phone }}</dd>
                 </div>
                 @endif
             </dl>
@@ -85,19 +85,19 @@
                 </svg>
                 Vehículo
             </h3>
-            @if($quotation['vehicle'])
+            @if($quotation->vehicle)
             <dl class="space-y-3 text-sm">
                 <div class="flex justify-between">
                     <dt class="text-gray-500">Marca / Modelo</dt>
-                    <dd class="font-medium text-gray-900">{{ $quotation['vehicle']['brand'] }} {{ $quotation['vehicle']['model'] ?? '' }}</dd>
+                    <dd class="font-medium text-gray-900">{{ $quotation->vehicle->brand }} {{ $quotation->vehicle->model ?? '' }}</dd>
                 </div>
                 <div class="flex justify-between">
                     <dt class="text-gray-500">Año</dt>
-                    <dd class="font-medium text-gray-900">{{ $quotation['vehicle']['year'] ?? '—' }}</dd>
+                    <dd class="font-medium text-gray-900">{{ $quotation->vehicle->year ?? '—' }}</dd>
                 </div>
                 <div class="flex justify-between">
                     <dt class="text-gray-500">Placa</dt>
-                    <dd class="font-medium text-gray-900">{{ $quotation['vehicle']['plate'] ?? '—' }}</dd>
+                    <dd class="font-medium text-gray-900">{{ $quotation->vehicle->plate ?? '—' }}</dd>
                 </div>
             </dl>
             @else
@@ -116,15 +116,21 @@
             <div class="space-y-3">
                 <div class="flex justify-between text-sm">
                     <span class="text-gray-500">Subtotal</span>
-                    <span class="font-medium text-gray-900">${{ number_format($quotation['subtotal'] ?? $quotation['total'] * 0.84, 2) }}</span>
+                    <span class="font-medium text-gray-900">${{ number_format($quotation->subtotal ?? 0, 2) }}</span>
                 </div>
                 <div class="flex justify-between text-sm">
-                    <span class="text-gray-500">IVA (16%)</span>
-                    <span class="font-medium text-gray-900">${{ number_format(($quotation['total'] ?? 0) * 0.16, 2) }}</span>
+                    <span class="text-gray-500">IVA ({{ $quotation->tax_rate ?? 0 }}%)</span>
+                    <span class="font-medium text-gray-900">${{ number_format($quotation->tax ?? 0, 2) }}</span>
                 </div>
+                @if($quotation->discount > 0)
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-500">Descuento</span>
+                    <span class="font-medium text-red-600">-${{ number_format($quotation->discount, 2) }}</span>
+                </div>
+                @endif
                 <div class="pt-3 border-t border-gray-200 flex justify-between">
                     <span class="text-sm font-semibold text-gray-700">Total</span>
-                    <span class="text-lg font-bold text-blue-600">${{ number_format($quotation['total'], 2) }}</span>
+                    <span class="text-lg font-bold text-blue-600">${{ number_format($quotation->total, 2) }}</span>
                 </div>
             </div>
         </div>
@@ -136,7 +142,7 @@
         <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-base font-semibold text-gray-900">Detalle de Partidas</h3>
         </div>
-        @if(isset($quotation['items']) && count($quotation['items']) > 0)
+        @if($quotation->items && $quotation->items->count() > 0)
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-left">
                 <thead class="text-xs uppercase text-gray-500 bg-gray-50">
@@ -148,12 +154,12 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @foreach($quotation['items'] as $item)
+                    @foreach($quotation->items as $item)
                     <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-5 py-3 text-gray-900">{{ $item['description'] ?? $item['name'] ?? '—' }}</td>
-                        <td class="px-5 py-3 text-center text-gray-700">{{ $item['quantity'] ?? 1 }}</td>
-                        <td class="px-5 py-3 text-right text-gray-700">${{ number_format($item['unit_price'] ?? $item['price'] ?? 0, 2) }}</td>
-                        <td class="px-5 py-3 text-right font-medium text-gray-900">${{ number_format(($item['quantity'] ?? 1) * ($item['unit_price'] ?? $item['price'] ?? 0), 2) }}</td>
+                        <td class="px-5 py-3 text-gray-900">{{ $item->description ?? $item->product?->name ?? '—' }}</td>
+                        <td class="px-5 py-3 text-center text-gray-700">{{ $item->quantity }}</td>
+                        <td class="px-5 py-3 text-right text-gray-700">${{ number_format($item->unit_price, 2) }}</td>
+                        <td class="px-5 py-3 text-right font-medium text-gray-900">${{ number_format($item->total, 2) }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -167,9 +173,9 @@
     </div>
 
     {{-- Action Buttons --}}
-    @if(in_array($quotation['status'], ['draft', 'pending_client']))
+    @if($quotation->status->isEditable())
     <div class="flex flex-wrap items-center gap-3">
-        <form method="POST" action="{{ route('client.quotations.approve', $quotation['id']) }}">
+        <form method="POST" action="{{ route('client.quotations.approve', $quotation) }}">
             @csrf
             <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg shadow-sm transition-colors"
                 onclick="return confirm('¿Estás seguro de aprobar esta cotización?')">
@@ -179,7 +185,7 @@
                 Aprobar Cotización
             </button>
         </form>
-        <form method="POST" action="{{ route('client.quotations.reject', $quotation['id']) }}">
+        <form method="POST" action="{{ route('client.quotations.reject', $quotation) }}">
             @csrf
             <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-lg shadow-sm transition-colors"
                 onclick="return confirm('¿Estás seguro de rechazar esta cotización?')">

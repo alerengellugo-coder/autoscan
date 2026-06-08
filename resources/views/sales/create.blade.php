@@ -60,7 +60,7 @@
                             <option value="">Seleccionar cotización...</option>
                             @foreach($quotations as $quotation)
                                 <option value="{{ $quotation->id }}" data-items="{{ json_encode($quotation->items) }}">
-                                    {{ $quotation->quotation_number }} — {{ $quotation->client['name'] ?? '—' }} — ${{ number_format($quotation->total, 2) }}
+                                    {{ $quotation->quotation_number }} — {{ $quotation->client->name ?? '—' }} — ${{ number_format($quotation->total, 2) }}
                                 </option>
                             @endforeach
                         </select>

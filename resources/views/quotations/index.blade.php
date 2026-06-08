@@ -67,11 +67,11 @@
                                 {{ $quotation->quotation_number }}
                             </a>
                         </td>
-                        <td class="px-5 py-3 text-gray-700">{{ $quotation->client['name'] ?? '—' }}</td>
+                        <td class="px-5 py-3 text-gray-700">{{ $quotation->client->name ?? '—' }}</td>
                         <td class="px-5 py-3">
                             <div>
-                                <span class="font-medium text-gray-900">{{ $quotation->vehicle['plate'] ?? '—' }}</span>
-                                <p class="text-xs text-gray-500">{{ $quotation->vehicle['brand'] ?? '' }} {{ $quotation->vehicle['model'] ?? '' }}</p>
+                                <span class="font-medium text-gray-900">{{ $quotation->vehicle->plate ?? '—' }}</span>
+                                <p class="text-xs text-gray-500">{{ $quotation->vehicle->brand ?? '' }} {{ $quotation->vehicle->model ?? '' }}</p>
                             </div>
                         </td>
                         <td class="px-5 py-3 font-semibold text-gray-900">${{ number_format($quotation->total, 2) }}</td>
