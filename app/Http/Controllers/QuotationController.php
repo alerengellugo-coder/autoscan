@@ -85,13 +85,10 @@ class QuotationController extends Controller
             'items.*.discount'      => ['nullable', 'numeric', 'min:0'],
         ]);
 
-        // Neon/pgBouncer compatibility: ensure no stale aborted transaction
-        // exists on this connection before starting a new one.
-        try {
-            DB::connection()->getPdo()->exec('ROLLBACK');
-        } catch (\Throwable $e) {
-            // No transaction active — ignore
-        }
+        // Neon/pgBouncer compatibility: get a fresh connection from the pool
+        // to avoid SQLSTATE[25P02] from stale aborted transactions.
+        DB::connection()->disconnect();
+        DB::reconnect();
 
         $quotation = DB::transaction(function () use ($validated) {
             $items = $validated['items'];

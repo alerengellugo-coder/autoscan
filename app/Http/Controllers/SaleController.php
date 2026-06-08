@@ -97,12 +97,9 @@ class SaleController extends Controller
             'manual_items.*.unit_price'    => ['required', 'numeric', 'min:0'],
         ]);
 
-        // Neon/pgBouncer compatibility: ensure no stale aborted transaction
-        try {
-            DB::connection()->getPdo()->exec('ROLLBACK');
-        } catch (\Throwable $e) {
-            // No transaction active — ignore
-        }
+        // Neon/pgBouncer compatibility: get a fresh connection from the pool
+        DB::connection()->disconnect();
+        DB::reconnect();
 
         $sale = DB::transaction(function () use ($validated, $request) {
             // Determine items source: from quotation or manual
