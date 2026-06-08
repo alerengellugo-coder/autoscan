@@ -25,47 +25,33 @@ trait NeonSafeTransaction
     /**
      * Execute a callback inside a DB transaction with automatic retry
      * on SQLSTATE[25P02] (aborted transaction from pgBouncer).
+     *
+     * Also includes a pre-transaction ROLLBACK to clear any stale
+     * aborted transaction state left by pgBouncer.
      */
-    protected function neonSafeTransaction(callable $callback, int $maxRetries = 3): mixed
+    protected function neonSafeTransaction(callable $callback, int $maxRetries = 2): mixed
     {
         $lastException = null;
 
         for ($attempt = 0; $attempt <= $maxRetries; $attempt++) {
-            $pdo = null;
             try {
-                $pdo = DB::connection('pgsql')->getPdo();
-                $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
-                // CRITICAL: Send ROLLBACK then BEGIN as a SINGLE statement.
-                // This ensures pgBouncer keeps us pinned to the same server
-                // connection for both operations, clearing any aborted state
-                // and immediately starting a clean transaction.
-                $pdo->exec('ROLLBACK; BEGIN;');
-
-                // Run callback — Eloquent uses the same underlying PDO
-                // which is now in a clean transaction on a known-good connection.
-                $result = $callback();
-
-                $pdo->exec('COMMIT');
-                return $result;
-            } catch (\Throwable $e) {
-                $lastException = $e;
-
-                // Try to clean up the transaction state
+                // Clear any aborted transaction state before starting
                 try {
-                    @$pdo->exec('ROLLBACK');
-                } catch (\Throwable $re) {
-                    // Connection might be completely broken
+                    DB::connection('pgsql')->getPdo()->exec('ROLLBACK');
+                } catch (\Throwable) {
+                    // No transaction to rollback, that's fine
                 }
 
-                // Check if this is a 25P02 error worth retrying
+                return DB::transaction($callback);
+            } catch (\Throwable $e) {
+                $lastException = $e;
                 $is25P02 = $this->isAbortedTransactionError($e);
 
                 if (!$is25P02 || $attempt >= $maxRetries) {
                     throw $e;
                 }
 
-                // Force Laravel to create a brand new PDO connection
+                // Force a brand new connection
                 DB::purge('pgsql');
             }
         }
@@ -79,7 +65,7 @@ trait NeonSafeTransaction
     private function isAbortedTransactionError(\Throwable $e): bool
     {
         $code = $e->getCode();
-        if ($code === '25P02' || $code === 25P02) {
+        if ($code === '25P02') {
             return true;
         }
         if (str_contains($e->getMessage(), '25P02')) {

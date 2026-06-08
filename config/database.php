@@ -66,7 +66,11 @@ return [
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DB_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
+            // Automatically strip -pooler suffix to bypass Neon pgBouncer
+            // and use direct connection (fixes SQLSTATE[25P02] aborted transaction errors)
+            'host' => Str::endsWith(env('DB_HOST', '127.0.0.1'), '-pooler')
+                ? Str::replaceLast('-pooler', '', env('DB_HOST', '127.0.0.1'))
+                : env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '5432'),
             'database' => env('DB_DATABASE', 'forge'),
             'username' => env('DB_USERNAME', 'forge'),
