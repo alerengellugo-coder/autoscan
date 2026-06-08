@@ -28,7 +28,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-gray-500">Bajo Stock</p>
-                    <p class="text-2xl font-bold text-gray-900 mt-1 {{ $low_stock_count > 0 ? 'text-red-600' : '' }}">{{ number_format($low_stock_count) }}</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1 @php $_t0 = $low_stock_count > 0 ?@php $_t1 = $low_stock_count > 0 ? 'text-red-600' : ''; @endphp{ $_t0 }tock_count) }}</p>
                 </div>
                 <div class="w-12 h-12 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
                     <svg class="w-6 h-6 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -71,7 +71,7 @@
                         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                     <option value="">Todas las categorías</option>
                     @foreach($categories as $category)
-                        <option value="{{ $category['value'] }}" {{ ($filters['category'] ?? '') == $category['value'] ? 'selected' : '' }}>
+                        <option value="@php $_t0 = $category['value'] }}" {{ ($filters['category'] ?? '') == $category['value'] ? "selected" : ""; @endphp{{ $_t0 }}>
                             {{ $category['label'] }}
                         </option>
                     @endforeach

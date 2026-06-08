@@ -8,7 +8,7 @@
 <div class="max-w-3xl mx-auto">
 
     <div class="mb-6">
-        <a href="{{ route('admin.vehiculos.index') }}" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors">
+        <a href="{{ route('admin.vehiculos.index') }}" class="inline-flex items-center gap-1@php $_t3 = route('admin.vehiculos.index') }}" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="15,18 9,12 15,6"/>
             </svg>
@@ -34,13 +34,10 @@
                         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                     <option value="">Seleccionar cliente</option>
                     @foreach($clients as $clientId => $clientName)
-                        <option value="{{ $clientId }}" {{ old('client_id') == $clientId ? 'selected' : '' }}>
-                            {{ $clientName }}
+                        <option value="{{ $clientId }}" {{ old('client_id'@php $_t2 = old('client_id') == $clientId ? 'selected' : ''; @endphp{{ $_t2 }}clientName }}
                         </option>
                     @endforeach
-                </select>
-                @error('client_id')
-                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                @php $_t8 = $clientId }}" {{ old('client_id') == $clientId ? "selected" : ""; @endphp{{ $_t8 }}n class="text-red-500 text-xs mt-1">{{ $message }}</span>
                 @enderror
             </div>
 
@@ -54,11 +51,9 @@
                             class="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                         <option value="">Seleccionar marca</option>
                         @foreach($brands as $brand)
-                            <option value="{{ $brand }}" {{ old('brand') == $brand ? 'selected' : '' }}>
-                                {{ $brand }}
+                            <option value="{{ $brand }}" @php $_t0 = old('b@php $_t1 = old('brand') == $brand ? 'selected' : ''; @endphp{ $_t0 }@php $_t1 = $brand }}
                             </option>
-                        @endforeach
-                        <option value="__custom__">Otra (especificar abajo)</option>
+                        @endfo@php $_t7 = $brand }}" {{ old('brand') == $brand ? "selected" : ""; @endphp{{ $_t7 }}a (especificar abajo)</option>
                     </select>
                     <input type="text"
                            id="brand_custom"
@@ -168,12 +163,9 @@
                             name="engine_type"
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                         <option value="">Seleccionar tipo</option>
-                        <option value="gasoline" {{ old('engine_type') == 'gasoline' ? 'selected' : '' }}>Gasolina</option>
-                        <option value="diesel" {{ old('engine_type') == 'diesel' ? 'selected' : '' }}>Diésel</option>
-                        <option value="electric" {{ old('engine_type') == 'electric' ? 'selected' : '' }}>Eléctrico</option>
-                        <option value="hybrid" {{ old('engine_type') == 'hybrid' ? 'selected' : '' }}>Híbrido</option>
-                    </select>
-                    @error('engine_type')
+                        <option value="gasoline" @php $_t0 = old('engine_type') == 'gasoline' ? 'selected' : ''; @endphp{{ $_t0 }}                  <option value="diesel" @php $_t0 = old('engine_type') == 'di@php $_t6 = old('engine_type') == 'gasoline' ? "selected" : ""; @endphp{{ $_t6 }}           <option value="electric" @php $_t1 = ol@php $_t5 = old('engine_type') == 'diesel' ? 'selected' : ''; @endphp{ $_t1 }éctrico</option>
+                        @php $_t4 = old('engine_type') == 'electric' ? "selected" : ""; @endphp{{ $_t4 }} ? 'selected' : ''; @endphp{{ $_t0 }}>Híbrido</option>
+   @php $_t3 = old('engine_type') == 'hybrid' ? "selected" : ""; @endphp{{ $_t3 }}'engine_type')
                         <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                     @enderror
                 </div>
@@ -186,9 +178,7 @@
                         name="transmission"
                         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                     <option value="">Seleccionar transmisión</option>
-                    <option value="automatic" {{ old('transmission') == 'automatic' ? 'selected' : '' }}>Automática</option>
-                    <option value="manual" {{ old('transmission') == 'manual' ? 'selected' : '' }}>Manual</option>
-                    <option value="cvt" {{ old('transmission') == 'cvt' ? 'selected' : '' }}>CVT</option>
+                    <option value="automatic" @php $_t2 = old('transmission') == 'automatic' ? 'selected'@php $_t2 = old('transmission') == 'automatic' ? 'selected' : ''; @endphp{ $_t2 }alue="manual" @php $_t3 = old('transmission') ==@php $_t1 = old('transmission') == 'manual' ? 'selected' : ''; @endphp{ $_t3 }            <option value="cvt" @php $_t0 = old('transmission') == 'cvt' ? "selected" : ""; @endphp{{ $_t0 }}>CVT</option>
                 </select>
                 @error('transmission')
                     <span class="text-red-500 text-xs mt-1">{{ $message }}</span>

@@ -6,7 +6,7 @@
 @section('content')
 <div class="space-y-6">
 
-    {{-- Back button --}}
+    @php $_t0 = -- Back button --}}
     <div>
         <a href="{{ route('client.orders.index') }}" class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -136,10 +136,8 @@
                 <div class="flex-1 flex flex-col items-center">
                     <div class="flex items-center w-full">
                         @if($idx > 0)
-                        <div class="flex-1 h-1 {{ $idx <= $currentIdx ? 'bg-blue-500' : 'bg-gray-200' }}"></div>
-                        @endif
-                        <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 {{ $idx <= $currentIdx ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-400' }}">
-                            @if($idx < $currentIdx)
+                        <div class="flex-1 h-1 @php $_t0 = $idx <= $currentIdx ? 'bg-blue-500' : 'bg-gray-200'; @endphp{{ $_t0 }}"></div>
+         @php $_t3 = $idx <= $currentIdx ? "bg-blue-500" : "bg-gray-200"; @endphp{{ $_t3 }}"w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 @php $_t0 = $idx <= $currentIdx ? 'bg-blue-500 text-white' @php $_t2 = $idx <= $currentIdx ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-400'; @endphp{ $_t0 }Idx)
                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20,6 9,17 4,12"/>
                             </svg>
@@ -152,10 +150,9 @@
                             @endif
                         </div>
                         @if($idx < count($statuses) - 1)
-                        <div class="flex-1 h-1 {{ $idx < $currentIdx ? 'bg-blue-500' : 'bg-gray-200' }}"></div>
-                        @endif
+                        <div class="flex-1 h-1 @php $_t1 = $idx < $currentIdx ? '@php $_t1 = $idx < $currentIdx ? 'bg-blue-500' : 'bg-gray-200'; @endphp{ $_t1 }        @endif
                     </div>
-                    <p class="mt-2 text-xs font-medium {{ $idx <= $currentIdx ? 'text-blue-600' : 'text-gray-400' }}">
+                    <p class="mt-2 text-xs font-medium @php $_t0 = $idx <= $currentIdx ? "text-blue-600" : "text-gray-400"; @endphp{{ $_t0 }}">
                         {{ $statusLabels[$status] }}
                     </p>
                 </div>

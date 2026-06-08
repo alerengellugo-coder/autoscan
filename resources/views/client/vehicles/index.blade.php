@@ -9,7 +9,7 @@
     {{-- Header with Add button --}}
     <div class="flex flex-wrap items-center justify-between gap-4">
         <p class="text-sm text-gray-500">
-            {{ $vehicles->count() }} vehículo{{ $vehicles->count() !== 1 ? 's' : '' }} registrado{{ $vehicles->count() !== 1 ? 's' : '' }}
+            {{ $vehicles->count() }} @php $_t1 = $vehicles->count() }} vehículo{{ $vehicles->count() !== 1 ? "s" : ""; @endphp{{ $_t1 }}ehicles->count() !== 1 ? "s" : ""; @endphp{{ $_t0 }}
         </p>
         <a href="{{ route('client.vehicles.create') }}" class="inline-flex items-center gap-1.5 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

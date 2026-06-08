@@ -5,6 +5,10 @@
 
 @section('content')
 @php if(!isset($errors)) $errors = app(\Illuminate\Contracts\Support\MessageBag::class); @endphp
+@php
+    $_password_cls = $errors->has('password') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : '';
+    $_email_cls = $errors->has('email') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : '';
+@endphp
 <form method="POST" action="{{ route('login') }}" class="space-y-5">
     @csrf
 
@@ -17,7 +21,7 @@
             </svg>
             <input type="email" id="email" name="email" required autofocus
                 value="{{ old('email') }}"
-                class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $errors->has('email') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}"
+                class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $_email_cls }}"
                 placeholder="tu@email.com">
         </div>
         @error('email')
@@ -33,7 +37,7 @@
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
             </svg>
             <input type="password" id="password" name="password" required
-                class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $errors->has('password') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}"
+                class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors {{ $_password_cls }}"
                 placeholder="••••••••">
         </div>
         @error('password')

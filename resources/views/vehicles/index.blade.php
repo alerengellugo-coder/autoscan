@@ -6,7 +6,7 @@
 @section('content')
 <div class="space-y-6">
 
-    {{-- Stats Row --}}
+    @php $_t0 = -- Stats Row --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
             <div class="flex items-center justify-between">
@@ -79,10 +79,7 @@
                 <select name="status"
                         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                     <option value="">Todos los estados</option>
-                    <option value="active" {{ ($filters['status'] ?? '') == 'active' ? 'selected' : '' }}>Activo</option>
-                    <option value="in_progress" {{ ($filters['status'] ?? '') == 'in_service' ? 'selected' : '' }}>En Proceso</option>
-                    <option value="completed" {{ ($filters['status'] ?? '') == 'completed' ? 'selected' : '' }}>Completado</option>
-                    <option value="cancelled" {{ ($filters['status'] ?? '') == 'cancelled' ? 'selected' : '' }}>Cancelado</option>
+                    <option value="active" @php $_t0 = ($filters['status'] ?? '') == 'active' ? 'selected' : ''; @endphp{{ $_t0 }}>Activo</opti@php $_t3 = ($filters['status'] ?? '') == 'active' ? "selected" : ""; @endphp{{ $_t3 }}rs['status'] ?? '') == 'in_service' ? 's@php $_t2 = ($filters['status'] ?? '') == 'in_service' ? "selected" : ""; @endphp{{ $_t2 }}alue="completed" @php $_t0 = ($filters['status'] ??@php $_t1 = ($filters['status'] ?? '') == 'completed' ? 'selected' : ''; @endphp{ $_t0 }                <option value="cancelled" @php $_t0 = ($filters['status'] ?? '') == 'cancelled' ? "selected" : ""; @endphp{{ $_t0 }}>Cancelado</option>
                 </select>
             </div>
             <div class="flex gap-2">

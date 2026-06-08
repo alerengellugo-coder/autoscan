@@ -8,7 +8,7 @@
 <div class="max-w-3xl mx-auto">
 
     <div class="mb-6">
-        <a href="{{ route('admin.ordenes.index') }}" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors">
+        <a href="{{ route('admin.ordenes.i@php $_t1 = route('admin.ordenes.index') }}" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="15,18 9,12 15,6"/>
             </svg>
@@ -34,8 +34,7 @@
                         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                     <option value="">Seleccionar vehículo</option>
                     @foreach($vehicles as $vehicle)
-                        <option value="{{ $vehicle->id }}" {{ old('vehicle_id') == $vehicle->id ? 'selected' : '' }}>
-                            {{ $vehicle->plate }} — {{ $vehicle->brand }} {{ $vehicle->model }} ({{ $vehicle->year }})
+                        <option value="{{ $vehicle->id }}" {{ old('v@php $_t1 = old('vehicle_id') == $vehicle->id ? 'selected' : ''; @endphp{{ $_t1 }} $vehicle->id }}" @php $_t0 = old('vehicle_id') == $vehicle->id ? "selected" : ""; @endphp{{ $_t4 }}{ $vehicle->year }})
                         </option>
                     @endforeach
                 </select>
@@ -53,9 +52,8 @@
                         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                     <option value="">Seleccionar cliente</option>
                     @foreach($clients as $clientId => $clientName)
-                        <option value="{{ $clientId }}" {{ old('client_id') == $clientId ? 'selected' : '' }}>
-                            {{ $clientName }}
-                        </option>
+                        <option value="{{ $clientId }}" @php $_t0 = old('client_id') == $clientId ? 'selected' : ''; @endphp{{ $_t0 }}>
+   @php $_t3 = $clientId }}" {{ old('client_id') == $clientId ? "selected" : ""; @endphp{{ $_t3 }}ption>
                     @endforeach
                 </select>
                 @error('client_id')
@@ -73,8 +71,7 @@
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                         <option value="">Seleccionar técnico</option>
                         @foreach($technicians as $technician)
-                            <option value="{{ $technician->id }}" {{ old('technician_id') == $technician->id ? 'selected' : '' }}>
-                                {{ $technician->name }}
+                            <option value="{{ $technician->id }}" {{ old('technician_id') == @php $_t2 = $technician->id }}" {{ old('technician_id') == $technician->id ? "selected" : ""; @endphp{{ $_t2 }}name }}
                             </option>
                         @endforeach
                     </select>
@@ -90,8 +87,7 @@
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                         <option value="">Seleccionar tipo</option>
                         @foreach($service_types as $type)
-                            <option value="{{ $type['value'] }}" {{ old('service_type') == $type['value'] ? 'selected' : '' }}>
-                                {{ $type['label'] }}
+                            <option value="{{ $type['value'] }}" {{ @php $_t1 = $type['value'] }}" {{ old('service_type') == $type['value'] ? "selected" : ""; @endphp{{ $_t1 }}         {{ $type['label'] }}
                             </option>
                         @endforeach
                     </select>
@@ -108,7 +104,7 @@
                         name="priority"
                         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                     @foreach($priorities as $priority)
-                        <option value="{{ $priority['value'] }}" {{ old('priority', 'normal') == $priority['value'] ? 'selected' : '' }}>
+                        <option value="@php $_t0 = $priority['value'] }}" {{ old('priority', 'normal') == $priority['value'] ? "selected" : ""; @endphp{{ $_t0 }}>
                             {{ $priority['label'] }}
                         </option>
                     @endforeach

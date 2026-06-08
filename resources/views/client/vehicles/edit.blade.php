@@ -9,6 +9,8 @@
 
     {{-- Back button --}}
     <div>
+        <a href="{@php $_t2 = -- Back button --}}
+    <div>
         <a href="{{ route('client.vehicles.index') }}" class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="15,18 9,12 15,6"/>
@@ -119,14 +121,8 @@
                     <label for="engine_type" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Motor</label>
                     <select id="engine_type" name="engine_type"
                         class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors bg-white {{ $errors->has('engine_type') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}">
-                        <option value="" {{ !$vehicle['engine_type'] && !old('engine_type') ? 'selected' : '' }}>Seleccionar...</option>
-                        <option value="gasolina" {{ ($vehicle['engine_type'] ?? old('engine_type')) === 'gasolina' ? 'selected' : '' }}>Gasolina</option>
-                        <option value="diesel" {{ ($vehicle['engine_type'] ?? old('engine_type')) === 'diesel' ? 'selected' : '' }}>Diésel</option>
-                        <option value="electrico" {{ ($vehicle['engine_type'] ?? old('engine_type')) === 'electrico' ? 'selected' : '' }}>Eléctrico</option>
-                        <option value="hibrido" {{ ($vehicle['engine_type'] ?? old('engine_type')) === 'hibrido' ? 'selected' : '' }}>Híbrido</option>
-                    </select>
-                    @error('engine_type')
-                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        <option value="" @php $_t0 = !$vehicle['engine_type'] && !old('engine_type') ? 'selected' : '\'; @endphp{{ $_t2 }}option value="gasolina" @php $_t0 = ($vehicle[\'engine_type@php $_t1 = ($vehicle[\'engine_type\'] ?? old(\'engine_type\')) === @php $_t8 = !$vehicle[\'engine_type\'] && !old(\'engine_type\') ? 'selected' : ''; @endphp{ $_t0 }   <option value="diesel" @php $_t1 = ($vehicle[\'engine_ty@php $_t7 = ($vehicle[\'engine_type\'] ?? old(\'engine_type\')) === \'gasolina\' ? 'selected' : ''; @endphp{ $_t1 }                <option value="electrico"@php $_t6 = ($vehicle[\'engine_type\'] ?? old(\'engine_type\')) === \'diesel\' ? "selected" : ""; @endphp{{ $_t6 }}'; @endphp{{ $_t0 }}>Eléctrico</option>
+                  @php $_t5 = ($vehicle['engine_type'] ?? old('engine_type')) === 'electrico' ? "selected" : ""; @endphp{{ $_t5 }}ibrido' ? 'selected' : ''; @endphp{{ $_t1 }}= ($vehicle['engine_type'] ?? old('engine_type')) === 'hibrido' ? "selected" : ""; @endphp@php $_t0 = $_t4 }}          <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -135,10 +131,7 @@
                     <label for="transmission" class="block text-sm font-medium text-gray-700 mb-1">Transmisión</label>
                     <select id="transmission" name="transmission"
                         class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-colors bg-white {{ $errors->has('transmission') ? 'border-red-400 focus:border-red-500 focus:ring-red-500 focus:ring-opacity-20' : }}">
-                        <option value="" {{ !$vehicle['transmission'] && !old('transmission') ? 'selected' : '' }}>Seleccionar...</option>
-                        <option value="automatica" {{ ($vehicle['transmission'] ?? old('transmission')) === 'automatica' ? 'selected' : '' }}>Automática</option>
-                        <option value="manual" {{ ($vehicle['transmission'] ?? old('transmission')) === 'manual' ? 'selected' : '' }}>Manual</option>
-                        <option value="cvt" {{ ($vehicle['transmission'] ?? old('transmission')) === 'cvt' ? 'selected' : '' }}>CVT</option>
+                        <option value="" @php $_t0 = !$vehicle['transmission'] && !old('transmission') ? 'selected' : ''; @endphp{{ $_t0 }}>S@php $_t3 = !$vehicle['transmission'] && !old('transmission') ? "selected" : ""; @endphp{{ $_t3 }} @php $_t2 = ($vehicle['transmission'] ?? old('transmission'@php $_t2 = ($vehicle['transmission'] ?? old('transmission')) === 'automatica' ? 'selected' : ''; @endphp{ $_t2 }on value="manual" @php $_t3 = ($vehicle['transmissio@php $_t1 = ($vehicle['transmission'] ?? old('transmission')) === 'manual' ? 'selected' : ''; @endphp{ $_t3 }                <option value="cvt" @php $_t0 = ($vehicle['transmission'] ?? old('transmission')) === 'cvt' ? "selected" : ""; @endphp{{ $_t0 }}>CVT</option>
                     </select>
                     @error('transmission')
                     <p class="mt-1 text-xs text-red-600">{{ $message }}</p>

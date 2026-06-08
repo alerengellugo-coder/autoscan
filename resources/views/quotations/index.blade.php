@@ -14,9 +14,9 @@
                 <select id="filter_status"
                         name="status"
                         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
-                    <option value="" {{ empty($filters['status'] ?? '') ? 'selected' : '' }}>Todos los estados</option>
+                    <option value="" @php $_t0 = empty($filters['status@php $_t1 = empty($filters['status'] ?? '') ? 'selected' : ''; @endphp{ $_t0 }n>
                     @foreach($status_options as $value => $label)
-                        <option value="{{ $value }}" {{ ($filters['status'] ?? '') == $value ? 'selected' : '' }}>
+                        <option value="@php $_t0 = $value }}" {{ ($filters['status'] ?? '') == $value ? "selected" : ""; @endphp{{ $_t0 }}>
                             {{ $label }}
                         </option>
                     @endforeach

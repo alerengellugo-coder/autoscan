@@ -10,7 +10,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200">
         <div class="px-5 py-4 border-b border-gray-200">
             <h2 class="text-lg font-semibold text-gray-900">
-                {{ $sales->count() }} compra{{ $sales->count() !== 1 ? 's' : '' }}
+                @php $_t0 = $sales->count() }} compra{{ $sales->count() !== 1 ? "s" : ""; @endphp{{ $_t0 }}
             </h2>
         </div>
         <div class="overflow-x-auto">

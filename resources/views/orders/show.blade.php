@@ -214,8 +214,7 @@
         <div class="p-6">
             <div class="relative">
                 @foreach($status_timeline as $index => $entry)
-                <div class="relative flex gap-4 {{ !$loop->last ? 'pb-8' : '' }}">
-                    {{-- Timeline line --}}
+                <div class="relative flex gap-4 @php $_t0 = !$loop->last ? 'pb-8' @php $_t1 = !$loop->last ? 'pb-8' : ''; @endphp{ $_t0 }-- Timeline line --}}
                     @if(!$loop->last)
                     <div class="absolute left-[15px] top-8 w-0.5 h-full bg-gray-200"></div>
                     @endif
@@ -367,7 +366,7 @@
                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                         <option value="">Seleccionar estado</option>
                         @foreach($status_options as $value => $label)
-                            <option value="{{ $value }}" {{ $order->status == $value ? 'disabled' : '' }}>
+                            <option value="@php $_t0 = $value }}" {{ $order->status == $value ? "disabled" : ""; @endphp{{ $_t0 }}>
                                 {{ $label }}
                             </option>
                         @endforeach
