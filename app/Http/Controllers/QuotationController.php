@@ -22,7 +22,7 @@ class QuotationController extends Controller
 {
     private function statusOptions(): array
     {
-        return collect(QuotationStatus::cases())->map(fn ($s) => ['value' => $s->value, 'label' => $s->label()])->values()->all();
+        return collect(QuotationStatus::cases())->mapWithKeys(fn ($s) => [$s->value => $s->label()])->toArray();
     }
 
     public function index(Request $request)

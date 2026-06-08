@@ -162,6 +162,17 @@ class Sale extends Model
         return $this->items->count();
     }
 
+    public function getPaymentStatusAttribute(): string
+    {
+        $paid = (float) ($this->paid_amount ?? 0);
+        $total = (float) $this->total;
+
+        if ($total <= 0) return 'pending';
+        if ($paid >= $total) return 'paid';
+        if ($paid > 0) return 'partial';
+        return 'pending';
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Scopes

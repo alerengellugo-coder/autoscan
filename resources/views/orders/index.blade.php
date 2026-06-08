@@ -63,11 +63,11 @@
                 </select>
             </div>
             <div class="flex-1 min-w-[180px]">
-                <select name="technician"
+                <select name="technician_id"
                         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                     <option value="">Todos los técnicos</option>
                     @foreach($technician_options as $techId => $techName)
-                        <option value="{{ $techId }}" {{ ($filters['technician'] ?? '') == $techId ? 'selected' : '' }}>
+                        <option value="{{ $techId }}" {{ ($filters['technician_id'] ?? '') == $techId ? 'selected' : '' }}>
                             {{ $techName }}
                         </option>
                     @endforeach

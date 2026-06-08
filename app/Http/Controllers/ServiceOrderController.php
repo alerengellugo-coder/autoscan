@@ -22,18 +22,22 @@ class ServiceOrderController extends Controller
 {
     private function statusOptions(): array
     {
-        return collect(OrderStatus::cases())->map(fn ($s) => ['value' => $s->value, 'label' => $s->label()])->values()->all();
+        return collect(OrderStatus::cases())->mapWithKeys(fn ($s) => [$s->value => $s->label()])->toArray();
     }
 
     private function priorityOptions(): array
     {
-        return collect(OrderPriority::cases())->map(fn ($p) => ['value' => $p->value, 'label' => $p->label()])->values()->all();
+        return collect(OrderPriority::cases())->mapWithKeys(fn ($p) => [$p->value => $p->label()])->toArray();
     }
 
     private function technicianOptions(): array
     {
-        return User::technicians()->active()->orderBy('name')->get(['id', 'name'])
-            ->map(fn ($t) => ['value' => $t->id, 'label' => $t->name])->values()->all();
+        return User::technicians()->active()->orderBy('name')->get()->pluck('name', 'id')->toArray();
+    }
+
+    private function priorityOptionsAsArray(): array
+    {
+        return collect(OrderPriority::cases())->map(fn ($p) => ['value' => $p->value, 'label' => $p->label()])->values()->all();
     }
 
     private function statusCounts(): array
@@ -107,14 +111,14 @@ class ServiceOrderController extends Controller
             ? Vehicle::where('client_id', $user->id)->active()->get()
             : Vehicle::with('client')->active()->orderBy('brand')->get();
         $technicians = $user->isClient() ? [] : User::technicians()->active()->orderBy('name')->get(['id', 'name']);
-        $clients = $user->isAdmin() ? User::clients()->active()->orderBy('name')->get(['id', 'name']) : [];
+        $clients = $user->isAdmin() ? User::clients()->active()->orderBy('name')->pluck('name', 'id')->toArray() : [];
 
         return view('orders.create', [
             'vehicles'     => $vehicles,
             'technicians'  => $technicians,
             'clients'      => $clients,
             'service_types' => collect(ServiceType::cases())->map(fn ($s) => ['value' => $s->value, 'label' => $s->label()])->values()->all(),
-            'priorities'   => $this->priorityOptions(),
+            'priorities'   => $this->priorityOptionsAsArray(),
         ]);
     }
 
@@ -146,6 +150,40 @@ class ServiceOrderController extends Controller
 
         $route = Auth::user()->isAdmin() ? 'admin.ordenes.show' : 'technician.orders.show';
         return redirect()->route($route, $order)->with('success', "Orden {$order->order_number} creada exitosamente.");
+    }
+
+    public function edit(ServiceOrder $serviceOrder)
+    {
+        Gate::authorize('manage-orders');
+        $serviceOrder->load(['vehicle', 'client', 'technician']);
+
+        $technicians = User::technicians()->active()->orderBy('name')->get(['id', 'name']);
+
+        return view('orders.edit', [
+            'order'        => $serviceOrder,
+            'technicians'  => $technicians,
+            'status_options' => $this->statusOptions(),
+            'priority_options' => $this->priorityOptionsAsArray(),
+        ]);
+    }
+
+    public function update(Request $request, ServiceOrder $serviceOrder)
+    {
+        Gate::authorize('manage-orders');
+        $validated = $request->validate([
+            'technician_id'            => ['nullable', 'exists:users,id'],
+            'service_type'             => ['nullable', 'string', 'in:' . implode(',', array_column(ServiceType::cases(), 'value'))],
+            'description'              => ['nullable', 'string', 'max:2000'],
+            'diagnosis'                => ['nullable', 'string', 'max:2000'],
+            'priority'                 => ['nullable', 'string', 'in:' . implode(',', array_column(OrderPriority::cases(), 'value'))],
+            'estimated_cost'           => ['nullable', 'numeric', 'min:0'],
+            'estimated_completion_date' => ['nullable', 'date'],
+            'notes'                    => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $serviceOrder->update($validated);
+
+        return redirect()->route('admin.ordenes.show', $serviceOrder)->with('success', "Orden {$serviceOrder->order_number} actualizada.");
     }
 
     public function show(ServiceOrder $serviceOrder)
