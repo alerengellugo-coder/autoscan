@@ -15,6 +15,25 @@
         </a>
     </div>
 
+    {{-- Validation Errors --}}
+    @if($errors->any())
+    <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+        <div class="flex">
+            <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+            <div class="ml-3">
+                <h3 class="text-sm font-medium text-red-800">Por favor corrige los siguientes errores:</h3>
+                <ul class="mt-2 text-sm text-red-600 list-disc list-inside space-y-1">
+                    @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <form method="POST" action="{{ route('admin.cotizaciones.store') }}" id="quotationForm">
         @csrf
 
@@ -84,12 +103,11 @@
                         @enderror
                     </div>
                     <div>
-                        <label for="valid_until" class="block text-sm font-medium text-gray-700 mb-1">Válida Hasta <span class="text-red-500">*</span></label>
+                        <label for="valid_until" class="block text-sm font-medium text-gray-700 mb-1">Válida Hasta</label>
                         <input type="date"
                                id="valid_until"
                                name="valid_until"
-                               value="{{ old('valid_until') }}"
-                               required
+                               value="{{ old('valid_until', now()->addDays(30)->format('Y-m-d')) }}"
                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                         @error('valid_until')
                             <span class="text-red-500 text-xs mt-1">{{ $message }}</span>

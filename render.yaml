@@ -45,7 +45,7 @@ services:
       - key: QUEUE_CONNECTION
         value: sync
       - key: SESSION_DRIVER
-        value: file
+        value: database
       - key: SESSION_LIFETIME
         value: "120"
       - key: MAIL_MAILER

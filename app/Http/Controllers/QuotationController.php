@@ -79,7 +79,7 @@ class QuotationController extends Controller
             'notes'         => ['nullable', 'string', 'max:1000'],
             'items'         => ['required', 'array', 'min:1'],
             'items.*.product_id'    => ['nullable', 'exists:products,id'],
-            'items.*.description'  => ['required', 'string', 'max:500'],
+            'items.*.description'  => ['nullable', 'string', 'max:500'],
             'items.*.quantity'      => ['required', 'numeric', 'min:0.01'],
             'items.*.unit_price'    => ['required', 'numeric', 'min:0'],
             'items.*.discount'      => ['nullable', 'numeric', 'min:0'],
@@ -104,7 +104,7 @@ class QuotationController extends Controller
             foreach ($items as $item) {
                 $quotation->items()->create([
                     'product_id' => $item['product_id'] ?? null,
-                    'description' => $item['description'],
+                    'description' => $item['description'] ?? ($item['name'] ?? 'Sin descripción'),
                     'quantity'   => $item['quantity'],
                     'unit_price' => $item['unit_price'],
                     'discount'   => $item['discount'] ?? null,

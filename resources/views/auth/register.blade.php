@@ -10,7 +10,27 @@
     $_phone_cls = $errors->has('phone') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : '';
     $_password_cls = $errors->has('password') ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' : '';
 @endphp
-<form method="POST" action="{{ route('register') }}" class="space-y-5">
+    <div>
+        {{-- General Validation Errors --}}
+        @if($errors->any())
+        <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-4">
+            <div class="flex">
+                <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+                </svg>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-800">Por favor corrige los siguientes errores:</h3>
+                    <ul class="mt-2 text-sm text-red-600 list-disc list-inside space-y-1">
+                        @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+        @endif
+    </div>
+    <form method="POST" action="{{ route('register') }}" class="space-y-5">
     @csrf
 
     {{-- Name --}}
@@ -54,7 +74,7 @@
             <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
             </svg>
-            <input type="tel" id="phone" name="phone"
+            <input type="tel" id="phone" name="phone" required
                 value="{{ old('phone') }}"
                 class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-colors {{ $_phone_cls }}"
                 placeholder="+52 55 1234 5678">
