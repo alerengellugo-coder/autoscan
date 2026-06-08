@@ -20,7 +20,7 @@
             <h2 class="text-lg font-semibold text-gray-900">Editar Usuario: {{ $user->name }}</h2>
         </div>
 
-        <form method="PUT" action="{{ route('admin.usuarios.update', $user) }}" class="p-6 space-y-4">
+        <form method="POST" action="{{ route('admin.usuarios.update', $user) }}" class="p-6 space-y-4">
             @csrf
             @method('PUT')
 

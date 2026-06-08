@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\Quotation;
 use App\Models\Sale;
 use App\Models\SaleItem;
+use App\Models\SalePayment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -62,7 +63,7 @@ class SaleController extends Controller
     public function create(Request $request)
     {
         return view('sales.create', [
-            'clients' => User::clients()->active()->orderBy('name')->get(['id', 'name']),
+            'clients' => User::clients()->active()->orderBy('name')->pluck('name', 'id')->toArray(),
             'products' => Product::active()->orderBy('name')->get(['id', 'name', 'price', 'stock_quantity']),
             'quotations' => Quotation::where('status', 'approved')
                 ->with(['client', 'items.product'])
@@ -110,14 +111,72 @@ class SaleController extends Controller
 
     public function show(Sale $sale)
     {
-        $sale->load(['client', 'quotation', 'items']);
+        $sale->load(['client', 'quotation', 'items', 'paymentRecords']);
         return view('sales.show', ['sale' => $sale, 'status_options' => $this->statusOptions()]);
+    }
+
+    public function edit(Sale $sale)
+    {
+        $sale->load(['client', 'quotation', 'items']);
+        return view('sales.edit', [
+            'sale' => $sale,
+            'clients' => User::clients()->active()->orderBy('name')->pluck('name', 'id')->toArray(),
+            'products' => Product::active()->orderBy('name')->get(['id', 'name', 'price', 'stock_quantity']),
+        ]);
+    }
+
+    public function update(Request $request, Sale $sale)
+    {
+        $validated = $request->validate([
+            'description' => 'nullable|string|max:2000',
+            'notes' => 'nullable|string|max:1000',
+            'tax_rate' => 'nullable|numeric|min:0|max:100',
+            'discount' => 'nullable|numeric|min:0',
+        ]);
+
+        $sale->update($validated);
+
+        return redirect()->route('admin.ventas.show', $sale)->with('success', "Venta {$sale->sale_number} actualizada.");
+    }
+
+    public function destroy(Sale $sale)
+    {
+        $sale->delete();
+        return redirect()->route('admin.ventas.index')->with('success', "Venta {$sale->sale_number} eliminada.");
     }
 
     public function registerPayment(Request $request, Sale $sale)
     {
-        $validated = $request->validate(['amount' => 'required|numeric|min:0', 'method' => 'nullable|string']);
-        $sale->update(['paid_amount' => ($sale->paid_amount ?? 0) + $validated['amount'], 'payment_method' => $validated['method'] ?? $sale->payment_method]);
+        $validated = $request->validate(['amount' => 'required|numeric|min:0', 'method' => 'nullable|string', 'reference' => 'nullable|string|max:255']);
+
+        $sale->paymentRecords()->create([
+            'amount' => $validated['amount'],
+            'method' => $validated['method'] ?? null,
+            'reference' => $validated['reference'] ?? null,
+        ]);
+
+        // Update sale totals
+        $newPaid = ($sale->paid_amount ?? 0) + $validated['amount'];
+        $sale->paid_amount = $newPaid;
+
+        if ($validated['method']) {
+            try {
+                $sale->payment_method = PaymentMethod::from($validated['method']);
+            } catch (\ValueError $e) {
+                // ignore invalid method
+            }
+        }
+
+        // Auto-update status based on payment
+        if ($newPaid >= (float) $sale->total) {
+            $sale->status = SaleStatus::Paid;
+            $sale->paid_at = now();
+        } else {
+            $sale->status = SaleStatus::PartiallyPaid;
+        }
+
+        $sale->save();
+
         return back()->with('success', 'Pago registrado.');
     }
 

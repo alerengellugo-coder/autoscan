@@ -237,6 +237,21 @@ class Sale extends Model
         return $this->hasMany(SaleItem::class);
     }
 
+    public function paymentRecords(): HasMany
+    {
+        return $this->hasMany(SalePayment::class)->orderByDesc('created_at');
+    }
+
+    public function getPaymentStatusLabelAttribute(): string
+    {
+        $map = [
+            'pending' => 'Pendiente',
+            'partial' => 'Parcial',
+            'paid' => 'Pagado',
+        ];
+        return $map[$this->payment_status] ?? ucfirst($this->payment_status);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Business Logic

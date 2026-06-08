@@ -24,8 +24,11 @@
                 <p class="text-sm text-gray-500 mt-0.5">Creada el {{ $quotation->created_at->format('d/m/Y') }}</p>
             </div>
             <div class="flex items-center gap-2 flex-wrap">
-                @switch($quotation->status)
-                    @case('pending')
+                @switch($quotation->status?->value)
+                    @case('draft')
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-200 text-gray-700">{{ $quotation->status_label ?? 'Borrador' }}</span>
+                        @break
+                    @case('pending_client')
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">{{ $quotation->status_label ?? 'Pendiente' }}</span>
                         @break
                     @case('approved')
@@ -36,9 +39,6 @@
                         @break
                     @case('expired')
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-600">{{ $quotation->status_label ?? 'Expirada' }}</span>
-                        @break
-                    @case('converted')
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">{{ $quotation->status_label ?? 'Convertida' }}</span>
                         @break
                     @default
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-600">{{ $quotation->status_label ?? $quotation->status }}</span>
@@ -143,12 +143,12 @@
                     </div>
                     <div class="flex justify-between text-sm">
                         <span class="text-gray-600">Impuestos ({{ $quotation->tax_rate ?? 0 }}%):</span>
-                        <span class="font-medium text-gray-900">${{ number_format($quotation->tax_amount ?? 0, 2) }}</span>
+                        <span class="font-medium text-gray-900">${{ number_format($quotation->tax ?? 0, 2) }}</span>
                     </div>
-                    @if($quotation->discount_amount > 0)
+                    @if($quotation->discount > 0)
                     <div class="flex justify-between text-sm">
                         <span class="text-gray-600">Descuento:</span>
-                        <span class="font-medium text-red-600">-${{ number_format($quotation->discount_amount, 2) }}</span>
+                        <span class="font-medium text-red-600">-${{ number_format($quotation->discount, 2) }}</span>
                     </div>
                     @endif
                     <div class="border-t border-gray-200 pt-2">

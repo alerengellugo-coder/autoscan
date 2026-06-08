@@ -37,11 +37,11 @@
                             @php
                                 $saleStatusColors = [
                                     'pending' => 'bg-yellow-100 text-yellow-800',
-                                    'completed' => 'bg-green-100 text-green-800',
+                                    'paid' => 'bg-green-100 text-green-800',
+                                    'partially_paid' => 'bg-blue-100 text-blue-800',
                                     'cancelled' => 'bg-red-100 text-red-800',
-                                    'refunded' => 'bg-orange-100 text-orange-800',
                                 ];
-                                $sColorClass = $saleStatusColors[(string)$sale['status']] ?? 'bg-gray-100 text-gray-800';
+                                $sColorClass = $saleStatusColors[$sale['status']] ?? 'bg-gray-100 text-gray-800';
                             @endphp
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $sColorClass }}">
                                 {{ $sale['status_label'] ?? ucfirst($sale['status']) }}
@@ -55,7 +55,7 @@
                                     'partial' => 'bg-orange-100 text-orange-800',
                                     'overdue' => 'bg-red-100 text-red-800',
                                 ];
-                                $pColorClass = $payStatusColors[(string)$sale['payment_status']] ?? 'bg-gray-100 text-gray-800';
+                                $pColorClass = $payStatusColors[$sale['payment_status']] ?? 'bg-gray-100 text-gray-800';
                             @endphp
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $pColorClass }}">
                                 {{ $sale['payment_status_label'] ?? ucfirst(str_replace('_', ' ', $sale['payment_status'])) }}

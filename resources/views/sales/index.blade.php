@@ -12,7 +12,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-500">Total Ventas</p>
-                    <p class="text-2xl font-bold text-gray-900 mt-1">${{ number_format($sales->sum('total'), 2) }}</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-1">${{ number_format($stats['total_revenue'], 2) }}</p>
                 </div>
                 <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
                     <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -86,7 +86,7 @@
                         <td class="px-5 py-3 text-gray-700">{{ $sale->client['name'] ?? '—' }}</td>
                         <td class="px-5 py-3 font-semibold text-gray-900">${{ number_format($sale->total, 2) }}</td>
                         <td class="px-5 py-3 text-gray-700">
-                            @switch((string)$sale->payment_method)
+                            @switch($sale->payment_method?->value)
                                 @case('cash')
                                     <span class="inline-flex items-center gap-1 text-xs font-medium text-gray-700">
                                         <svg class="w-3.5 h-3.5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
@@ -106,17 +106,20 @@
                                     </span>
                                     @break
                                 @default
-                                    <span class="text-xs text-gray-500">{{ $sale->payment_method_label ?? $sale->payment_method ?? '—' }}</span>
+                                    <span class="text-xs text-gray-500">{{ $sale->payment_method_label ?? '—' }}</span>
                                     @break
                             @endswitch
                         </td>
                         <td class="px-5 py-3">
-                            @switch((string)$sale->status)
+                            @switch($sale->status?->value)
                                 @case('pending')
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">{{ $sale->status_label ?? 'Pendiente' }}</span>
                                     @break
-                                @case('completed')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">{{ $sale->status_label ?? 'Completada' }}</span>
+                                @case('paid')
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">{{ $sale->status_label ?? 'Pagada' }}</span>
+                                    @break
+                                @case('partially_paid')
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">{{ $sale->status_label ?? 'Parcial' }}</span>
                                     @break
                                 @case('cancelled')
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ $sale->status_label ?? 'Cancelada' }}</span>

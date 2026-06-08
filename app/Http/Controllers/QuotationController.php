@@ -58,7 +58,7 @@ class QuotationController extends Controller
     public function create(Request $request)
     {
         return view('quotations.create', [
-            'clients'  => User::clients()->active()->orderBy('name')->get(['id', 'name']),
+            'clients'  => User::clients()->active()->orderBy('name')->pluck('name', 'id')->toArray(),
             'vehicles' => Vehicle::active()->orderBy('brand')->get(['id', 'brand', 'model', 'plate', 'client_id']),
             'products' => Product::active()->orderBy('name')->get(['id', 'name', 'price', 'stock_quantity', 'min_stock_alert']),
             'service_orders' => ServiceOrder::where('client_id', $request->input('client_id'))->get(),
@@ -128,6 +128,40 @@ class QuotationController extends Controller
             'quotation'     => $quotation,
             'status_options' => $this->statusOptions(),
         ]);
+    }
+
+    public function edit(Quotation $quotation)
+    {
+        $quotation->load(['client', 'vehicle', 'items']);
+        return view('quotations.edit', [
+            'quotation' => $quotation,
+            'clients'  => User::clients()->active()->orderBy('name')->pluck('name', 'id')->toArray(),
+            'vehicles' => Vehicle::active()->orderBy('brand')->get(['id', 'brand', 'model', 'plate', 'client_id']),
+            'products' => Product::active()->orderBy('name')->get(['id', 'name', 'price', 'stock_quantity', 'min_stock_alert']),
+        ]);
+    }
+
+    public function update(Request $request, Quotation $quotation)
+    {
+        $validated = $request->validate([
+            'client_id' => 'required|exists:users,id',
+            'vehicle_id' => 'nullable|exists:vehicles,id',
+            'description' => 'nullable|string|max:2000',
+            'tax_rate' => 'nullable|numeric|min:0|max:100',
+            'discount' => 'nullable|numeric|min:0',
+            'valid_until' => 'nullable|date',
+            'notes' => 'nullable|string|max:1000',
+        ]);
+
+        $quotation->update($validated);
+
+        return redirect()->route('admin.cotizaciones.show', $quotation)->with('success', "Cotización {$quotation->quotation_number} actualizada.");
+    }
+
+    public function destroy(Quotation $quotation)
+    {
+        $quotation->delete();
+        return redirect()->route('admin.cotizaciones.index')->with('success', "Cotización {$quotation->quotation_number} eliminada.");
     }
 
     public function updateStatus(Request $request, Quotation $quotation)

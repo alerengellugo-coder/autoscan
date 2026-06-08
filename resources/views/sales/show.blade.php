@@ -25,12 +25,15 @@
             </div>
             <div class="flex items-center gap-2 flex-wrap">
                 {{-- Status Badge --}}
-                @switch((string)$sale->status)
+                @switch($sale->status?->value)
                     @case('pending')
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">{{ $sale->status_label ?? 'Pendiente' }}</span>
                         @break
-                    @case('completed')
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">{{ $sale->status_label ?? 'Completada' }}</span>
+                    @case('paid')
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">{{ $sale->status_label ?? 'Pagada' }}</span>
+                        @break
+                    @case('partially_paid')
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">{{ $sale->status_label ?? 'Parcial' }}</span>
                         @break
                     @case('cancelled')
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">{{ $sale->status_label ?? 'Cancelada' }}</span>
@@ -41,7 +44,7 @@
                 @endswitch
 
                 {{-- Payment Status Badge --}}
-                @switch((string)$sale->payment_status)
+                @switch($sale->payment_status)
                     @case('paid')
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">Pagado</span>
                         @break
@@ -122,12 +125,12 @@
                     </div>
                     <div class="flex justify-between text-sm">
                         <span class="text-gray-600">Impuestos:</span>
-                        <span class="font-medium text-gray-900">${{ number_format($sale->tax_amount ?? 0, 2) }}</span>
+                        <span class="font-medium text-gray-900">${{ number_format($sale->tax ?? 0, 2) }}</span>
                     </div>
-                    @if($sale->discount_amount > 0)
+                    @if($sale->discount > 0)
                     <div class="flex justify-between text-sm">
                         <span class="text-gray-600">Descuento:</span>
-                        <span class="font-medium text-red-600">-${{ number_format($sale->discount_amount, 2) }}</span>
+                        <span class="font-medium text-red-600">-${{ number_format($sale->discount, 2) }}</span>
                     </div>
                     @endif
                     <div class="border-t border-gray-200 pt-2">
@@ -165,9 +168,9 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @forelse($sale->payments as $payment)
+                    @forelse($sale->paymentRecords as $payment)
                     <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-5 py-3 text-gray-500 text-xs">{{ $payment->created_at->format('d/m/Y H:i') }}</td>
+                        <td class="px-5 py-3 text-gray-500 text-xs">{{ $payment->created_at }}</td>
                         <td class="px-5 py-3 font-semibold text-green-600">${{ number_format($payment->amount, 2) }}</td>
                         <td class="px-5 py-3 text-gray-700">
                             @switch($payment->method)

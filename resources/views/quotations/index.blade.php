@@ -76,8 +76,11 @@
                         </td>
                         <td class="px-5 py-3 font-semibold text-gray-900">${{ number_format($quotation->total, 2) }}</td>
                         <td class="px-5 py-3">
-                            @switch($quotation->status)
-                                @case('pending')
+                            @switch($quotation->status?->value)
+                                @case('draft')
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200 text-gray-700">{{ $quotation->status_label ?? 'Borrador' }}</span>
+                                    @break
+                                @case('pending_client')
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">{{ $quotation->status_label ?? 'Pendiente' }}</span>
                                     @break
                                 @case('approved')
@@ -88,9 +91,6 @@
                                     @break
                                 @case('expired')
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">{{ $quotation->status_label ?? 'Expirada' }}</span>
-                                    @break
-                                @case('converted')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">{{ $quotation->status_label ?? 'Convertida' }}</span>
                                     @break
                                 @default
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">{{ $quotation->status_label ?? $quotation->status }}</span>

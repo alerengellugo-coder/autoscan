@@ -45,12 +45,10 @@
                         <td class="px-5 py-3">
                             @php
                                 $qStatusColors = [
-                                    'pending' => 'bg-yellow-100 text-yellow-800',
+                                    'draft' => 'bg-gray-200 text-gray-700',
+                                    'pending_client' => 'bg-yellow-100 text-yellow-800',
                                     'approved' => 'bg-green-100 text-green-800',
                                     'rejected' => 'bg-red-100 text-red-800',
-                                    'cancelled' => 'bg-gray-100 text-gray-800',
-                                    'sent' => 'bg-blue-100 text-blue-800',
-                                    'converted' => 'bg-green-100 text-green-800',
                                     'expired' => 'bg-gray-100 text-gray-800',
                                 ];
                                 $qColorClass = $qStatusColors[$quotation['status']] ?? 'bg-gray-100 text-gray-800';
