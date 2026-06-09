@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             TechnicianUserSeeder::class,
             SampleProductsSeeder::class,
             SampleSettingsSeeder::class,
+            SampleDataSeeder::class,
         ]);
     }
 }

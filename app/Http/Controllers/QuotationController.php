@@ -123,6 +123,8 @@ class QuotationController extends Controller
 
     public function show(Quotation $quotation)
     {
+        abort_if(! $quotation->exists, 404, 'Cotización no encontrada.');
+
         $quotation->load(['client', 'vehicle', 'items', 'serviceOrder']);
         $user = Auth::user();
         $page = $user->isAdmin() ? 'quotations.show' : 'client.quotations.show';
