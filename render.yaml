@@ -29,7 +29,7 @@ services:
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST
-        value: ep-dark-cloud-aq2rrffa-pooler.c-8.us-east-1.aws.neon.tech
+        value: ep-dark-cloud-aq2rrffa.c-8.us-east-1.aws.neon.tech
       - key: DB_PORT
         value: "5432"
       - key: DB_DATABASE
@@ -82,7 +82,7 @@ services:
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST
-        value: ep-dark-cloud-aq2rrffa-pooler.c-8.us-east-1.aws.neon.tech
+        value: ep-dark-cloud-aq2rrffa.c-8.us-east-1.aws.neon.tech
       - key: DB_PORT
         value: "5432"
       - key: DB_DATABASE

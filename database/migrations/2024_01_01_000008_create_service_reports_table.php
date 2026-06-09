@@ -17,14 +17,18 @@ return new class extends Migration
             $table->id();
             $table->foreignId('service_order_id')->constrained('service_orders')->cascadeOnDelete();
             $table->foreignId('technician_id')->constrained('users')->cascadeOnDelete();
-            $table->string('title');
+            $table->date('report_date');
+            $table->string('title')->nullable();
             $table->text('description');
+            $table->text('work_performed')->nullable();
             $table->string('previous_status')->nullable();
-            $table->string('new_status');
+            $table->string('new_status')->nullable();
             $table->text('findings')->nullable();
+            $table->text('recommendations')->nullable();
             $table->json('parts_used')->nullable();
             $table->decimal('labor_hours', 5, 2)->nullable();
             $table->json('images')->nullable();
+            $table->text('notes')->nullable();
             $table->timestamps();
 
             $table->index('service_order_id');
