@@ -130,7 +130,7 @@
                             {{ $order['technician']['name'] ?? '—' }}
                         </td>
                         <td class="px-5 py-3 text-gray-500">
-                            {{ \Carbon\Carbon::parse($order['created_at'])->format('d/m/Y') }}
+                            {{ isset($order['created_at']) && $order['created_at'] ? \Carbon\Carbon::parse($order['created_at'])->format('d/m/Y') : '—' }}
                         </td>
                     </tr>
                     @empty

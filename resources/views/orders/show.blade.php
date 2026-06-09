@@ -21,7 +21,7 @@
         <div class="px-6 py-5 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
                 <h2 class="text-xl font-bold text-gray-900">Orden #{{ $order->order_number }}</h2>
-                <p class="text-sm text-gray-500 mt-0.5">Creada el {{ $order->created_at->format('d/m/Y') }} @ {{ $order->created_at->format('H:i') }}</p>
+                <p class="text-sm text-gray-500 mt-0.5">Creada el {{ $order->created_at?->format('d/m/Y') ?? '—' }} @ {{ $order->created_at?->format('H:i') ?? '' }}</p>
             </div>
             <div class="flex items-center gap-2 flex-wrap">
                 {{-- Status Badge --}}
@@ -259,7 +259,7 @@
                                 @endswitch
                             </p>
                             <p class="text-xs text-gray-500 flex-shrink-0 ml-4">
-                                {{ $entry->created_at->format('d/m/Y H:i') }}
+                                {{ $entry->created_at?->format('d/m/Y H:i') ?? '—' }}
                             </p>
                         </div>
                         @if($entry->notes)
@@ -291,7 +291,7 @@
                             Reporte #{{ $report->id }}
                         </a>
                         <p class="text-xs text-gray-500 mt-0.5">
-                            {{ $report->created_at->format('d/m/Y H:i') }}
+                            {{ $report->created_at?->format('d/m/Y H:i') ?? '—' }}
                             @if($report->technician)
                                 &middot; {{ $report->technician->name }}
                             @endif

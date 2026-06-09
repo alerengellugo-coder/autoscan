@@ -22,9 +22,9 @@
             <div>
                 <h2 class="text-xl font-bold text-gray-900">Reporte #{{ $report->id }}</h2>
                 <p class="text-sm text-gray-500 mt-0.5">
-                    Fecha: {{ $report->report_date ? $report->report_date->format('d/m/Y') : $report->created_at->format('d/m/Y') }}
+                    Fecha: {{ $report->report_date?->format('d/m/Y') ?? ($report->created_at?->format('d/m/Y') ?? '—') }}
                     @if($report->created_at)
-                        &middot; Creado: {{ $report->created_at->format('d/m/Y H:i') }}
+                        &middot; Creado: {{ $report->created_at?->format('d/m/Y H:i') ?? '—' }}
                     @endif
                 </p>
             </div>

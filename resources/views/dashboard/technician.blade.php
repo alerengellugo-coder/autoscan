@@ -147,7 +147,7 @@
                             {{ $order['client']['name'] ?? '—' }}
                         </td>
                         <td class="px-5 py-3 text-gray-500">
-                            {{ \Carbon\Carbon::parse($order['created_at'])->format('d/m/Y') }}
+                            {{ isset($order['created_at']) && $order['created_at'] ? \Carbon\Carbon::parse($order['created_at'])->format('d/m/Y') : '—' }}
                         </td>
                     </tr>
                     @empty
@@ -191,7 +191,7 @@
                     </div>
                     <div class="ml-4 flex-shrink-0">
                         <span class="text-xs text-gray-400">
-                            {{ \Carbon\Carbon::parse($report['report_date'])->format('d/m/Y') }}
+                            {{ isset($report['created_at']) && $report['created_at'] ? \Carbon\Carbon::parse($report['created_at'])->format('d/m/Y') : '—' }}
                         </span>
                     </div>
                 </div>

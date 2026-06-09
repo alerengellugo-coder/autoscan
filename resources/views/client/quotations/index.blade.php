@@ -62,13 +62,13 @@
                         </td>
                         <td class="px-5 py-3 text-gray-500">
                             @if($quotation->valid_until)
-                                {{ $quotation->valid_until->format('d/m/Y') }}
+                                {{ $quotation->valid_until?->format('d/m/Y') ?? '—' }}
                             @else
                                 —
                             @endif
                         </td>
                         <td class="px-5 py-3 text-gray-500">
-                            {{ $quotation->created_at->format('d/m/Y') }}
+                            {{ $quotation->created_at?->format('d/m/Y') ?? '—' }}
                         </td>
                         <td class="px-5 py-3">
                             <a href="{{ route('client.quotations.show', $quotation) }}" class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 text-xs font-medium">

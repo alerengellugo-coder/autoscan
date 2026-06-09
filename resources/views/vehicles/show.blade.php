@@ -98,7 +98,7 @@
                 {{-- Fecha de Registro --}}
                 <div>
                     <dt class="text-xs font-medium text-gray-500 uppercase tracking-wide">Fecha de Registro</dt>
-                    <dd class="mt-1 text-sm text-gray-900">{{ $vehicle->created_at->format('d/m/Y') }}</dd>
+                    <dd class="mt-1 text-sm text-gray-900">{{ $vehicle->created_at?->format('d/m/Y') ?? '—' }}</dd>
                 </div>
 
             </div>

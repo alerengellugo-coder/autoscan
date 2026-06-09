@@ -21,9 +21,9 @@
         <div class="flex flex-wrap items-start justify-between gap-4">
             <div>
                 <h2 class="text-xl font-bold text-gray-900">Cotización {{ $quotation->quotation_number }}</h2>
-                <p class="mt-1 text-sm text-gray-500">Fecha: {{ $quotation->created_at->format('d/m/Y') }}</p>
+                <p class="mt-1 text-sm text-gray-500">Fecha: {{ $quotation->created_at?->format('d/m/Y') ?? '—' }}</p>
                 @if($quotation->valid_until)
-                <p class="text-sm text-gray-500">Válida hasta: {{ $quotation->valid_until->format('d/m/Y') }}</p>
+                <p class="text-sm text-gray-500">Válida hasta: {{ $quotation->valid_until?->format('d/m/Y') ?? '—' }}</p>
                 @endif
             </div>
             @php

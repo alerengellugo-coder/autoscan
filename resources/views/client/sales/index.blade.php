@@ -62,7 +62,7 @@
                             </span>
                         </td>
                         <td class="px-5 py-3 text-gray-500">
-                            {{ $sale->created_at->format('d/m/Y') }}
+                            {{ $sale->created_at?->format('d/m/Y') ?? '—' }}
                         </td>
                     </tr>
                     @empty

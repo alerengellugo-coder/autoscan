@@ -65,7 +65,7 @@
                             {{ $order['technician']['name'] ?? 'Sin asignar' }}
                         </td>
                         <td class="px-5 py-3 text-gray-500">
-                            {{ \Carbon\Carbon::parse($order['created_at'])->format('d/m/Y') }}
+                            {{ isset($order['created_at']) && $order['created_at'] ? \Carbon\Carbon::parse($order['created_at'])->format('d/m/Y') : '—' }}
                         </td>
                         <td class="px-5 py-3">
                             <a href="{{ route('client.orders.show', $order['id']) }}" class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 text-xs font-medium">

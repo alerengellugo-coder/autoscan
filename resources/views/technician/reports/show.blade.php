@@ -21,7 +21,7 @@
         <div class="flex flex-wrap items-start justify-between gap-4">
             <div>
                 <h2 class="text-xl font-bold text-gray-900">Reporte #{{ $report->id }}</h2>
-                <p class="mt-1 text-sm text-gray-500">Fecha: {{ $report->report_date ? $report->report_date->format('d/m/Y H:i') : $report->created_at->format('d/m/Y H:i') }}</p>
+                <p class="mt-1 text-sm text-gray-500">Fecha: {{ $report->report_date?->format('d/m/Y H:i') ?? ($report->created_at?->format('d/m/Y H:i') ?? '—') }}</p>
             </div>
             <div class="flex items-center gap-3">
                 @if($report->labor_hours)

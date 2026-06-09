@@ -60,7 +60,7 @@
                     <tr class="hover:bg-gray-50 transition-colors">
                         <td class="px-5 py-3 text-gray-500">{{ $report->id }}</td>
                         <td class="px-5 py-3 text-gray-500">
-                            {{ $report->report_date ? $report->report_date->format('d/m/Y') : $report->created_at->format('d/m/Y') }}
+                            {{ $report->report_date?->format('d/m/Y') ?? ($report->created_at?->format('d/m/Y') ?? '—') }}
                         </td>
                         <td class="px-5 py-3 text-gray-900 max-w-xs truncate">
                             {{ $report->description ?? '—' }}

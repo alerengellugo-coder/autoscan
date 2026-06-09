@@ -21,7 +21,7 @@
         <div class="px-6 py-5 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
                 <h2 class="text-xl font-bold text-gray-900">Cotización #{{ $quotation->quotation_number }}</h2>
-                <p class="text-sm text-gray-500 mt-0.5">Creada el {{ $quotation->created_at->format('d/m/Y') }}</p>
+                <p class="text-sm text-gray-500 mt-0.5">Creada el {{ $quotation->created_at?->format('d/m/Y') ?? '—' }}</p>
             </div>
             <div class="flex items-center gap-2 flex-wrap">
                 @switch($quotation->status?->value)
@@ -47,7 +47,7 @@
 
                 @if($quotation->valid_until)
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-50 text-gray-600 border border-gray-200">
-                        Válida hasta: {{ $quotation->valid_until->format('d/m/Y') }}
+                        Válida hasta: {{ $quotation->valid_until?->format('d/m/Y') ?? '—' }}
                     </span>
                 @endif
             </div>

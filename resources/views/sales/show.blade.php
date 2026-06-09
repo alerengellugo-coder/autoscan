@@ -21,7 +21,7 @@
         <div class="px-6 py-5 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
                 <h2 class="text-xl font-bold text-gray-900">Venta #{{ $sale->sale_number }}</h2>
-                <p class="text-sm text-gray-500 mt-0.5">Creada el {{ $sale->created_at->format('d/m/Y') }}</p>
+                <p class="text-sm text-gray-500 mt-0.5">Creada el {{ $sale->created_at?->format('d/m/Y') ?? '—' }}</p>
             </div>
             <div class="flex items-center gap-2 flex-wrap">
                 {{-- Status Badge --}}

@@ -103,7 +103,7 @@
                     <p class="text-sm text-gray-500 mt-1">{{ $notification->data['message'] ?? $notification->data['body'] }}</p>
                     @endif
                     <p class="text-xs text-gray-400 mt-1.5">
-                        {{ $notification->created_at->format('d/m/Y H:i') }}
+                        {{ $notification->created_at?->format('d/m/Y H:i') ?? '—' }}
                         @if(!$notification->read_at)
                             <span class="inline-flex items-center ml-2 px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-blue-100 text-blue-700">Nueva</span>
                         @endif

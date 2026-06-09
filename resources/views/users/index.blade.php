@@ -75,7 +75,7 @@
                                 </span>
                             @endif
                         </td>
-                        <td class="px-5 py-3 text-gray-500 text-xs">{{ $user->created_at->format('d/m/Y') }}</td>
+                        <td class="px-5 py-3 text-gray-500 text-xs">{{ $user->created_at?->format('d/m/Y') ?? '—' }}</td>
                         <td class="px-5 py-3 text-right">
                             <div class="flex items-center justify-end gap-1">
                                 {{-- Toggle Active --}}

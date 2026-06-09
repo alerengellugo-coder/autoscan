@@ -100,7 +100,7 @@
                         <td class="px-5 py-3 text-gray-700 text-xs">
                             {{ $quotation->valid_until ? $quotation->valid_until->format('d/m/Y') : '—' }}
                         </td>
-                        <td class="px-5 py-3 text-gray-500 text-xs">{{ $quotation->created_at->format('d/m/Y') }}</td>
+                        <td class="px-5 py-3 text-gray-500 text-xs">{{ $quotation->created_at?->format('d/m/Y') ?? '—' }}</td>
                         <td class="px-5 py-3 text-right">
                             <div class="flex items-center justify-end gap-1">
                                 <a href="{{ route('admin.cotizaciones.show', $quotation) }}" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-blue-600 hover:text-white hover:bg-blue-600 rounded-lg transition-colors" title="Ver">

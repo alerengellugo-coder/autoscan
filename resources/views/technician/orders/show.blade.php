@@ -21,7 +21,7 @@
         <div class="flex flex-wrap items-start justify-between gap-4">
             <div>
                 <h2 class="text-xl font-bold text-gray-900">Orden {{ $order['order_number'] }}</h2>
-                <p class="mt-1 text-sm text-gray-500">Creada el {{ \Carbon\Carbon::parse($order['created_at'])->format('d/m/Y H:i') }}</p>
+                <p class="mt-1 text-sm text-gray-500">Creada el {{ isset($order['created_at']) && $order['created_at'] ? \Carbon\Carbon::parse($order['created_at'])->format('d/m/Y H:i') : '—' }}</p>
             </div>
             <div class="flex items-center gap-3">
                 @php
@@ -156,7 +156,7 @@
                         @endif
                     </div>
                     <div class="ml-4 flex-shrink-0 text-right">
-                        <p class="text-xs text-gray-400">{{ \Carbon\Carbon::parse($report['report_date'])->format('d/m/Y') }}</p>
+                        <p class="text-xs text-gray-400">{{ isset($report['created_at']) && $report['created_at'] ? \Carbon\Carbon::parse($report['created_at'])->format('d/m/Y') : (isset($report['report_date']) && $report['report_date'] ? \Carbon\Carbon::parse($report['report_date'])->format('d/m/Y') : '—') }}</p>
                         @if($report['labor_hours'])
                         <p class="text-xs text-gray-500">{{ number_format($report['labor_hours'], 1) }} hrs</p>
                         @endif
