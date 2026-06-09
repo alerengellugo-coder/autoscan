@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('sale_number')->unique();
             $table->foreignId('client_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('quotation_id')->nullable()->constrained('quotations')->nullOnDelete();
+            $table->text('description')->nullable();
             $table->enum('status', [
                 'pending',
                 'paid',
@@ -25,12 +26,15 @@ return new class extends Migration
                 'cancelled',
             ])->default('pending');
             $table->decimal('subtotal', 10, 2)->default(0);
+            $table->decimal('tax_rate', 5, 3)->default(16);
             $table->decimal('tax', 10, 2)->default(0);
             $table->decimal('discount', 10, 2)->default(0);
+            $table->string('discount_type')->default('percentage');
             $table->decimal('total', 10, 2)->default(0);
             $table->decimal('paid_amount', 10, 2)->default(0);
             $table->enum('payment_method', ['cash', 'card', 'transfer', 'credit'])->nullable();
             $table->timestamp('paid_at')->nullable();
+            $table->text('notes')->nullable();
             $table->timestamps();
 
             $table->index('client_id');

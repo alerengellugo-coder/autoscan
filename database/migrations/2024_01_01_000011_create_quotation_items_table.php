@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('quotation_id')->constrained('quotations')->cascadeOnDelete();
             $table->foreignId('product_id')->nullable()->constrained('products')->nullOnDelete();
             $table->enum('item_type', ['product', 'service', 'labor'])->default('product');
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->text('description')->nullable();
             $table->decimal('quantity', 10, 2)->default(1);
             $table->decimal('unit_price', 10, 2);

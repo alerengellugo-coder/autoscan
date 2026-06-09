@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\DB;
 
 class QuotationController extends Controller
 {
-    use \App\Traits\NeonSafeTransaction;
     private function statusOptions(): array
     {
         return collect(QuotationStatus::cases())->mapWithKeys(fn ($s) => [$s->value => $s->label()])->toArray();
@@ -86,12 +85,11 @@ class QuotationController extends Controller
             'items.*.discount'      => ['nullable', 'numeric', 'min:0'],
         ]);
 
-        $quotation = $this->neonSafeTransaction(function () use ($validated) {
+        $quotation = DB::transaction(function () use ($validated) {
             $items = $validated['items'];
             unset($validated['items']);
 
             $validated['status'] = QuotationStatus::Draft->value;
-            // number is auto-generated in model boot()
 
             $subtotal = collect($items)->sum(fn ($item) => $item['quantity'] * $item['unit_price']);
             $taxRate = $validated['tax_rate'] ?? 0;
@@ -221,7 +219,7 @@ class QuotationController extends Controller
             return back()->withErrors(['error' => 'Solo se pueden convertir cotizaciones aprobadas.']);
         }
 
-        $sale = $this->neonSafeTransaction(function () use ($quotation) {
+        $sale = DB::transaction(function () use ($quotation) {
             $sale = \App\Models\Sale::create([
                 'client_id'      => $quotation->client_id,
                 'quotation_id'   => $quotation->id,

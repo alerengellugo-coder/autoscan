@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\DB;
 
 class SaleController extends Controller
 {
-    use \App\Traits\NeonSafeTransaction;
     private function statusOptions(): array
     {
         return collect(SaleStatus::cases())->mapWithKeys(fn ($s) => [$s->value => $s->label()])->toArray();
@@ -98,7 +97,7 @@ class SaleController extends Controller
             'manual_items.*.unit_price'    => ['required', 'numeric', 'min:0'],
         ]);
 
-        $sale = $this->neonSafeTransaction(function () use ($validated, $request) {
+        $sale = DB::transaction(function () use ($validated, $request) {
             // Determine items source: from quotation or manual
             if (!empty($validated['quotation_id'])) {
                 $quotation = Quotation::with('items')->findOrFail($validated['quotation_id']);
