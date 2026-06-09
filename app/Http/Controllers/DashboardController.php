@@ -102,7 +102,7 @@ class DashboardController extends Controller
 
         $recent_reports = ServiceReport::with(['serviceOrder.vehicle', 'technician'])
             ->where('technician_id', $user->id)
-            ->latest('report_date')
+            ->latest()
             ->take(5)
             ->get();
 
