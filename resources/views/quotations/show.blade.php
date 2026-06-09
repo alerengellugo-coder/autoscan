@@ -225,7 +225,7 @@
                 </div>
                 <p class="text-sm text-gray-500 mt-1">Cotización <span class="font-mono font-semibold">#{{ $quotation->quotation_number }}</span></p>
             </div>
-            <form method="POST" action="{{ route('admin.cotizaciones.update-status', $quotation) }}" class="p-6 space-y-4">
+            <form method="POST" action="{{ $quotation->id ? route('admin.cotizaciones.update-status', $quotation) : '#' }}" class="p-6 space-y-4">
                 @csrf
                 <div>
                     <label for="new_status" class="block text-sm font-medium text-gray-700 mb-1">Nuevo Estado</label>
