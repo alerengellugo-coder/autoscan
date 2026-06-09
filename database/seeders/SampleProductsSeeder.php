@@ -20,6 +20,7 @@ class SampleProductsSeeder extends Seeder
                 'stock_quantity' => 25,
                 'min_stock_alert' => 5,
                 'unit'        => 'liter',
+                'image_path'  => 'products/aceite-5w30.png',
                 'is_active'   => true,
             ],
             [
@@ -32,6 +33,7 @@ class SampleProductsSeeder extends Seeder
                 'stock_quantity' => 40,
                 'min_stock_alert' => 10,
                 'unit'        => 'piece',
+                'image_path'  => 'products/filtro-aceite.png',
                 'is_active'   => true,
             ],
             [
@@ -44,6 +46,7 @@ class SampleProductsSeeder extends Seeder
                 'stock_quantity' => 35,
                 'min_stock_alert' => 8,
                 'unit'        => 'piece',
+                'image_path'  => 'products/filtro-aire.png',
                 'is_active'   => true,
             ],
             [
@@ -56,6 +59,7 @@ class SampleProductsSeeder extends Seeder
                 'stock_quantity' => 20,
                 'min_stock_alert' => 5,
                 'unit'        => 'set',
+                'image_path'  => 'products/pastillas-freno.png',
                 'is_active'   => true,
             ],
             [
@@ -68,6 +72,7 @@ class SampleProductsSeeder extends Seeder
                 'stock_quantity' => 15,
                 'min_stock_alert' => 4,
                 'unit'        => 'piece',
+                'image_path'  => 'products/disco-freno.png',
                 'is_active'   => true,
             ],
             [
@@ -80,6 +85,7 @@ class SampleProductsSeeder extends Seeder
                 'stock_quantity' => 10,
                 'min_stock_alert' => 3,
                 'unit'        => 'piece',
+                'image_path'  => 'products/bateria-12v.png',
                 'is_active'   => true,
             ],
             [
@@ -92,6 +98,7 @@ class SampleProductsSeeder extends Seeder
                 'stock_quantity' => 8,
                 'min_stock_alert' => 2,
                 'unit'        => 'piece',
+                'image_path'  => 'products/bateria-agm.png',
                 'is_active'   => true,
             ],
             [
@@ -104,6 +111,7 @@ class SampleProductsSeeder extends Seeder
                 'stock_quantity' => 5,
                 'min_stock_alert' => 2,
                 'unit'        => 'piece',
+                'image_path'  => 'products/escaner-obd2.png',
                 'is_active'   => true,
             ],
             [
@@ -116,6 +124,7 @@ class SampleProductsSeeder extends Seeder
                 'stock_quantity' => 12,
                 'min_stock_alert' => 3,
                 'unit'        => 'piece',
+                'image_path'  => 'products/multimetro.png',
                 'is_active'   => true,
             ],
             [
@@ -128,6 +137,7 @@ class SampleProductsSeeder extends Seeder
                 'stock_quantity' => 18,
                 'min_stock_alert' => 5,
                 'unit'        => 'kit',
+                'image_path'  => 'products/cables-bateria.png',
                 'is_active'   => true,
             ],
             [
@@ -140,6 +150,7 @@ class SampleProductsSeeder extends Seeder
                 'stock_quantity' => 8,
                 'min_stock_alert' => 2,
                 'unit'        => 'kit',
+                'image_path'  => 'products/kit-herramientas.png',
                 'is_active'   => true,
             ],
             [
@@ -152,6 +163,7 @@ class SampleProductsSeeder extends Seeder
                 'stock_quantity' => 50,
                 'min_stock_alert' => 15,
                 'unit'        => 'liter',
+                'image_path'  => 'products/refrigerante.png',
                 'is_active'   => true,
             ],
             [
@@ -164,6 +176,7 @@ class SampleProductsSeeder extends Seeder
                 'stock_quantity' => 60,
                 'min_stock_alert' => 15,
                 'unit'        => 'liter',
+                'image_path'  => 'products/liquido-frenos.png',
                 'is_active'   => true,
             ],
             [
@@ -176,6 +189,7 @@ class SampleProductsSeeder extends Seeder
                 'stock_quantity' => 100,
                 'min_stock_alert' => 25,
                 'unit'        => 'piece',
+                'image_path'  => 'products/bujia-iridium.png',
                 'is_active'   => true,
             ],
             [
@@ -188,6 +202,7 @@ class SampleProductsSeeder extends Seeder
                 'stock_quantity' => 12,
                 'min_stock_alert' => 3,
                 'unit'        => 'piece',
+                'image_path'  => 'products/correa-distribucion.png',
                 'is_active'   => true,
             ],
         ];
