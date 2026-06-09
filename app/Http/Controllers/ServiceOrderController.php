@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderStatusChanged;
 use App\Models\Enums\OrderPriority;
 use App\Models\Enums\OrderStatus;
 use App\Models\Enums\ServiceType;
 use App\Models\ServiceOrder;
 use App\Models\User;
 use App\Models\Vehicle;
+use App\Notifications\NewServiceReport;
 use App\Notifications\OrderCheckedIn;
 use App\Notifications\OrderDelivered;
 use App\Notifications\OrderStatusUpdated;
@@ -188,10 +190,25 @@ class ServiceOrderController extends Controller
 
     public function show(ServiceOrder $serviceOrder)
     {
-        Gate::authorize('manage-orders');
+        $user = Auth::user();
+
+        // Clients can only view their own orders
+        if ($user->isClient() && $serviceOrder->client_id !== $user->id) {
+            abort(403, 'No autorizado para ver esta orden.');
+        }
+
+        // Technicians can only view orders assigned to them
+        if ($user->isTechnician() && $serviceOrder->technician_id !== $user->id) {
+            abort(403, 'No autorizado para ver esta orden.');
+        }
+
+        // Admins manage orders
+        if ($user->isAdmin()) {
+            Gate::authorize('manage-orders');
+        }
+
         $serviceOrder->load(['vehicle.client', 'client', 'technician', 'reports' => fn ($q) => $q->orderByDesc('report_date'), 'reports.technician', 'quotation']);
 
-        $user = Auth::user();
         $page = match (true) {
             $user->isAdmin() => 'orders.show',
             $user->isTechnician() => 'technician.orders.show',
@@ -277,13 +294,12 @@ class ServiceOrderController extends Controller
             }
         });
 
-        // Notify client of status change
-        if ($serviceOrder->client && $serviceOrder->client->email) {
-            if ($newStatus === OrderStatus::Delivered) {
-                $serviceOrder->client->notify(new OrderDelivered($serviceOrder));
-            } else {
-                $serviceOrder->client->notify(new OrderStatusUpdated($serviceOrder, $oldStatus, $newStatus));
-            }
+        // Notify client of status change via event/listener
+        OrderStatusChanged::dispatch($serviceOrder, $oldStatus, $newStatus);
+
+        // Also send dedicated delivery notification
+        if ($newStatus === OrderStatus::Delivered && $serviceOrder->client && $serviceOrder->client->email) {
+            $serviceOrder->client->notify(new OrderDelivered($serviceOrder));
         }
 
         return back()->with('success', "Estado actualizado a '{$newStatus->label()}'.");
@@ -306,7 +322,14 @@ class ServiceOrderController extends Controller
         ]);
         $validated['service_order_id'] = $serviceOrder->id;
         $validated['technician_id'] = Auth::id();
-        $serviceOrder->reports()->create($validated);
+        $report = ServiceReport::create($validated);
+
+        // Notify client of new service report
+        $serviceOrder->load('client');
+        if ($serviceOrder->client && $serviceOrder->client->email) {
+            $serviceOrder->client->notify(new NewServiceReport($report));
+        }
+
         return back()->with('success', 'Informe de servicio agregado exitosamente.');
     }
 

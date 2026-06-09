@@ -13,6 +13,9 @@ use App\Models\ServiceOrder;
 use App\Models\User;
 use App\Models\Vehicle;
 use App\Notifications\QuotationApproved;
+use App\Notifications\QuotationRejected;
+use App\Notifications\QuotationSent;
+use App\Notifications\SaleCreatedFromQuotation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -171,9 +174,16 @@ class QuotationController extends Controller
         $oldStatus = $quotation->status;
         $quotation->update(['status' => $newStatus->value]);
 
-        // Notify admin when client approves a quotation
+        // Notify client when quotation is sent to them
+        if ($newStatus === QuotationStatus::PendingClient && $oldStatus !== QuotationStatus::PendingClient) {
+            $quotation->load('client');
+            if ($quotation->client && $quotation->client->email) {
+                $quotation->client->notify(new QuotationSent($quotation));
+            }
+        }
+
+        // Notify admins when client approves a quotation
         if ($newStatus === QuotationStatus::Approved && $oldStatus !== QuotationStatus::Approved) {
-            // Notify all admins
             $admins = User::admins()->active()->get();
             foreach ($admins as $admin) {
                 $admin->notify(new QuotationApproved($quotation));
@@ -208,6 +218,13 @@ class QuotationController extends Controller
             abort(403);
         }
         $quotation->reject();
+
+        // Notify admins of rejection
+        $admins = User::admins()->active()->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new QuotationRejected($quotation));
+        }
+
         return back()->with('success', 'Cotizacion rechazada.');
     }
 
@@ -248,6 +265,11 @@ class QuotationController extends Controller
 
             return $sale;
         });
+
+        // Notify client that sale was created from their quotation
+        if ($quotation->client && $quotation->client->email) {
+            $quotation->client->notify(new SaleCreatedFromQuotation($sale));
+        }
 
         return redirect()->route('admin.ventas.show', $sale)->with('success', "Venta {$sale->sale_number} creada desde cotización.");
     }

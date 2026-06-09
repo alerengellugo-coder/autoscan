@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ServiceOrder;
 use App\Models\ServiceReport;
+use App\Notifications\NewServiceReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -73,7 +74,14 @@ class ServiceReportController extends Controller
             'notes'            => 'nullable|string|max:1000',
         ]);
         $validated['technician_id'] = Auth::id();
-        ServiceReport::create($validated);
+        $report = ServiceReport::create($validated);
+
+        // Notify client of new service report
+        $serviceOrder = ServiceOrder::with('client')->find($report->service_order_id);
+        if ($serviceOrder && $serviceOrder->client && $serviceOrder->client->email) {
+            $serviceOrder->client->notify(new NewServiceReport($report));
+        }
+
         return back()->with('success', 'Informe creado.');
     }
 

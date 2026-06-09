@@ -13,7 +13,14 @@ class VehicleController extends Controller
 {
     public function index(Request $request)
     {
+        $user = Auth::user();
         $query = Vehicle::query()->with('client');
+
+        // Clients only see their own vehicles
+        if ($user->isClient()) {
+            $query->where('client_id', $user->id);
+        }
+
         if ($request->filled('search')) {
             $s = $request->input('search');
             $query->where('plate', 'like', "%{$s}%")->orWhere('brand', 'like', "%{$s}%")->orWhere('model', 'like', "%{$s}%");
@@ -69,18 +76,33 @@ class VehicleController extends Controller
 
     public function show(Vehicle $vehicle)
     {
+        // Clients can only view their own vehicles
+        if (Auth::user()->isClient() && $vehicle->client_id !== Auth::id()) {
+            abort(403, 'No autorizado para ver este vehículo.');
+        }
+
         $vehicle->load(['client', 'serviceOrders' => fn ($q) => $q->latest()]);
         return view('vehicles.show', ['vehicle' => $vehicle]);
     }
 
     public function edit(Vehicle $vehicle)
     {
+        // Clients can only edit their own vehicles
+        if (Auth::user()->isClient() && $vehicle->client_id !== Auth::id()) {
+            abort(403, 'No autorizado para editar este vehículo.');
+        }
+
         $vehicle->load('client');
         return view('vehicles.edit', ['vehicle' => $vehicle]);
     }
 
     public function update(Request $request, Vehicle $vehicle)
     {
+        // Clients can only update their own vehicles
+        if (Auth::user()->isClient() && $vehicle->client_id !== Auth::id()) {
+            abort(403, 'No autorizado para editar este vehículo.');
+        }
+
         $validated = $request->validate([
             'brand' => 'required|string|max:100',
             'model' => 'required|string|max:100',
