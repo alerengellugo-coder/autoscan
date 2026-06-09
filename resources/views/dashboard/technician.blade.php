@@ -122,7 +122,7 @@
                                     'delivered' => 'bg-emerald-100 text-emerald-800',
                                     'cancelled' => 'bg-red-100 text-red-800',
                                 ];
-                                $colorClass = $statusColors[$order['status']] ?? 'bg-gray-100 text-gray-800';
+                                $colorClass = $statusColors[$order['status']?->value] ?? 'bg-gray-100 text-gray-800';
                             @endphp
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $colorClass }}">
                                 {{ $order['status_label'] }}
@@ -137,7 +137,7 @@
                                     'high' => 'bg-orange-100 text-orange-700',
                                     'urgent' => 'bg-red-100 text-red-700',
                                 ];
-                                $pColorClass = $priorityColors[$order['priority']] ?? 'bg-gray-100 text-gray-700';
+                                $pColorClass = $priorityColors[$order['priority']?->value] ?? 'bg-gray-100 text-gray-700';
                             @endphp
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $pColorClass }}">
                                 {{ $order['priority_label'] }}
