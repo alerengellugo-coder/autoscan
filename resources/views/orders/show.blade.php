@@ -357,6 +357,7 @@
 
             <form method="POST" action="{{ route('admin.ordenes.update-status', $order) }}" class="p-6 space-y-4">
                 @csrf
+                @method('PATCH')
 
                 <div>
                     <label for="new_status" class="block text-sm font-medium text-gray-700 mb-1">Nuevo Estado</label>
