@@ -34,7 +34,7 @@ Route::middleware('guest')->group(function () {
 
 // Email verification routes
 Route::middleware('auth')->group(function () {
-    Route::get('/verify-email', 'App\Http\Controllers\Auth\EmailVerificationPromptController@show')->name('verification.notice');
+    Route::get('/verify-email', App\Http\Controllers\Auth\EmailVerificationPromptController::class)->name('verification.notice');
     Route::get('/verify-email/{id}/{hash}', 'App\Http\Controllers\Auth\VerifyEmailController@__invoke')->name('verification.verify');
     Route::post('/email/verification-notification', 'App\Http\Controllers\Auth\EmailVerificationNotificationController@store')->name('verification.send');
 });
