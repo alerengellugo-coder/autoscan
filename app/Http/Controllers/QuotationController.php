@@ -228,7 +228,12 @@ class QuotationController extends Controller
         return back()->with('success', 'Cotizacion rechazada.');
     }
 
-    public function generatePdf(Quotation $quotation) { return response()->json(['message' => 'PDF generation not implemented yet']); }
+    public function generatePdf(Quotation $quotation)
+    {
+        $quotation->load(['client', 'vehicle', 'items', 'serviceOrder']);
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('quotations.pdf', ['quotation' => $quotation]);
+        return $pdf->stream("Cotizacion-{$quotation->quotation_number}.pdf");
+    }
 
     public function convertToSale(Request $request, Quotation $quotation)
     {

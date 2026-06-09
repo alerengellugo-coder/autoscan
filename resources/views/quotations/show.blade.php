@@ -173,12 +173,14 @@
 
         <div class="flex items-center gap-3 flex-wrap">
             {{-- PDF --}}
+            @if($quotation->id)
             <a href="{{ route('admin.cotizaciones.pdf', $quotation) }}" target="_blank" class="inline-flex items-center gap-1.5 px-4 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-colors">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/>
                 </svg>
                 Descargar PDF
             </a>
+            @endif
 
             {{-- Change Status --}}
             <button type="button"
@@ -192,7 +194,7 @@
             </button>
 
             {{-- Convert to Sale --}}
-            @if($quotation->status == 'approved')
+            @if($quotation->id && $quotation->status == 'approved')
             <form method="POST" action="{{ route('admin.cotizaciones.convert-to-sale', $quotation) }}" onsubmit="return confirm('¿Convertir esta cotización en venta?')">
                 @csrf
                 @method('POST')
