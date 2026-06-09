@@ -9,7 +9,17 @@ use Illuminate\Http\Request;
 
 class EmailVerificationPromptController extends Controller
 {
+    public function show(Request $request)
+    {
+        return $this->prompt($request);
+    }
+
     public function __invoke(Request $request)
+    {
+        return $this->prompt($request);
+    }
+
+    private function prompt(Request $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
             return redirect()->intended(
