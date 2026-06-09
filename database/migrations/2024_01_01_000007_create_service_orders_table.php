@@ -44,8 +44,11 @@ return new class extends Migration
             $table->decimal('actual_cost', 10, 2)->nullable();
             $table->date('estimated_completion_date')->nullable();
             $table->timestamp('completed_at')->nullable();
+            $table->text('notes')->nullable();
             $table->text('internal_notes')->nullable();
             $table->text('client_visible_notes')->nullable();
+            $table->timestamp('started_at')->nullable();
+            $table->timestamp('delivered_at')->nullable();
             $table->timestamps();
 
             $table->index('vehicle_id');

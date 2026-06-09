@@ -23,7 +23,10 @@ return new class extends Migration
             $table->decimal('quantity', 10, 2)->default(1);
             $table->decimal('unit_price', 10, 2);
             $table->decimal('discount', 10, 2)->default(0);
+            $table->string('discount_type')->default('percentage');
+            $table->decimal('cost', 10, 2)->nullable();
             $table->decimal('total', 10, 2);
+            $table->text('notes')->nullable();
             $table->timestamps();
 
             $table->index('sale_id');
