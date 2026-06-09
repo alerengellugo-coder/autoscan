@@ -25,6 +25,19 @@ class AdminUserSeeder extends Seeder
         $admin->assignRole('admin');
         $admin->markEmailAsVerified();
 
+        $tech = User::firstOrCreate(
+            ['email' => 'tech@autoscan.com'],
+            [
+                'name'     => 'Técnico Principal',
+                'password' => Hash::make('password'),
+                'phone'    => '+58 412-1111111',
+                'role'     => 'technician',
+                'is_active'   => true,
+            ]
+        );
+        $tech->assignRole('technician');
+        $tech->markEmailAsVerified();
+
         $client1 = User::firstOrCreate(
             ['email' => 'carlos.garcia@email.com'],
             [
