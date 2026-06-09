@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use App\Models\Enums\ProductCategory;
+use Illuminate\Http\Request;
+
 /**
  * Controller: PageController
  *
@@ -24,7 +28,18 @@ class PageController extends Controller
      */
     public function home()
     {
-        return view('pages.home');
+        // Load all active products from DB, grouped by category
+        $products = Product::active()->orderBy('name')->get();
+        $categories = ProductCategory::cases();
+
+        // Group products by category
+        $productsByCategory = $products->groupBy(fn ($p) => $p->category?->value ?? 'other');
+
+        return view('pages.home', [
+            'products' => $products,
+            'categories' => $categories,
+            'products_by_category' => $productsByCategory,
+        ]);
     }
 
     /**
