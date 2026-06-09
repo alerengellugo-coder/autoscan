@@ -28,6 +28,18 @@ if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "SomeRandomStringSomeRandomString" ] || [
     php artisan key:generate --force 2>&1 || echo "WARNING: key:generate failed"
 fi
 
+# Strip -pooler from DB_HOST to bypass Neon pgBouncer
+# (pgBouncer causes SQLSTATE[25P02] aborted transaction errors)
+if [ -n "$DB_HOST" ]; then
+    case "$DB_HOST" in
+        *-pooler)
+            DB_HOST="${DB_HOST%-pooler}"
+            export DB_HOST
+            echo "Stripped -pooler suffix: DB_HOST is now ${DB_HOST}"
+            ;;
+    esac
+fi
+
 if [ -n "$DB_HOST" ]; then
     echo "Waiting for PostgreSQL at ${DB_HOST}:${DB_PORT:-5432}..."
     for i in $(seq 1 15); do
