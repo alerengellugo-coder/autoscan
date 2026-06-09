@@ -117,12 +117,11 @@ class UserController extends Controller
             ->where(function ($query) use ($q) {
                 $query->where('name', 'like', "%{$q}%")
                     ->orWhere('email', 'like', "%{$q}%")
-                    ->orWhere('phone', 'like', "%{$q}%")
-                    ->orWhere('identification', 'like', "%{$q}%");
+                    ->orWhere('phone', 'like', "%{$q}%");
             })
             ->orderBy('name')
             ->take(15)
-            ->get(['id', 'name', 'email', 'phone', 'identification']);
+            ->get(['id', 'name', 'email', 'phone']);
 
         return response()->json($clients);
     }

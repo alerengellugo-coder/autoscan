@@ -255,7 +255,7 @@
                     clientDropdown.innerHTML = data.map(c => `
                         <button type="button" onclick="selectClient(${c.id}, '${c.name.replace(/'/g, "\\'")}', '${(c.email || '').replace(/'/g, "\\'")}', '${(c.phone || '').replace(/'/g, "\\'")}')" class="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors border-b border-gray-50 last:border-0">
                             <div class="font-medium text-sm text-gray-900">${c.name}</div>
-                            <div class="text-xs text-gray-500 mt-0.5">${[c.email, c.phone, c.identification].filter(Boolean).join(' · ')}</div>
+                            <div class="text-xs text-gray-500 mt-0.5">${[c.email, c.phone].filter(Boolean).join(' · ')}</div>
                         </button>
                     `).join('');
                 }
