@@ -65,7 +65,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/vehiculos/{vehicle}/editar', [VehicleController::class, 'edit'])->name('vehicles.edit');
         Route::put('/vehiculos/{vehicle}', [VehicleController::class, 'update'])->name('vehicles.update');
         Route::get('/ordenes', [ServiceOrderController::class, 'clientOrders'])->name('orders.index');
-        Route::get('/ordenes/{order}', [ServiceOrderController::class, 'show'])->name('orders.show');
+        Route::get('/ordenes/{service_order}', [ServiceOrderController::class, 'show'])->name('orders.show');
         Route::get('/cotizaciones', [QuotationController::class, 'clientQuotations'])->name('quotations.index');
         Route::get('/cotizaciones/{quotation}', [QuotationController::class, 'show'])->name('quotations.show');
         Route::post('/cotizaciones/{quotation}/aprobar', [QuotationController::class, 'clientApprove'])->name('quotations.approve');
@@ -76,12 +76,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Technician routes
     Route::middleware('role:technician')->prefix('tecnico')->name('technician.')->group(function () {
         Route::get('/ordenes', [ServiceOrderController::class, 'index'])->name('orders.index');
-        Route::get('/ordenes/{order}', [ServiceOrderController::class, 'show'])->name('orders.show');
-        Route::patch('/ordenes/{order}/status', [ServiceOrderController::class, 'updateStatus'])->name('orders.update-status');
-        Route::post('/ordenes/{order}/reports', [ServiceReportController::class, 'store'])->name('orders.reports.store');
+        Route::get('/ordenes/{service_order}', [ServiceOrderController::class, 'show'])->name('orders.show');
+        Route::patch('/ordenes/{service_order}/status', [ServiceOrderController::class, 'updateStatus'])->name('orders.update-status');
+        Route::post('/ordenes/{service_order}/reports', [ServiceReportController::class, 'store'])->name('orders.reports.store');
         Route::get('/catalogo', [ProductController::class, 'catalog'])->name('products.catalog');
         Route::get('/reportes', [ServiceReportController::class, 'index'])->name('reports.index');
-        Route::get('/reportes/{report}', [ServiceReportController::class, 'show'])->name('reports.show');
+        Route::get('/reportes/{service_report}', [ServiceReportController::class, 'show'])->name('reports.show');
     });
 
     // Admin routes
@@ -98,24 +98,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/clientes/{clientId}/vehiculos', [VehicleController::class, 'getClientVehicles'])->name('clientes.vehiculos');
         Route::get('/clientes/{clientId}/ordenes', [ServiceOrderController::class, 'getClientOrders'])->name('clientes.ordenes');
 
-        Route::resource('vehiculos', VehicleController::class)->except(['show']);
+        Route::resource('vehiculos', VehicleController::class)
+            ->except(['show'])
+            ->parameters(['vehiculos' => 'vehicle']);
         Route::get('/vehiculos/{vehicle}', [VehicleController::class, 'show'])->name('vehiculos.show');
         Route::post('/vehiculos/cliente/{client}', [VehicleController::class, 'addVehicleForClient'])->name('vehiculos.add-for-client');
-        Route::resource('ordenes', ServiceOrderController::class);
-        Route::patch('/ordenes/{order}/status', [ServiceOrderController::class, 'updateStatus'])->name('ordenes.update-status');
-        Route::post('/ordenes/{order}/reports', [ServiceReportController::class, 'store'])->name('ordenes.reports.store');
-        Route::resource('productos', ProductController::class);
-        Route::resource('cotizaciones', QuotationController::class);
+        Route::resource('ordenes', ServiceOrderController::class)->parameters(['ordenes' => 'service_order']);
+        Route::patch('/ordenes/{service_order}/status', [ServiceOrderController::class, 'updateStatus'])->name('ordenes.update-status');
+        Route::post('/ordenes/{service_order}/reports', [ServiceReportController::class, 'store'])->name('ordenes.reports.store');
+        Route::resource('productos', ProductController::class)->parameters(['productos' => 'product']);
+        Route::resource('cotizaciones', QuotationController::class)->parameters(['cotizaciones' => 'quotation']);
         Route::patch('/cotizaciones/{quotation}/status', [QuotationController::class, 'updateStatus'])->name('cotizaciones.update-status');
         Route::get('/cotizaciones/{quotation}/pdf', [QuotationController::class, 'generatePdf'])->name('cotizaciones.pdf');
         Route::post('/cotizaciones/{quotation}/convertir-venta', [QuotationController::class, 'convertToSale'])->name('cotizaciones.convert-to-sale');
-        Route::resource('ventas', SaleController::class);
+        Route::resource('ventas', SaleController::class)->parameters(['ventas' => 'sale']);
         Route::post('/ventas/{sale}/pago', [SaleController::class, 'registerPayment'])->name('ventas.register-payment');
         Route::post('/ventas/{sale}/cancelar', [SaleController::class, 'cancel'])->name('ventas.cancel');
         Route::get('/reportes-servicio/crear', [ServiceReportController::class, 'create'])->name('reports.create');
         Route::get('/reportes-servicio', [ServiceReportController::class, 'index'])->name('reports.index');
-        Route::get('/reportes-servicio/{report}', [ServiceReportController::class, 'show'])->name('reports.show');
-        Route::delete('/reportes-servicio/{report}', [ServiceReportController::class, 'destroy'])->name('reports.destroy');
+        Route::get('/reportes-servicio/{service_report}', [ServiceReportController::class, 'show'])->name('reports.show');
+        Route::delete('/reportes-servicio/{service_report}', [ServiceReportController::class, 'destroy'])->name('reports.destroy');
     });
     Route::get('/perfil', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/perfil', [ProfileController::class, 'update'])->name('profile.update');
