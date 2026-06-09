@@ -21,7 +21,7 @@
             <p class="text-sm text-gray-500 mt-1">Modifica los datos del producto <span class="font-medium text-gray-700">{{ $product->name }}</span>.</p>
         </div>
 
-        <form method="POST" action="{{ route('admin.productos.update', $product) }}" class="p-6 space-y-5">
+        <form method="POST" action="{{ route('admin.productos.update', $product) }}" enctype="multipart/form-data" class="p-6 space-y-5">
             @csrf
             @method('PUT')
 
@@ -158,6 +158,36 @@
                 @enderror
             </div>
 
+            {{-- Image --}}
+            <div>
+                <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Imagen del Producto</label>
+                @if($product->image_path)
+                    <div class="mb-3">
+                        <img src="{{ asset($product->image_path) }}" alt="{{ $product->name }}" class="w-32 h-32 object-cover rounded-lg border border-gray-200">
+                        <p class="text-xs text-gray-400 mt-1">Imagen actual. Sube una nueva para reemplazarla.</p>
+                    </div>
+                @endif
+                <div class="flex items-center gap-4">
+                    <label for="image" class="flex-1 flex items-center justify-center gap-2 px-4 py-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50/50 transition-colors">
+                        <svg class="w-8 h-8 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21,15 16,10 5,21"/>
+                        </svg>
+                        <span class="text-sm text-gray-500">Haz clic para seleccionar una nueva imagen</span>
+                    </label>
+                </div>
+                <input type="file" id="image" name="image" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="previewImage(this)">
+                <div id="imagePreview" class="mt-2 hidden">
+                    <img id="imagePreviewImg" src="" alt="Vista previa" class="w-32 h-32 object-cover rounded-lg border border-gray-200">
+                    <button type="button" onclick="clearImagePreview()" class="mt-1 text-xs text-red-500 hover:text-red-700">Eliminar imagen</button>
+                </div>
+                <p class="text-xs text-gray-400 mt-1">Formatos: JPG, PNG, WebP. Máximo 2MB.</p>
+                @error('image')
+                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                @enderror
+            </div>
+
             {{-- Description --}}
             <div>
                 <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
@@ -185,3 +215,26 @@
 
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function previewImage(input) {
+    const preview = document.getElementById('imagePreview');
+    const img = document.getElementById('imagePreviewImg');
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            img.src = e.target.result;
+            preview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+function clearImagePreview() {
+    const input = document.getElementById('image');
+    const preview = document.getElementById('imagePreview');
+    input.value = '';
+    preview.classList.add('hidden');
+}
+</script>
+@endpush

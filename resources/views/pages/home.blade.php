@@ -33,7 +33,7 @@
                     </svg>
                     Registrarse
                 </a>
-                <a href="#productos" class="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white text-sm font-semibold rounded-lg transition-colors border border-white/20">
+                <a href="#productos" class="scroll-smooth inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white text-sm font-semibold rounded-lg transition-colors border border-white/20">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
                     </svg>
@@ -78,7 +78,7 @@
                         {{-- Product image placeholder --}}
                         <div class="h-44 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center relative">
                             @if($product->image_path)
-                                <img src="{{ Storage::url($product->image_path) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                                <img src="{{ asset($product->image_path) }}" alt="{{ $product->name }}" class="w-full h-full object-cover" loading="lazy">
                             @else
                                 <div class="text-center">
                                     <svg class="w-12 h-12 text-blue-300 mx-auto mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">

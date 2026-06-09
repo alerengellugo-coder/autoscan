@@ -18,6 +18,13 @@
 
     {{-- Product Detail Card --}}
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        {{-- Product Image --}}
+        @if($product->image_path)
+        <div class="h-64 bg-gray-100 flex items-center justify-center overflow-hidden">
+            <img src="{{ asset($product->image_path) }}" alt="{{ $product->name }}" class="max-h-full max-w-full object-contain">
+        </div>
+        @endif
+
         {{-- Header --}}
         <div class="px-6 py-5 border-b border-gray-200 flex items-center justify-between">
             <div>

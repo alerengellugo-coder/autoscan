@@ -8,6 +8,7 @@ use App\Models\Enums\ProductCategory;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -80,8 +81,19 @@ class ProductController extends Controller
             'stock_quantity' => 'required|integer|min:0',
             'min_stock_alert' => 'required|integer|min:0',
             'unit' => 'nullable|string|max:50',
+            'image' => 'nullable|image|mimes:jpeg,png,webp|max:2048',
         ]);
         if (empty($validated['slug'])) $validated['slug'] = \Illuminate\Support\Str::slug($validated['name']);
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $fileName = \Illuminate\Support\Str::slug($validated['name']) . '-' . time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images/products'), $fileName);
+            $validated['image_path'] = 'images/products/' . $fileName;
+        }
+        unset($validated['image']);
+
         Product::create($validated);
         return redirect()->route('admin.productos.index')->with('success', 'Producto creado.');
     }
@@ -106,7 +118,26 @@ class ProductController extends Controller
             'cost' => 'nullable|numeric|min:0',
             'stock_quantity' => 'required|integer|min:0',
             'min_stock_alert' => 'required|integer|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,webp|max:2048',
         ]);
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $fileName = \Illuminate\Support\Str::slug($validated['name']) . '-' . time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images/products'), $fileName);
+            $validated['image_path'] = 'images/products/' . $fileName;
+
+            // Delete old image if it exists in public directory
+            if ($product->image_path && str_starts_with($product->image_path, 'images/products/')) {
+                $oldPath = public_path($product->image_path);
+                if (file_exists($oldPath)) {
+                    @unlink($oldPath);
+                }
+            }
+        }
+        unset($validated['image']);
+
         $product->update($validated);
         return redirect()->route('admin.productos.index')->with('success', 'Producto actualizado.');
     }
