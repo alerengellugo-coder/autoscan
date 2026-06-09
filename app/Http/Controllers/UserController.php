@@ -102,6 +102,32 @@ class UserController extends Controller
     }
 
     /**
+     * AJAX: Search clients by name, email, phone, identification.
+     */
+    public function searchClients(Request $request)
+    {
+        $q = $request->query('q', '');
+
+        if (strlen($q) < 2) {
+            return response()->json([]);
+        }
+
+        $clients = User::where('role', 'client')
+            ->where('is_active', true)
+            ->where(function ($query) use ($q) {
+                $query->where('name', 'like', "%{$q}%")
+                    ->orWhere('email', 'like', "%{$q}%")
+                    ->orWhere('phone', 'like', "%{$q}%")
+                    ->orWhere('identification', 'like', "%{$q}%");
+            })
+            ->orderBy('name')
+            ->take(15)
+            ->get(['id', 'name', 'email', 'phone', 'identification']);
+
+        return response()->json($clients);
+    }
+
+    /**
      * Remove the specified user.
      */
     public function destroy(User $user)

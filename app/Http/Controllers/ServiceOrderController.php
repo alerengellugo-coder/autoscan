@@ -106,6 +106,19 @@ class ServiceOrderController extends Controller
         ]);
     }
 
+    /**
+     * AJAX: Get service orders for a specific client (for quotation forms).
+     */
+    public function getClientOrders(Request $request, $clientId)
+    {
+        $orders = ServiceOrder::where('client_id', $clientId)
+            ->orderByDesc('created_at')
+            ->take(20)
+            ->get(['id', 'order_number']);
+
+        return response()->json($orders);
+    }
+
     public function create(Request $request)
     {
         $user = Auth::user();

@@ -119,6 +119,19 @@ class VehicleController extends Controller
         return back()->with('success', 'Vehículo actualizado.');
     }
 
+    /**
+     * AJAX: Get vehicles for a specific client (for order/quotation forms).
+     */
+    public function getClientVehicles(Request $request, $clientId)
+    {
+        $vehicles = Vehicle::where('client_id', $clientId)
+            ->where('status', 'active')
+            ->orderBy('brand')
+            ->get(['id', 'plate', 'brand', 'model', 'year']);
+
+        return response()->json($vehicles);
+    }
+
     public function addVehicleForClient(Request $request, User $client)
     {
         $validated = $request->validate([

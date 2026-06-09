@@ -24,40 +24,51 @@
         <form method="POST" action="{{ route('admin.ordenes.store') }}" class="p-6 space-y-5">
             @csrf
 
-            {{-- Vehicle --}}
+            {{-- Client Search (admin only) --}}
+            <div>
+                <label for="client_search" class="block text-sm font-medium text-gray-700 mb-1">Buscar Cliente <span class="text-red-500">*</span></label>
+                <div class="relative">
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <input type="text"
+                           id="client_search"
+                           name="client_search"
+                           autocomplete="off"
+                           placeholder="Buscar por nombre, email, teléfono o cédula..."
+                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                    <div id="client_dropdown" class="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden"></div>
+                </div>
+                <div id="client_selected_display" class="hidden mt-2 flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg">
+                    <svg class="w-4 h-4 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span id="client_selected_name" class="text-sm font-medium text-blue-900"></span>
+                    <span id="client_selected_info" class="text-xs text-blue-600"></span>
+                    <button type="button" onclick="clearClientSelection()" class="ml-auto text-blue-400 hover:text-blue-600">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+                <input type="hidden" id="client_id" name="client_id" value="">
+                @error('client_id')
+                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                @enderror
+            </div>
+
+            {{-- Vehicle (filtered by client) --}}
             <div>
                 <label for="vehicle_id" class="block text-sm font-medium text-gray-700 mb-1">Vehículo <span class="text-red-500">*</span></label>
                 <select id="vehicle_id"
                         name="vehicle_id"
                         required
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
-                    <option value="">Seleccionar vehículo</option>
-                    @foreach($vehicles as $vehicle)
-                        <option value="{{ $vehicle->id }}" {{ old('vehicle_id') == $vehicle->id ? 'selected' : '' }}>
-                            {{ $vehicle->plate }} — {{ $vehicle->brand }} {{ $vehicle->model }} ({{ $vehicle->year }})
-                        </option>
-                    @endforeach
+                        disabled
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                    <option value="">Primero selecciona un cliente</option>
                 </select>
+                <p class="text-xs text-gray-400 mt-1">Los vehículos se cargan según el cliente seleccionado.</p>
                 @error('vehicle_id')
-                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                @enderror
-            </div>
-
-            {{-- Client (admin only) --}}
-            <div>
-                <label for="client_id" class="block text-sm font-medium text-gray-700 mb-1">Cliente <span class="text-red-500">*</span></label>
-                <select id="client_id"
-                        name="client_id"
-                        required
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
-                    <option value="">Seleccionar cliente</option>
-                    @foreach($clients as $clientId => $clientName)
-                        <option value="{{ $clientId }}" {{ old('client_id') == $clientId ? 'selected' : '' }}>
-                            {{ $clientName }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('client_id')
                     <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                 @enderror
             </div>
@@ -202,4 +213,114 @@
     </div>
 
 </div>
+
+@push('scripts')
+<script>
+    let searchTimeout = null;
+
+    const clientSearch = document.getElementById('client_search');
+    const clientDropdown = document.getElementById('client_dropdown');
+    const clientHidden = document.getElementById('client_id');
+    const clientDisplay = document.getElementById('client_selected_display');
+    const clientNameEl = document.getElementById('client_selected_name');
+    const clientInfoEl = document.getElementById('client_selected_info');
+    const vehicleSelect = document.getElementById('vehicle_id');
+
+    // Close dropdown on outside click
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('#client_search') && !e.target.closest('#client_dropdown')) {
+            clientDropdown.classList.add('hidden');
+        }
+    });
+
+    // Search clients on typing
+    clientSearch.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const query = this.value.trim();
+
+        if (query.length < 2) {
+            clientDropdown.classList.add('hidden');
+            return;
+        }
+
+        searchTimeout = setTimeout(function() {
+            fetch('/admin/clientes/buscar?q=' + encodeURIComponent(query), {
+                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (!data.length) {
+                    clientDropdown.innerHTML = '<div class="px-4 py-3 text-sm text-gray-400">No se encontraron clientes.</div>';
+                } else {
+                    clientDropdown.innerHTML = data.map(c => `
+                        <button type="button" onclick="selectClient(${c.id}, '${c.name.replace(/'/g, "\\'")}', '${(c.email || '').replace(/'/g, "\\'")}', '${(c.phone || '').replace(/'/g, "\\'")}')" class="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors border-b border-gray-50 last:border-0">
+                            <div class="font-medium text-sm text-gray-900">${c.name}</div>
+                            <div class="text-xs text-gray-500 mt-0.5">${[c.email, c.phone, c.identification].filter(Boolean).join(' · ')}</div>
+                        </button>
+                    `).join('');
+                }
+                clientDropdown.classList.remove('hidden');
+            })
+            .catch(() => {
+                clientDropdown.innerHTML = '<div class="px-4 py-3 text-sm text-red-400">Error de búsqueda.</div>';
+                clientDropdown.classList.remove('hidden');
+            });
+        }, 300);
+    });
+
+    function selectClient(id, name, email, phone) {
+        clientHidden.value = id;
+        clientSearch.value = '';
+        clientDropdown.classList.add('hidden');
+        clientNameEl.textContent = name;
+        clientInfoEl.textContent = [email, phone].filter(Boolean).join(' · ');
+        clientDisplay.classList.remove('hidden');
+
+        // Load vehicles for this client
+        loadClientVehicles(id);
+    }
+
+    function clearClientSelection() {
+        clientHidden.value = '';
+        clientSearch.value = '';
+        clientDisplay.classList.add('hidden');
+        vehicleSelect.innerHTML = '<option value="">Primero selecciona un cliente</option>';
+        vehicleSelect.disabled = true;
+        vehicleSelect.classList.add('bg-gray-100');
+    }
+
+    function loadClientVehicles(clientId) {
+        vehicleSelect.innerHTML = '<option value="">Cargando vehículos...</option>';
+        vehicleSelect.disabled = true;
+
+        fetch('/admin/clientes/' + clientId + '/vehiculos', {
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+        })
+        .then(r => r.json())
+        .then(data => {
+            vehicleSelect.disabled = false;
+            vehicleSelect.classList.remove('bg-gray-100');
+            if (!data.length) {
+                vehicleSelect.innerHTML = '<option value="">Este cliente no tiene vehículos registrados</option>';
+            } else {
+                vehicleSelect.innerHTML = '<option value="">Seleccionar vehículo</option>' +
+                    data.map(v => `<option value="${v.id}">${v.plate} — ${v.brand} ${v.model} (${v.year || 'N/A'})</option>`).join('');
+            }
+        })
+        .catch(() => {
+            vehicleSelect.innerHTML = '<option value="">Error al cargar vehículos</option>';
+        });
+    }
+
+    // Prevent form submit if no client selected
+    document.querySelector('form').addEventListener('submit', function(e) {
+        if (!clientHidden.value) {
+            e.preventDefault();
+            clientSearch.focus();
+            clientSearch.classList.add('border-red-400', 'ring-2', 'ring-red-200');
+            setTimeout(() => clientSearch.classList.remove('border-red-400', 'ring-2', 'ring-red-200'), 3000);
+        }
+    });
+</script>
+@endpush
 @endsection

@@ -92,6 +92,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/usuarios/{user}', 'App\Http\Controllers\UserController@update')->name('usuarios.update');
         Route::put('/usuarios/{user}/toggle-active', 'App\Http\Controllers\UserController@toggleActive')->name('usuarios.toggle-active');
         Route::delete('/usuarios/{user}', 'App\Http\Controllers\UserController@destroy')->name('usuarios.destroy');
+
+        // AJAX lookup endpoints for order/quotation creation forms
+        Route::get('/clientes/buscar', 'App\Http\Controllers\UserController@searchClients')->name('clientes.buscar');
+        Route::get('/clientes/{clientId}/vehiculos', [VehicleController::class, 'getClientVehicles'])->name('clientes.vehiculos');
+        Route::get('/clientes/{clientId}/ordenes', [ServiceOrderController::class, 'getClientOrders'])->name('clientes.ordenes');
+
         Route::resource('vehiculos', VehicleController::class)->except(['show']);
         Route::get('/vehiculos/{vehicle}', [VehicleController::class, 'show'])->name('vehiculos.show');
         Route::post('/vehiculos/cliente/{client}', [VehicleController::class, 'addVehicleForClient'])->name('vehiculos.add-for-client');
