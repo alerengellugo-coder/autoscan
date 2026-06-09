@@ -205,7 +205,7 @@
     @endif
 
     {{-- Status Timeline --}}
-    @if($status_timeline && $status_timeline->count() > 0)
+    @if(!empty($status_timeline) && count($status_timeline) > 0)
     <div class="bg-white rounded-xl shadow-sm border border-gray-200">
         <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-lg font-semibold text-gray-900">Historial de Estado</h3>
@@ -213,6 +213,7 @@
         <div class="p-6">
             <div class="relative">
                 @foreach($status_timeline as $index => $entry)
+                @php $entryStatus = $entry['status'] ?? 'pending'; @endphp
                 <div class="relative flex gap-4 {{ !$loop->last ? 'pb-8' : '' }}">
                     {{-- Timeline line --}}
                     @if(!$loop->last)
@@ -221,10 +222,14 @@
 
                     {{-- Dot --}}
                     <div class="relative z-10 flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mt-0.5
-                        @switch($entry->status)
+                        @switch($entryStatus)
                             @case('pending') bg-yellow-100 border-2 border-yellow-400 @break
+                            @case('diagnosing') bg-purple-100 border-2 border-purple-400 @break
                             @case('in_progress') bg-blue-100 border-2 border-blue-400 @break
+                            @case('waiting_parts') bg-orange-100 border-2 border-orange-400 @break
+                            @case('quality_check') bg-indigo-100 border-2 border-indigo-400 @break
                             @case('completed') bg-green-100 border-2 border-green-400 @break
+                            @case('delivered') bg-emerald-100 border-2 border-emerald-400 @break
                             @case('cancelled') bg-red-100 border-2 border-red-400 @break
                             @default bg-gray-100 border-2 border-gray-400 @break
                         @endswitch
@@ -235,10 +240,14 @@
                             </svg>
                         @else
                             <div class="w-2 h-2 rounded-full
-                                @switch($entry->status)
+                                @switch($entryStatus)
                                     @case('pending') bg-yellow-400 @break
+                                    @case('diagnosing') bg-purple-400 @break
                                     @case('in_progress') bg-blue-400 @break
+                                    @case('waiting_parts') bg-orange-400 @break
+                                    @case('quality_check') bg-indigo-400 @break
                                     @case('completed') bg-green-400 @break
+                                    @case('delivered') bg-emerald-400 @break
                                     @case('cancelled') bg-red-400 @break
                                     @default bg-gray-400 @break
                                 @endswitch
@@ -250,23 +259,14 @@
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center justify-between">
                             <p class="text-sm font-medium text-gray-900">
-                                @switch($entry->status)
-                                    @case('pending') Pendiente @break
-                                    @case('in_progress') En Proceso @break
-                                    @case('completed') Completado @break
-                                    @case('cancelled') Cancelado @break
-                                    @default {{ $entry->status }} @break
-                                @endswitch
+                                {{ $entry['label'] ?? ucfirst(str_replace('_', ' ', $entryStatus)) }}
                             </p>
                             <p class="text-xs text-gray-500 flex-shrink-0 ml-4">
-                                {{ $entry->created_at?->format('d/m/Y H:i') ?? '—' }}
+                                {{ $entry['date'] ?? '—' }}
                             </p>
                         </div>
-                        @if($entry->notes)
-                            <p class="text-sm text-gray-600 mt-1">{{ $entry->notes }}</p>
-                        @endif
-                        @if($entry->user)
-                            <p class="text-xs text-gray-400 mt-1">Por: {{ $entry->user->name ?? $entry->user }}</p>
+                        @if(!empty($entry['user_name']))
+                            <p class="text-xs text-gray-400 mt-1">Por: {{ $entry['user_name'] }}</p>
                         @endif
                     </div>
                 </div>
