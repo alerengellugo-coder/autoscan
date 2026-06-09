@@ -67,13 +67,17 @@ class SendOrderStatusNotification implements ShouldQueue
         }
 
         // Send the notification to the client
-        $client->notify(new OrderStatusUpdated(
-            order: $order,
-            oldStatus: $event->oldStatus,
-            newStatus: $event->newStatus,
-        ));
+        try {
+            $client->notify(new OrderStatusUpdated(
+                order: $order,
+                oldStatus: $event->oldStatus,
+                newStatus: $event->newStatus,
+            ));
 
-        Log::info("OrderStatusChanged: Notification sent to client {$client->name} ({$client->email}) for order #{$order->order_number}");
+            Log::info("OrderStatusChanged: Notification sent to client {$client->name} ({$client->email}) for order #{$order->order_number}");
+        } catch (\Throwable $e) {
+            Log::warning("OrderStatusChanged: Failed to notify client {$client->name} for order #{$order->order_number}: {$e->getMessage()}");
+        }
     }
 
     /**

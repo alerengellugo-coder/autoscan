@@ -177,19 +177,27 @@ class QuotationController extends Controller
         $quotation->update(['status' => $newStatus->value]);
 
         // Notify client when quotation is sent to them
-        if ($newStatus === QuotationStatus::PendingClient && $oldStatus !== QuotationStatus::PendingClient) {
-            $quotation->load('client');
-            if ($quotation->client && $quotation->client->email) {
-                $quotation->client->notify(new QuotationSent($quotation));
+        try {
+            if ($newStatus === QuotationStatus::PendingClient && $oldStatus !== QuotationStatus::PendingClient) {
+                $quotation->load('client');
+                if ($quotation->client && $quotation->client->email) {
+                    $quotation->client->notify(new QuotationSent($quotation));
+                }
             }
+        } catch (\Throwable $e) {
+            \Log::warning('QuotationSent notification failed: ' . $e->getMessage());
         }
 
         // Notify admins when client approves a quotation
-        if ($newStatus === QuotationStatus::Approved && $oldStatus !== QuotationStatus::Approved) {
-            $admins = User::admins()->active()->get();
-            foreach ($admins as $admin) {
-                $admin->notify(new QuotationApproved($quotation));
+        try {
+            if ($newStatus === QuotationStatus::Approved && $oldStatus !== QuotationStatus::Approved) {
+                $admins = User::admins()->active()->get();
+                foreach ($admins as $admin) {
+                    $admin->notify(new QuotationApproved($quotation));
+                }
             }
+        } catch (\Throwable $e) {
+            \Log::warning('QuotationApproved notification failed: ' . $e->getMessage());
         }
 
         return back()->with('success', 'Estado actualizado.');
@@ -206,9 +214,13 @@ class QuotationController extends Controller
         $quotation->approve();
 
         // Notify admins
-        $admins = User::admins()->active()->get();
-        foreach ($admins as $admin) {
-            $admin->notify(new QuotationApproved($quotation));
+        try {
+            $admins = User::admins()->active()->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new QuotationApproved($quotation));
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('QuotationApproved notification failed: ' . $e->getMessage());
         }
 
         return back()->with('success', 'Cotizacion aprobada exitosamente.');
@@ -222,9 +234,13 @@ class QuotationController extends Controller
         $quotation->reject();
 
         // Notify admins of rejection
-        $admins = User::admins()->active()->get();
-        foreach ($admins as $admin) {
-            $admin->notify(new QuotationRejected($quotation));
+        try {
+            $admins = User::admins()->active()->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new QuotationRejected($quotation));
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('QuotationRejected notification failed: ' . $e->getMessage());
         }
 
         return back()->with('success', 'Cotizacion rechazada.');
@@ -274,8 +290,12 @@ class QuotationController extends Controller
         });
 
         // Notify client that sale was created from their quotation
-        if ($quotation->client && $quotation->client->email) {
-            $quotation->client->notify(new SaleCreatedFromQuotation($sale));
+        try {
+            if ($quotation->client && $quotation->client->email) {
+                $quotation->client->notify(new SaleCreatedFromQuotation($sale));
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('SaleCreatedFromQuotation notification failed: ' . $e->getMessage());
         }
 
         return redirect()->route('admin.ventas.show', $sale)->with('success', "Venta {$sale->sale_number} creada desde cotización.");

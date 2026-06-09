@@ -23,6 +23,9 @@ echo "Cache driver: $CACHE_DRIVER"
 
 export APP_DEBUG=true
 
+# Force log mailer to prevent SMTP connection timeouts (no SMTP on Render)
+export MAIL_MAILER=log
+
 if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "SomeRandomStringSomeRandomString" ] || [ "$APP_KEY" = "null" ]; then
     echo "Generating application key..."
     php artisan key:generate --force 2>&1 || echo "WARNING: key:generate failed"

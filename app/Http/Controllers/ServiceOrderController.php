@@ -159,8 +159,12 @@ class ServiceOrderController extends Controller
         $order = ServiceOrder::create($validated);
 
         // Notify client of check-in
-        if ($order->client && $order->client->email) {
-            $order->client->notify(new OrderCheckedIn($order));
+        try {
+            if ($order->client && $order->client->email) {
+                $order->client->notify(new OrderCheckedIn($order));
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('OrderCheckedIn notification failed: ' . $e->getMessage());
         }
 
         $route = Auth::user()->isAdmin() ? 'admin.ordenes.show' : 'technician.orders.show';
@@ -311,8 +315,12 @@ class ServiceOrderController extends Controller
         OrderStatusChanged::dispatch($serviceOrder, $oldStatus, $newStatus);
 
         // Also send dedicated delivery notification
-        if ($newStatus === OrderStatus::Delivered && $serviceOrder->client && $serviceOrder->client->email) {
-            $serviceOrder->client->notify(new OrderDelivered($serviceOrder));
+        try {
+            if ($newStatus === OrderStatus::Delivered && $serviceOrder->client && $serviceOrder->client->email) {
+                $serviceOrder->client->notify(new OrderDelivered($serviceOrder));
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('OrderDelivered notification failed: ' . $e->getMessage());
         }
 
         return back()->with('success', "Estado actualizado a '{$newStatus->label()}'.");
@@ -338,9 +346,13 @@ class ServiceOrderController extends Controller
         $report = ServiceReport::create($validated);
 
         // Notify client of new service report
-        $serviceOrder->load('client');
-        if ($serviceOrder->client && $serviceOrder->client->email) {
-            $serviceOrder->client->notify(new NewServiceReport($report));
+        try {
+            $serviceOrder->load('client');
+            if ($serviceOrder->client && $serviceOrder->client->email) {
+                $serviceOrder->client->notify(new NewServiceReport($report));
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('NewServiceReport notification failed: ' . $e->getMessage());
         }
 
         return back()->with('success', 'Informe de servicio agregado exitosamente.');

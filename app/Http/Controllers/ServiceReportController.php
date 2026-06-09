@@ -77,9 +77,13 @@ class ServiceReportController extends Controller
         $report = ServiceReport::create($validated);
 
         // Notify client of new service report
-        $serviceOrder = ServiceOrder::with('client')->find($report->service_order_id);
-        if ($serviceOrder && $serviceOrder->client && $serviceOrder->client->email) {
-            $serviceOrder->client->notify(new NewServiceReport($report));
+        try {
+            $serviceOrder = ServiceOrder::with('client')->find($report->service_order_id);
+            if ($serviceOrder && $serviceOrder->client && $serviceOrder->client->email) {
+                $serviceOrder->client->notify(new NewServiceReport($report));
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('NewServiceReport notification failed: ' . $e->getMessage());
         }
 
         return back()->with('success', 'Informe creado.');
