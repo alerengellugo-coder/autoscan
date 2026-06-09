@@ -130,7 +130,7 @@ class ServiceOrder extends Model
         }
 
         return $this->estimated_completion_date->isPast()
-            && !$this->status->isFinal();
+            && !$this->status?->isFinal();
     }
 
     public function getDurationDaysAttribute(): ?int
@@ -270,7 +270,7 @@ class ServiceOrder extends Model
             OrderStatus::Cancelled->value => [],
         ];
 
-        $allowed = $transitions[$this->status->value] ?? [];
+        $allowed = $transitions[$this->status?->value ?? OrderStatus::Pending->value] ?? [];
 
         return in_array($newStatus, $allowed, strict: true);
     }

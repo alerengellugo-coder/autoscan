@@ -236,10 +236,11 @@ class ServiceOrderController extends Controller
 
         if ($user->isAdmin()) {
             $statusTimeline = [];
+            $currentStatus = $serviceOrder->status ?? OrderStatus::Pending;
             $statusTimeline[] = [
-                'status' => $serviceOrder->status->value,
-                'label' => $serviceOrder->status->label(),
-                'date' => $serviceOrder->created_at->toIso8601String(),
+                'status' => $currentStatus->value,
+                'label' => $currentStatus->label(),
+                'date' => $serviceOrder->created_at?->toIso8601String() ?? now()->toIso8601String(),
                 'user_name' => $serviceOrder->client?->name ?? 'Sistema',
             ];
             if ($serviceOrder->started_at) {
@@ -294,10 +295,10 @@ class ServiceOrderController extends Controller
             'notes'  => ['nullable', 'string', 'max:1000'],
         ]);
         $newStatus = OrderStatus::from($validated['status']);
+        $oldStatus = $serviceOrder->status ?? OrderStatus::Pending;
         if (! $serviceOrder->canTransitionTo($newStatus)) {
-            return back()->withErrors(['status' => "No se puede cambiar el estado de '{$serviceOrder->status->label()}' a '{$newStatus->label()}'."]);
+            return back()->withErrors(['status' => "No se puede cambiar el estado de '{$oldStatus->label()}' a '{$newStatus->label()}'."]);
         }
-        $oldStatus = $serviceOrder->status;
 
         DB::transaction(function () use ($serviceOrder, $newStatus, $validated) {
             $data = ['status' => $newStatus->value];
@@ -361,7 +362,7 @@ class ServiceOrderController extends Controller
     public function destroy(ServiceOrder $serviceOrder)
     {
         Gate::authorize('manage-orders');
-        if ($serviceOrder->status->isFinal()) {
+        if ($serviceOrder->status?->isFinal()) {
             return back()->with('error', 'No se puede cancelar una orden completada o entregada.');
         }
         DB::transaction(function () use ($serviceOrder) {
